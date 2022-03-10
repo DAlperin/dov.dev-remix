@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate_fadeInTop {
+    animation-name: fadeInDown;
+    animation-duration: 0.2s;
+}
+
+@layer base {
+    h1 {
+        @apply text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14;
+    }
+    h2 {
+        @apply text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-4xl md:leading-14;
+    }
+    h3 {
+        @apply text-lg font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-lg sm:leading-10 md:text-2xl md:leading-14;
+    }
+    hr {
+        @apply my-2;
+    }
+    p {
+        @apply my-2;
+    }
+}

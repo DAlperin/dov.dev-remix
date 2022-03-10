@@ -1,0 +1,11 @@
+[
+    {
+        "name": "About",
+        "link": "/about"
+    },
+    {
+        "name": "Dashboard",
+        "link": "/dashboard",
+        "loggedinOnly": true
+    }
+]
