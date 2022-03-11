@@ -21,9 +21,12 @@ type bundledMDX = {
 };
 
 export async function getPage(slug: string): Promise<bundledMDX | undefined> {
+    console.log(process.env);
     const redis = new Redis({
         port: 6379,
-        host: "127.0.0.1",
+        family: 6,
+        host: process.env.REDIS_HOST,
+        password: process.env.REDIS_PASSWORD || undefined,
     });
     if (await redis.exists(`page:${slug}`)) {
         const cached = await redis.get(`page:${slug}`);

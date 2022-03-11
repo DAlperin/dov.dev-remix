@@ -22,7 +22,9 @@ export function createRedisSessionStorage({
 }: redisSessionArguments): SessionStorage {
     const redis = new Redis({
         port: 6379,
-        host: "127.0.0.1",
+        family: 6,
+        host: process.env.REDIS_HOST,
+        password: process.env.REDIS_PASSWORD || undefined,
     });
 
     return createSessionStorage({
