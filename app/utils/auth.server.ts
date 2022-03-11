@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
-import invariant from "@remix-run/dev/invariant";
 import { redirect as runtimeRedirect } from "@remix-run/server-runtime";
+import invariant from "@remix-run/server-runtime/invariant";
 import { compare, hash as bcryptHash } from "bcrypt";
 import { redirect } from "remix";
 import { Authenticator, AuthorizationError } from "remix-auth";
