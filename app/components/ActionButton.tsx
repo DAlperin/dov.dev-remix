@@ -27,6 +27,7 @@ export default function ActionButton({
                 return (
                     <input
                         key={param.key + param.value}
+                        aria-hidden
                         type="text"
                         hidden
                         readOnly
