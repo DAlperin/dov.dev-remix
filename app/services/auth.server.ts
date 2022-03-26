@@ -2,7 +2,6 @@ import type { User } from "@prisma/client";
 import invariant from "@remix-run/react/invariant";
 import { redirect as runtimeRedirect } from "@remix-run/server-runtime";
 import { compare, hash as bcryptHash } from "bcrypt";
-import { redirect } from "remix";
 import { Authenticator, AuthorizationError } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 
@@ -29,7 +28,7 @@ export async function logout(
     session.unset("user");
     await commitSession(session);
     if (options) {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+         
         throw runtimeRedirect(options.redirectTo);
     }
 }
@@ -40,7 +39,7 @@ export async function ensureAdmin(
 ): Promise<User> {
     const user = await isAuthenticated(request);
     if (!user) {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+         
         throw runtimeRedirect(options.failureRedirect);
     }
     return user;
@@ -54,7 +53,6 @@ export async function isAuthenticated(
     const sessionUser = await auth.isAuthenticated(request);
     if (!sessionUser) {
         if (options?.failureRedirect) {
-            // eslint-disable-next-line @typescript-eslint/no-throw-literal
             throw runtimeRedirect(options.failureRedirect);
         }
         return false;
@@ -65,13 +63,13 @@ export async function isAuthenticated(
             await logout(request);
         }
         if (options?.failureRedirect) {
-            // eslint-disable-next-line @typescript-eslint/no-throw-literal
+             
             throw runtimeRedirect(options.failureRedirect);
         }
         return false;
     }
     if (options?.successRedirect) {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+         
         throw runtimeRedirect(options.successRedirect);
     }
     return user;
