@@ -31,11 +31,19 @@ export default function ActionCheckbox({
                 submit(event.currentTarget, { replace: true });
             }}
         >
-            <input hidden type="text" name="_action" value={action} readOnly />
+            <input
+                hidden
+                type="text"
+                name="_action"
+                value={action}
+                aria-hidden
+                readOnly
+            />
             {params?.map((param) => {
                 return (
                     <input
                         key={param.key + param.value}
+                        aria-hidden
                         type="text"
                         hidden
                         readOnly
@@ -46,6 +54,7 @@ export default function ActionCheckbox({
             })}
             <input
                 disabled={disabled}
+                aria-label="checkbox"
                 type="checkbox"
                 name={name}
                 defaultChecked={initialValue}
