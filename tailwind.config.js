@@ -2,7 +2,7 @@ const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-    content: ["./app/**/*.{ts,tsx,jsx,js}"],
+    content: ["./app/**/*.{ts,tsx,jsx,js}", "./content/**/*.mdx"],
     darkMode: "class",
     theme: {
         extend: {
@@ -40,20 +40,6 @@ module.exports = {
                                     color: theme("colors.primary.600"),
                                 },
                                 code: { color: primary400 },
-                            },
-                            h1: {
-                                fontWeight: "700",
-                                letterSpacing: spacingTight,
-                                color: gray900,
-                            },
-                            h2: {
-                                fontWeight: "700",
-                                letterSpacing: spacingTight,
-                                color: gray900,
-                            },
-                            h3: {
-                                fontWeight: "600",
-                                color: gray900,
                             },
                             "h4,h5,h6": {
                                 color: gray900,
@@ -108,20 +94,6 @@ module.exports = {
                                     color: primary400,
                                 },
                                 code: { color: primary400 },
-                            },
-                            h1: {
-                                fontWeight: "700",
-                                letterSpacing: spacingTight,
-                                color: gray100,
-                            },
-                            h2: {
-                                fontWeight: "700",
-                                letterSpacing: spacingTight,
-                                color: gray100,
-                            },
-                            h3: {
-                                fontWeight: "600",
-                                color: gray100,
                             },
                             "h4,h5,h6": {
                                 color: gray100,
