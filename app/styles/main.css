@@ -42,6 +42,12 @@
     animation: move 10s ease-in-out infinite;
     transform-origin: 50% 50%;
 }
+.react-grid-placeholder {
+    @apply bg-red-400 opacity-60;
+}
+g.recharts-layer.recharts-cartesian-axis > g > g > text {
+    fill: white;
+}
 @layer base {
     .mostly_half {
         height: calc(50% - 0.5rem);
