@@ -4,21 +4,41 @@
 generator client {
   provider = "prisma-client-js"
   binaryTargets = ["native"]
+  previewFeatures = ["referentialIntegrity"]
 }
+
 model User {
   id String @id @default(uuid())
   email String @unique
   name String
   hash String
+  dashboards Dashboard[]
   admin Boolean @default(false)
 }
+
 model registrationSecret {
   key String @unique
   admin Boolean @default(false)
   used Boolean @default(false)
   createdAt        DateTime           @default(now())
 }
+
+model Dashboard {
+  id String @id @default(uuid())
+  owner User @relation(fields: [ownerID], references: [id])
+  default Boolean @default(false)
+  ownerID String
+  name String
+  layout Json
+}
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
