@@ -6,7 +6,22 @@ import Split from "../app/components/Split";
 import RoundedImage from "../app/components/RoundedImage";
 
 <Split>
-    <RoundedImage path="/static/headshot.png" />
+    <div>
+        <RoundedImage className="mx-auto" path="/static/headshot.png" />
+        <div className="flex-col w-4/5 mx-auto">
+            <span className="flex-1 font-bold m-0 text-center">
+                Sponsor Dov Alperin on GitHub Sponsors
+            </span>
+            <span className="flex-1 m-0 text-center">
+                Maybe buy me a coffee? :)
+            </span>
+            <iframe
+                src="https://github.com/sponsors/DAlperin/button"
+                title="Sponsor DAlperin"
+                className="flex-1 max-w-full mt-1"
+            ></iframe>
+        </div>
+    </div>
     ## Curious student, professional software and web developer, entrepreneur, activist
     and fast learner. Passionate about the places hardware and software combine,
     space exploration, using technology to make a difference, and “making” in almost
