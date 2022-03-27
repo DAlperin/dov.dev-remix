@@ -43,19 +43,28 @@
     transform-origin: 50% 50%;
 }
 @layer base {
+    .mostly_half {
+        height: calc(50% - 0.5rem);
+    }
     h1 {
-        @apply text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14;
+        @apply text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-5 md:text-6xl md:leading-10;
     }
     h2 {
-        @apply text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-4xl md:leading-14;
+        @apply text-xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl sm:leading-5 md:text-4xl md:leading-10;
     }
     h3 {
-        @apply text-lg font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-lg sm:leading-10 md:text-2xl md:leading-14;
+        @apply text-lg font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-lg sm:leading-5 md:text-2xl md:leading-10;
+    }
+    h4 {
+        @apply font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-sm sm:leading-5 md:text-xl md:leading-10;
     }
     hr {
         @apply my-2;
     }
     p {
         @apply my-2;
+    }
+    html {
+        @apply h-full;
     }
 }
