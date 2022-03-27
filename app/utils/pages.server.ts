@@ -1,11 +1,14 @@
+// eslint-disable-next-line import/no-namespace
 import type * as esbuild from "esbuild";
 import parseFrontMatter from "front-matter";
+import fsExists from "fs.promises.exists"
 import type grayMatter from "gray-matter";
-import Redis from "ioredis";
 import path from "path";
+
 
 import { readFile, readdir } from "./fs.server";
 import { bundleMDX } from "./mdx.server";
+import { cache } from "~/services/cache.server";
 
 export type PageMarkdownAttributes = {
     title: string;
@@ -21,21 +24,18 @@ type bundledMDX = {
 };
 
 export async function getPage(slug: string): Promise<bundledMDX | undefined> {
-    console.log(process.env);
-    const redis = new Redis({
-        port: 6379,
-        family: 6,
-        host: process.env.REDIS_HOST,
-        password: process.env.REDIS_PASSWORD || undefined,
-    });
-    if (await redis.exists(`page:${slug}`)) {
-        const cached = await redis.get(`page:${slug}`);
+    if (await cache.redis.exists(`page:${slug}`)) {
+        const cached = await cache.redis.get(`page:${slug}`);
         if (cached) {
             return JSON.parse(cached) as bundledMDX;
         }
     }
+    const pagePath = path.join(`${__dirname}/../content/pages`, `${slug}.mdx`)
+    if (!await fsExists(pagePath)) {
+        return undefined
+    }
     const source = await readFile(
-        path.join(`${__dirname}/../content/pages`, `${slug}.mdx`),
+        pagePath,
         "utf-8"
     );
     const rehypeHighlight = await import("rehype-highlight").then(
@@ -46,12 +46,13 @@ export async function getPage(slug: string): Promise<bundledMDX | undefined> {
         "rehype-autolink-headings"
     );
 
-    const { default: rehypeToc } = await import("rehype-toc");
+    //     const { default: rehypeToc } = await import("rehype-toc");
     const { default: rehypeSlug } = await import("rehype-slug");
 
     const output = await bundleMDX({
         source,
-        xdmOptions(options, frontmatter) {
+        // (option, frontmatter)
+        xdmOptions(options) {
             options.remarkPlugins = [
                 ...(options.remarkPlugins ?? []),
                 // remarkMdxImages,
@@ -70,12 +71,11 @@ export async function getPage(slug: string): Promise<bundledMDX | undefined> {
             return options;
         },
     }).catch((error) => {
-        console.error(error);
         throw error;
     });
     if (output) {
-        await redis.set(`page:${slug}`, JSON.stringify(output), "EX", 200);
-        return output as bundledMDX;
+        await cache.redis.set(`page:${slug}`, JSON.stringify(output), "EX", 200);
+        return output as unknown as bundledMDX;
     }
 }
 
