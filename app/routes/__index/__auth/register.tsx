@@ -4,7 +4,7 @@ import type { LoaderFunction } from "remix";
 import { json } from "remix";
 
 import AnimatableLink from "~/components/AnimatableLink";
-import { auth, hash, isAuthenticated } from "~/utils/auth.server";
+import { auth, hash, isAuthenticated } from "~/services/auth.server";
 import { db } from "~/utils/db.server";
 import emailRegex from "~/utils/emailregex";
 import { isNativeError } from "~/utils/errors";
@@ -134,7 +134,7 @@ export const action: LoaderFunction = async ({ request }) => {
     }
     await auth.authenticate("form", request, {
         successRedirect: "/",
-        failureRedirect: "/auth/login",
+        failureRedirect: "/login",
     });
 };
 export const loader: LoaderFunction = async ({ request }) => {
@@ -272,7 +272,7 @@ export default function Register(): JSX.Element {
             <p>
                 Or go{" "}
                 <AnimatableLink
-                    to="/auth/login"
+                    to="/login"
                     className="hover:underline text-blue-400"
                 >
                     login

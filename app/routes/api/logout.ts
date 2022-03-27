@@ -1,7 +1,7 @@
 import type { ActionFunction } from "remix";
 
-import { auth, logout } from "~/utils/auth.server";
+import { logout } from "~/services/auth.server";
 
 export const action: ActionFunction = async ({ request }) => {
-    await logout(request, { redirectTo: "/auth/login" });
+    await logout(request, { redirectTo: "/login" });
 };

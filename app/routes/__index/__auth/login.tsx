@@ -3,7 +3,7 @@ import type { LoaderFunction } from "remix";
 import { json, useLoaderData } from "remix";
 
 import AnimatableLink from "~/components/AnimatableLink";
-import { auth, isAuthenticated } from "~/utils/auth.server";
+import { auth, isAuthenticated } from "~/services/auth.server";
 import { getSession } from "~/utils/session.server";
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
@@ -36,7 +36,7 @@ export const action: LoaderFunction = async ({ request }) => {
     }
     await auth.authenticate("form", request, {
         successRedirect: "/",
-        failureRedirect: "/auth/login",
+        failureRedirect: "/login",
     });
 };
 
@@ -137,7 +137,7 @@ export default function Login(): JSX.Element {
             <p>
                 Or go{" "}
                 <AnimatableLink
-                    to="/auth/register"
+                    to="/register"
                     className="hover:underline text-blue-400"
                 >
                     register

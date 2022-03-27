@@ -3,8 +3,8 @@ import type { LinksFunction, LoaderFunction } from "remix";
 import { useLoaderData } from "remix";
 import Image, { ImageFit } from "remix-image";
 
-import styles from "../styles/index.css";
-import { isAuthenticated } from "~/utils/auth.server";
+import styles from "../../styles/index.css";
+import { isAuthenticated } from "~/services/auth.server";
 
 type LoaderData = {
     user: false | User;
