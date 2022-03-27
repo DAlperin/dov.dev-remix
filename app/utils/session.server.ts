@@ -1,4 +1,6 @@
-import { createRedisSessionStorage } from "~/utils/redisSession.server";
+import { createRedisSessionStorage } from "remix-redis-session";
+
+import defaultRedisConfig from "~/config/defaultRedisConfig";
 
 export const sessionStorage = createRedisSessionStorage({
     cookie: {
@@ -7,8 +9,11 @@ export const sessionStorage = createRedisSessionStorage({
         sameSite: "lax",
         secrets: ["s3cr3t"],
         path: "/",
-        httpOnly: true,
+        httpOnly: false,
     },
+    options: {
+        redisConfig: defaultRedisConfig
+    }
 });
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
