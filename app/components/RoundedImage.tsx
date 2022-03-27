@@ -2,8 +2,9 @@ import { Image, ImageFit } from "remix-image";
 
 type Props = {
     path: string;
+    className?: string;
 };
-export default function RoundedImage({ path }: Props): JSX.Element {
+export default function RoundedImage({ path, className }: Props): JSX.Element {
     return (
         <Image
             src={path}
@@ -18,7 +19,7 @@ export default function RoundedImage({ path }: Props): JSX.Element {
             options={{
                 fit: ImageFit.COVER,
             }}
-            className="rounded-full"
+            className={`rounded-full ${className ?? ""}`}
         />
     );
 }

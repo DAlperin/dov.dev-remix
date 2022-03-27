@@ -2,7 +2,6 @@ import type { registrationSecret } from "@prisma/client";
 import { Form, useTransition } from "@remix-run/react";
 import { useState } from "react";
 
-import ActionButton from "~/components/ActionButton";
 import KeysTable from "~/components/KeysTable";
 
 type Props = {
@@ -38,7 +37,7 @@ export default function DashboardAdminContent({
                     <input
                         type="checkbox"
                         name="admin"
-                        className="mr-2 p-3 mb-1 w-full w-0.5 bg-slate-200 dark:bg-gray-700 rounded border-2 border-slate-200 dark:border-gray-400 focus:border-slate-600 focus:outline-none"
+                        className="mr-2 p-3 mb-1 w-full bg-slate-200 dark:bg-gray-700 rounded border-2 border-slate-200 dark:border-gray-400 focus:border-slate-600 focus:outline-none"
                         aria-label="admin checkbox"
                     />
                     Admin

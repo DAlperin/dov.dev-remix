@@ -34,7 +34,7 @@ export default function KeysTable({
                                 className={`table-row w-full ${
                                     newKey === key.key
                                         ? "text-green-700 animate_fadeInTop"
-                                        : null
+                                        : ""
                                 }`}
                                 key={key.key}
                             >
