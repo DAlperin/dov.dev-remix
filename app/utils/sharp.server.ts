@@ -33,7 +33,7 @@ export const sharpTransformer: Transformer = {
             .resize(width, height, {
                 fit,
                 position,
-                background: {r:0,g:0,b:0,alpha:0}
+                background: { r: 0, g: 0, b: 0, alpha: 0 },
             })
             .jpeg({
                 quality,
