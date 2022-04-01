@@ -18,10 +18,7 @@ function LayoutWrapper({ children, user, navItems }: Props): JSX.Element {
                 <div>
                     <Link to="/" aria-label="dov.dev">
                         <div className="flex items-center justify-between">
-                            <div className="dark:logo-dark mr-3">
-                                {/* <Logo /> */}
-                            </div>
-                            <div className="hidden h-6 text-2xl font-semibold sm:block">
+                            <div className="h-6 text-2xl font-semibold">
                                 dov.dev
                             </div>
                         </div>
