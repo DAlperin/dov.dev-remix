@@ -30,7 +30,7 @@ class ResourceCache {
     }
 
     public async getWithPrefix(prefix: string) {
-        let res = []
+        const res = []
         const keys = await this.redis.keys(`${prefix}:*`)
         for (const key of keys) {
             const val = await this.redis.get(key)
