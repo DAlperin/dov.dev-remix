@@ -1,11 +1,3 @@
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-} from "chart.js";
 import type { LoaderFunction } from "remix";
 import { useLoaderData } from "remix";
 import type Stripe from "stripe";
@@ -17,14 +9,6 @@ type LoaderData = {
     totalCollected: number;
     charges: Stripe.Response<Stripe.ApiList<Stripe.Charge>>;
 };
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip
-);
 
 export const loader: LoaderFunction = async () => {
     return {

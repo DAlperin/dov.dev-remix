@@ -29,7 +29,7 @@ model Dashboard {
   default Boolean @default(false)
   ownerID String
   name String
-  layout Json
+  data Json
 }
 
 // datasource db {

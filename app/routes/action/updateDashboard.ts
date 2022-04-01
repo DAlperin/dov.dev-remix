@@ -1,8 +1,9 @@
+import type { Prisma } from "@prisma/client";
 import type { ActionFunction } from "remix";
 import { json } from "remix";
 
 import { isAuthenticated } from "~/services/auth.server";
-import { db } from "~/utils/db.server";
+import { db } from "~/services/db.server";
 
 export const action: ActionFunction = async ({ request }) => {
     const user = await isAuthenticated(request);
@@ -16,20 +17,38 @@ export const action: ActionFunction = async ({ request }) => {
             }
         );
     }
-    const data = await request.formData();
-    const dashboardID = data.get("id")?.toString();
-    const layout = JSON.parse(data.get("layout") as string);
+    const rawData = await request.formData();
+    const dataField = rawData.get("data")
+    const idField = rawData.get("id")
+
+    if (
+        typeof dataField !== "string" ||
+        typeof idField !== "string"
+    ) {
+        return json(
+            {
+                message:
+                    "Bad Request",
+            },
+            {
+                status: 400,
+            }
+        );
+    }
+    const newData: Prisma.JsonObject = {
+        data: JSON.parse(dataField),
+    }
     /* HACK: We should probably check that the user has permissions on the dashboard separately
              so that we can use dashboard.update without having to specify the ownerID which is
              not allowed since the ownerID is not unique */
     const update = await db.dashboard.updateMany({
         where: {
             ownerID: user.id,
-            id: dashboardID,
+            id: idField,
         },
         data: {
-            layout,
-        },
+            data: newData
+        }
     });
     if (update.count === 0) {
         return json(

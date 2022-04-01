@@ -6,7 +6,7 @@ import { useLoaderData } from "remix";
 
 import KeysTable from "~/components/KeysTable";
 import { ensureAdmin, isAuthenticated } from "~/services/auth.server";
-import { db } from "~/utils/db.server";
+import { db } from "~/services/db.server";
 import { genRandomID } from "~/utils/random.server";
 import { commitSession, getSession } from "~/utils/session.server";
 

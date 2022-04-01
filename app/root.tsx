@@ -1,4 +1,3 @@
-import { RemixErrorBoundary, useCatch } from "@remix-run/react/errorBoundaries";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
@@ -11,7 +10,7 @@ import {
     useLoaderData,
     useTransition,
 } from "remix";
-import type { MetaFunction, LoaderFunction, LinksFunction, Error } from "remix";
+import type { MetaFunction, LoaderFunction, LinksFunction } from "remix";
 import {
     createThemeSessionResolver,
     ThemeProvider,
@@ -22,17 +21,14 @@ import { useSpinDelay } from "spin-delay";
 
 import styles from "./tailwind.css";
 import { isAuthenticated } from "~/services/auth.server";
-import { getNavbarItems } from "~/utils/navbar.server";
 import { sessionStorage } from "~/utils/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
     const { getTheme } = await themeSessionResolver(request);
     const user = await isAuthenticated(request);
-    const isAuthed = user !== false;
     return {
         theme: getTheme(),
         user,
-        navItems: getNavbarItems(isAuthed),
     };
 };
 
@@ -41,7 +37,8 @@ let firstRender = true;
 // h/t to kentcdodds who heavily inspired this implementation
 function PageLoadingMessage() {
     const transition = useTransition();
-    const [pendingPath, setPendingPath] = useState("");
+    const [pendingPath, setPendingPath] = useState<string | null>();
+    const [message, setMessage] = useState<string | null>();
     const showLoader = useSpinDelay(Boolean(transition.state !== "idle"), {
         delay: 400,
         minDuration: 1000,
@@ -50,7 +47,13 @@ function PageLoadingMessage() {
     useEffect(() => {
         if (firstRender) return;
         if (transition.state === "idle") return;
-        setPendingPath(transition.location.pathname);
+        if (transition.state === "submitting") {
+            setMessage("Submitting...");
+            setPendingPath(null);
+        } else {
+            setPendingPath(transition.location.pathname);
+            setMessage(null);
+        }
     }, [transition]);
 
     useEffect(() => {
@@ -95,9 +98,12 @@ function PageLoadingMessage() {
                                             </motion.span>
                                         </div>
                                     </AnimatePresence>
-                                    <span className="truncate">
-                                        path: {pendingPath}
-                                    </span>
+                                    {pendingPath ? (
+                                        <span className="truncate">
+                                            path: {pendingPath}
+                                        </span>
+                                    ) : null}
+                                    {message ? <span>{message}</span> : null}
                                 </div>
                             </div>
                         </div>
@@ -134,7 +140,7 @@ function App(): JSX.Element {
     const data = useLoaderData();
     const [theme] = useTheme();
     const transition = useTransition();
-    const showLoader = useSpinDelay(Boolean(transition.state !== "idle"), {
+    const showLoader = useSpinDelay(Boolean(transition.state === "loading"), {
         delay: 400,
         minDuration: 500,
     });

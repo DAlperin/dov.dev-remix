@@ -18,7 +18,6 @@ export const sharpTransformer: Transformer = {
     transform: async (
         { data },
         {
-            contentType: outputContentType,
             width,
             height,
             fit,
@@ -38,21 +37,22 @@ export const sharpTransformer: Transformer = {
             .jpeg({
                 quality,
                 progressive: true,
-                force: outputContentType === MimeType.JPEG,
+                // force: outputContentType === MimeType.JPEG,
             })
             .png({
                 progressive: true,
                 compressionLevel,
-                force: outputContentType === MimeType.PNG,
+                // force: outputContentType === MimeType.PNG,
             })
             .webp({
                 quality,
-                force: outputContentType === MimeType.WEBP,
+                // force: outputContentType === MimeType.WEBP,
             })
             .tiff({
                 quality,
                 force: false,
-            });
+            })
+            .toFormat("webp");
 
         return image.toBuffer();
     },

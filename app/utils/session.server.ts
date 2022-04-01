@@ -6,7 +6,7 @@ export const sessionStorage = createRedisSessionStorage({
     cookie: {
         name: "dovdotdev",
         secure: true,
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "lax" : false,
         secrets: ["s3cr3t"],
         path: "/",
         httpOnly: false,

@@ -1,8 +1,7 @@
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
 import type { LoaderFunction } from "remix";
-import { useParams } from "remix";
-import { json, useLoaderData } from "remix";
+import { json, useLoaderData, useParams } from "remix";
 
 import Split from "~/components/Split";
 import { getPage } from "~/utils/pages.server";
@@ -41,6 +40,18 @@ export function CatchBoundary(): JSX.Element {
             <h4>
                 We couldnt find <em>{slug}</em> if you think it should be here
                 contact us dov@dov.dev
+            </h4>
+        </div>
+    );
+}
+
+export function ErrorBoundary(): JSX.Element {
+    return (
+        <div>
+            <h2>500</h2>
+            <h4>
+                Something went wrong. This probably isn't your fault. Try again
+                later.
             </h4>
         </div>
     );

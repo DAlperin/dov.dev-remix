@@ -5,7 +5,7 @@ import { json } from "remix";
 
 import AnimatableLink from "~/components/AnimatableLink";
 import { auth, hash, isAuthenticated } from "~/services/auth.server";
-import { db } from "~/utils/db.server";
+import { db } from "~/services/db.server";
 import emailRegex from "~/utils/emailregex";
 import { isNativeError } from "~/utils/errors";
 
