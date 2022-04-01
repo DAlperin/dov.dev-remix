@@ -1,5 +1,5 @@
 import type { registrationSecret } from "@prisma/client";
-import type { Transition } from "@remix-run/react/transition";
+import { AnimatePresence, motion } from "framer-motion";
 
 import ActionButton from "~/components/ActionButton";
 import ActionCheckbox from "~/components/ActionCheckbox";
@@ -7,14 +7,12 @@ import ActionCheckbox from "~/components/ActionCheckbox";
 type Props = {
     newKey: string | null;
     keys: registrationSecret[];
-    transition: Transition;
     CurrentlyInvalidating: string;
     setCurrentlyInvalidating: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function KeysTable({
     keys,
-    transition,
     CurrentlyInvalidating,
     setCurrentlyInvalidating,
     newKey,
@@ -28,56 +26,57 @@ export default function KeysTable({
                     <div className="table-cell text-left ...">options</div>
                 </div>
                 <div className="table-row-group">
-                    {keys.map((key) => {
-                        return (
-                            <div
-                                className={`table-row w-full ${
-                                    newKey === key.key
-                                        ? "text-green-700 animate_fadeInTop"
-                                        : ""
-                                }`}
-                                key={key.key}
-                            >
-                                <div className="table-cell">{key.key}</div>
-                                <div className="table-cell">
-                                    <ActionCheckbox
-                                        action="setAdmin"
-                                        name="admin"
-                                        initialValue={key.admin}
-                                        params={[
-                                            {
-                                                key: "key",
-                                                value: key.key,
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                                <div className="table-cell">
-                                    <ActionButton
-                                        disabled={
-                                            transition.state === "submitting" &&
-                                            CurrentlyInvalidating === key.key
-                                        }
-                                        className="bg-gray-500 hover:bg-gray-700 disabled:cursor-not-allowed disabled:bg-gray-400 text-white font-bold py-1 px-1 max-w-1 rounded cursor-pointer"
-                                        action="invalidate"
-                                        onSubmit={() => {
-                                            setCurrentlyInvalidating(key.key);
-                                        }}
-                                        params={[
-                                            {
-                                                key: "key",
-                                                value: key.key,
-                                            },
-                                        ]}
-                                    >
-                                        {CurrentlyInvalidating === key.key
-                                            ? "Loading..."
-                                            : "Invalidate"}
-                                    </ActionButton>
-                                </div>
-                            </div>
-                        );
-                    })}
+                    <AnimatePresence>
+                        {keys.map((key) => {
+                            return (
+                                <motion.div
+                                    exit={{ opacity: 0 }}
+                                    key={key.key}
+                                    className={`table-row w-full ${
+                                        newKey === key.key
+                                            ? "text-green-700 animate_fadeInTop"
+                                            : ""
+                                    }`}
+                                >
+                                    <div className="table-cell">{key.key}</div>
+                                    <div className="table-cell">
+                                        <ActionCheckbox
+                                            action="setAdmin"
+                                            name="admin"
+                                            initialValue={key.admin}
+                                            params={[
+                                                {
+                                                    key: "key",
+                                                    value: key.key,
+                                                },
+                                            ]}
+                                        />
+                                    </div>
+                                    <div className="table-cell">
+                                        <ActionButton
+                                            className="bg-gray-500 hover:bg-gray-700 disabled:cursor-not-allowed disabled:bg-gray-400 text-white font-bold py-1 px-1 max-w-1 rounded cursor-pointer"
+                                            action="invalidate"
+                                            onSubmit={() => {
+                                                setCurrentlyInvalidating(
+                                                    key.key
+                                                );
+                                            }}
+                                            params={[
+                                                {
+                                                    key: "key",
+                                                    value: key.key,
+                                                },
+                                            ]}
+                                        >
+                                            {CurrentlyInvalidating === key.key
+                                                ? "Loading..."
+                                                : "Invalidate"}
+                                        </ActionButton>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
                 </div>
             </div>
         </div>
