@@ -19,10 +19,12 @@ export default function ChargeRow({
     let customer: Stripe.Customer | undefined;
     let customerName = "unknown";
 
+    // @ts-expect-error FIXME: there has to be a more elegant way to deal with this API
     if (charge.customer.deleted) {
         deleted = true;
         customerName = "deleted";
     } else {
+        // @ts-expect-error see above
         ({ customer } = charge);
     }
 
