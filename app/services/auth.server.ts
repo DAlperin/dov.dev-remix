@@ -5,7 +5,7 @@ import { compare, hash as bcryptHash } from "bcrypt";
 import { Authenticator, AuthorizationError } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 
-import { db } from "~/utils/db.server";
+import { db } from "~/services/db.server";
 import {
     commitSession,
     getSession,
@@ -28,7 +28,6 @@ export async function logout(
     session.unset("user");
     await commitSession(session);
     if (options) {
-         
         throw runtimeRedirect(options.redirectTo);
     }
 }
@@ -39,7 +38,7 @@ export async function ensureAdmin(
 ): Promise<User> {
     const user = await isAuthenticated(request);
     if (!user) {
-         
+
         throw runtimeRedirect(options.failureRedirect);
     }
     return user;
@@ -63,13 +62,13 @@ export async function isAuthenticated(
             await logout(request);
         }
         if (options?.failureRedirect) {
-             
+
             throw runtimeRedirect(options.failureRedirect);
         }
         return false;
     }
     if (options?.successRedirect) {
-         
+
         throw runtimeRedirect(options.successRedirect);
     }
     return user;

@@ -1,4 +1,4 @@
-import json from "../../content/navbar.json";
+import json from "~/../content/navbar.json";
 
 export type NavbarItem = {
     name: string;
