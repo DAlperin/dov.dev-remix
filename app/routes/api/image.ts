@@ -7,7 +7,7 @@ import {
     fetchResolver,
 } from "remix-image/server";
 
-import { sharpTransformer } from "../../utils/sharp.server";
+import { sharpTransformer } from "~/utils/sharp.server";
 
 export const fetchImage: Resolver = async (asset, url, options, basePath) => {
     if (url.startsWith("/") && (url.length === 1 || url[1] !== "/")) {
