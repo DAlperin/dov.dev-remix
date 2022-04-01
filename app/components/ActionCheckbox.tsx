@@ -1,4 +1,4 @@
-import { Form, useSubmit } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import React from "react";
 
 type AttributeValue = string | number | readonly string[] | undefined;
@@ -22,13 +22,13 @@ export default function ActionCheckbox({
     initialValue,
     params,
 }: Props): JSX.Element {
-    const submit = useSubmit();
+    const fetcher = useFetcher();
     return (
-        <Form
+        <fetcher.Form
             method="post"
             onSubmit={onSubmit}
             onChange={(event) => {
-                submit(event.currentTarget, { replace: true });
+                fetcher.submit(event.currentTarget, { replace: true });
             }}
         >
             <input
@@ -40,17 +40,19 @@ export default function ActionCheckbox({
                 readOnly
             />
             {params?.map((param) => {
-                return (
-                    <input
-                        key={param.key + param.value}
-                        aria-hidden
-                        type="text"
-                        hidden
-                        readOnly
-                        name={param.key}
-                        value={param.value}
-                    />
-                );
+                if (param.value) {
+                    return (
+                        <input
+                            key={`${param.key} ${param.value?.toString()}`}
+                            aria-hidden
+                            type="text"
+                            hidden
+                            readOnly
+                            name={param.key}
+                            value={param.value}
+                        />
+                    );
+                }
             })}
             <input
                 disabled={disabled}
@@ -60,6 +62,6 @@ export default function ActionCheckbox({
                 defaultChecked={initialValue}
                 className={className}
             />
-        </Form>
+        </fetcher.Form>
     );
 }

@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import type { ReactChildren } from "react";
 import React from "react";
 
@@ -21,23 +21,26 @@ export default function ActionButton({
     disabled,
     onSubmit,
 }: Props): JSX.Element {
+    const fetcher = useFetcher();
     return (
-        <Form method="post" onSubmit={onSubmit}>
+        <fetcher.Form method="post" onSubmit={onSubmit}>
             {params?.map((param) => {
-                return (
-                    <input
-                        key={param.key + param.value}
-                        aria-hidden
-                        type="text"
-                        hidden
-                        readOnly
-                        name={param.key}
-                        value={param.value}
-                    />
-                );
+                if (param.value) {
+                    return (
+                        <input
+                            key={`${param.key} ${param.value?.toString()}`}
+                            aria-hidden
+                            type="text"
+                            hidden
+                            readOnly
+                            name={param.key}
+                            value={param.value}
+                        />
+                    );
+                }
             })}
             <button
-                disabled={disabled}
+                disabled={disabled ?? fetcher.state === "submitting"}
                 type="submit"
                 name="_action"
                 value={action}
@@ -45,6 +48,6 @@ export default function ActionButton({
             >
                 {children}
             </button>
-        </Form>
+        </fetcher.Form>
     );
 }
