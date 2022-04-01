@@ -41,9 +41,8 @@ export async function getAccountCharges(): Promise<
 export async function getTotalCollected(): Promise<number> {
     let totalCollected = 0;
     const accountCharges = await getAccountCharges();
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
-    for (let i = 0; i < accountCharges.data.length; i++) {
-        const captured = accountCharges.data[i].amount_captured;
+    for (const charge of accountCharges.data) {
+        const captured = charge.amount_captured
         if (captured > 0) {
             const net = captured;
             totalCollected += net / 100;
@@ -53,7 +52,7 @@ export async function getTotalCollected(): Promise<number> {
 }
 
 export type ChargeWithCustomer = {
-    customer: Stripe.Customer | Stripe.DeletedCustomer;
+    customer: Stripe.Customer | Stripe.DeletedCustomer | Promise<Stripe.Customer | Stripe.DeletedCustomer>;
     chargeAmount: number;
     receiptUrl: string | undefined;
 };
@@ -68,12 +67,12 @@ export async function getCustomerForID(
     return stripe.customers.retrieve(id);
 }
 
-// FIXME: I hate this whole function
 export async function getRecentChargesWithCustomer(): Promise<
     ChargeWithCustomer[]
 > {
     const results: ChargeWithCustomer[] = [];
     const charges = await getAccountCharges();
+    let fullCache = true
     for (const charge of charges.data) {
         let customer: Stripe.Customer | Stripe.DeletedCustomer | undefined;
         if (typeof charge.customer === "string") {
@@ -82,22 +81,26 @@ export async function getRecentChargesWithCustomer(): Promise<
             if (cached) {
                 customer = JSON.parse(cached)
             } else {
-                // FIXME: This should be cached, this is unaceptably slow
-                // eslint-disable-next-line no-await-in-loop
-                customer = await stripe.customers.retrieve(charge.customer);
-                // eslint-disable-next-line no-await-in-loop
-                await cache.redis.set(`customer:${charge.customer}`, JSON.stringify(customer), "EX", 300)
+                fullCache = false
             }
-        }
-        if (customer) {
+
             results.push({
                 chargeAmount: totalCollectedForCharge(charge),
-                customer,
+                customer: customer ?? stripe.customers.retrieve(charge.customer),
                 receiptUrl: charge.receipt_url ? charge.receipt_url : undefined,
             });
         }
     }
-    return results;
+    if (fullCache) return results
+    return Promise.all(results.map(async (item) => {
+        const customer = await item.customer
+        void cache.redis.set(`customer:${customer.id}`, JSON.stringify(customer), "EX", 300)
+        return {
+            ...item,
+            customer
+        }
+    }))
+
 }
 
 export const months = [
