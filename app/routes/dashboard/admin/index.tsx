@@ -112,7 +112,6 @@ export default function AdminIndex(): JSX.Element {
     }, []);
     const fetcher = useFetcher();
     const [currentLayout, setCurrentLayout] = useState<Layout[]>();
-
     const [currentLayoutKey, setCurrentLayoutKey] = useState<string>("");
     const {
         chargesWithCustomers,
@@ -121,7 +120,6 @@ export default function AdminIndex(): JSX.Element {
         dashboardData,
         dashboardLayout,
     } = useLoaderData<LoaderData>();
-    console.log(dashboardData);
     const chargesWithMoney: ChargeWithCustomer[] = chargesWithCustomers.filter(
         (charge) => {
             if (charge.chargeAmount > 0) {
