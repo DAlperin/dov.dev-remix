@@ -8,6 +8,7 @@ import {
     Scripts,
     ScrollRestoration,
     useLoaderData,
+    useLocation,
     useTransition,
 } from "remix";
 import type { MetaFunction, LoaderFunction, LinksFunction } from "remix";
@@ -117,7 +118,15 @@ function PageLoadingMessage() {
 export const themeSessionResolver = createThemeSessionResolver(sessionStorage);
 
 export const meta: MetaFunction = () => {
-    return { title: "New Remix App" };
+    return {
+        title: "dov.dev",
+        robots: "follow, index",
+        description: "Dov Alperins personal website",
+        // "og:url": "https://dov.dev",
+        "og:type": "website",
+        "og:site_name": "dov.dev",
+        "og:title": "dov.dev",
+    };
 };
 
 export const links: LinksFunction = () => {
@@ -137,6 +146,7 @@ export default function AppWithProviders(): JSX.Element {
 }
 
 function App(): JSX.Element {
+    const location = useLocation();
     const data = useLoaderData();
     const [theme] = useTheme();
     const transition = useTransition();
@@ -151,6 +161,10 @@ function App(): JSX.Element {
                 <meta
                     name="viewport"
                     content="width=device-width,initial-scale=1"
+                />
+                <meta
+                    name="og:url"
+                    content={`https://dov.dev${location.pathname}`}
                 />
                 <Meta />
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />

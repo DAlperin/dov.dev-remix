@@ -1,9 +1,11 @@
 import Stripe from "stripe";
 
 import { cache } from "~/services/cache.server";
+import { assertedEnvVar } from "~/utils/environment.server";
 
-// @ts-expect-error assume we have STRIPE_KEY
-const stripe = new Stripe(process.env.STRIPE_KEY, {});
+const stripe = new Stripe(assertedEnvVar("STRIPE_KEY"), {
+    apiVersion: "2020-08-27"
+});
 
 export async function getBalanceTransactions(): Promise<
     Stripe.Response<Stripe.ApiList<Stripe.BalanceTransaction>>

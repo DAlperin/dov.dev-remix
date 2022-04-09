@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         return;
     }
     if (user.admin) {
-        if (pathname === "/dashboard") {
+        if (/\/dashboard\/?$/u.test(pathname)) {
             return redirect("/dashboard/admin");
         }
         return {

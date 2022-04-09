@@ -4,7 +4,8 @@ import { Responsive, WidthProvider as widthProvider } from "react-grid-layout";
 import reactGridStyles from "react-grid-layout/css/styles.css";
 import reactResizeStyles from "react-resizable/css/styles.css";
 import type { LoaderFunction, LinksFunction } from "remix";
-import { useFetcher, Outlet, useLoaderData } from "remix";
+import { useFetcher, useLoaderData } from "remix";
+import { ClientOnly } from "remix-utils";
 
 import DashboardItemRenderer from "~/components/DashboardItemRenderer";
 import { ensureAdmin } from "~/services/auth.server";
@@ -25,7 +26,6 @@ import type {
     dataItem,
 } from "~/utils/dashboards";
 import { mergeLayoutsToDashboard } from "~/utils/dashboards";
-import { useDebounce } from "~/utils/debounce";
 
 export const links: LinksFunction = () => {
     return [
@@ -105,14 +105,13 @@ function getDataForCurrentLayoutItem(
         if (dataItem.i === i) return dataItem;
     }
 }
-
 export default function AdminIndex(): JSX.Element {
     const breakpoints = useMemo(() => {
         return { lg: 1280, md: 992, sm: 767, xs: 480, xxs: 0 };
     }, []);
     const fetcher = useFetcher();
+    // const location = useLocation();
     const [currentLayout, setCurrentLayout] = useState<Layout[]>();
-
     const [currentLayoutKey, setCurrentLayoutKey] = useState<string>("");
     const {
         chargesWithCustomers,
@@ -121,7 +120,6 @@ export default function AdminIndex(): JSX.Element {
         dashboardData,
         dashboardLayout,
     } = useLoaderData<LoaderData>();
-    console.log(dashboardData);
     const chargesWithMoney: ChargeWithCustomer[] = chargesWithCustomers.filter(
         (charge) => {
             if (charge.chargeAmount > 0) {
@@ -147,50 +145,70 @@ export default function AdminIndex(): JSX.Element {
         });
     }, [dashboardData, breakpoints, dashboardLayout]);
     return (
-        <div className="h-full">
-            <ResponsiveGridLayout
-                className="layout"
-                layouts={dashboardLayout}
-                isDraggable
-                width={800}
-                isResizable
-                isBounded
-                breakpoints={breakpoints}
-                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-                onLayoutChange={(layout, layouts) => {
-                    if (!dashboardData.id) return;
-                    mergeLayoutsToDashboard(layouts, dashboardData);
-                    fetcher.submit(
-                        {
-                            data: JSON.stringify(dashboardData),
-                            id: dashboardData.id,
-                        },
-                        { method: "post", action: "/action/updateDashboard" }
-                    );
-                }}
-            >
-                {currentLayout?.map((val) => {
-                    const data = getDataForCurrentLayoutItem(
-                        currentLayoutKey,
-                        val.i,
-                        dashboardData
-                    );
-                    if (!data) return null;
-                    return (
-                        <div className="bg-gray-700 rounded" key={val.i}>
-                            <DashboardItemRenderer
-                                type={data?.type}
-                                chartData={chartData}
-                                financeData={{
-                                    chargesWithMoney,
-                                    totalCollected,
+        <div className="h-full w-full">
+            {/* ResponsiveGridLayout does not behave with hydration. TODO: find out why*/}
+            <ClientOnly>
+                {() => {
+                    if (currentLayout)
+                        return (
+                            <ResponsiveGridLayout
+                                className="layout"
+                                layouts={dashboardLayout}
+                                isDraggable
+                                width={800}
+                                isResizable
+                                isBounded
+                                breakpoints={breakpoints}
+                                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                                onLayoutChange={(layout, layouts) => {
+                                    if (
+                                        !dashboardData.id ||
+                                        layout.length === 0
+                                    )
+                                        return;
+                                    mergeLayoutsToDashboard(
+                                        layouts,
+                                        dashboardData
+                                    );
+                                    fetcher.submit(
+                                        {
+                                            data: JSON.stringify(dashboardData),
+                                            id: dashboardData.id,
+                                        },
+                                        {
+                                            method: "post",
+                                            action: "/action/updateDashboard",
+                                        }
+                                    );
                                 }}
-                            />
-                        </div>
-                    );
-                })}
-            </ResponsiveGridLayout>
-            <Outlet />
+                            >
+                                {currentLayout?.map((val) => {
+                                    const data = getDataForCurrentLayoutItem(
+                                        currentLayoutKey,
+                                        val.i,
+                                        dashboardData
+                                    );
+                                    if (!data) return null;
+                                    return (
+                                        <div
+                                            className="bg-gray-700 rounded"
+                                            key={val.i}
+                                        >
+                                            <DashboardItemRenderer
+                                                type={data?.type}
+                                                chartData={chartData}
+                                                financeData={{
+                                                    chargesWithMoney,
+                                                    totalCollected,
+                                                }}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </ResponsiveGridLayout>
+                        );
+                }}
+            </ClientOnly>
         </div>
     );
 }

@@ -71,7 +71,6 @@ export default function Index(): JSX.Element {
                     />
                 </div>
                 <div className="aboutContent pt-8 md:px-8 homepageText space-y-5 basis-3/4">
-                    {/* <AuthorContent /> */}
                     <p>
                         Lorem, ipsum dolor sit amet consectetur adipisicing
                         elit. Accusamus, deserunt suscipit? Culpa porro

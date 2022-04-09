@@ -4,6 +4,7 @@ type Props = {
     path: string;
     className?: string;
 };
+
 export default function RoundedImage({ path, className }: Props): JSX.Element {
     return (
         <Image

@@ -5,7 +5,6 @@ import fsExists from "fs.promises.exists"
 import type grayMatter from "gray-matter";
 import path from "path";
 
-
 import { readFile, readdir } from "./fs.server";
 import { bundleMDX } from "./mdx.server";
 import { cache } from "~/services/cache.server";
@@ -38,34 +37,24 @@ export async function getPage(slug: string): Promise<bundledMDX | undefined> {
         pagePath,
         "utf-8"
     );
-    const rehypeHighlight = await import("rehype-highlight").then(
-        (mod) => mod.default
-    );
     const { default: remarkGfm } = await import("remark-gfm");
     const { default: rehypeAutolinkHeadings } = await import(
         "rehype-autolink-headings"
     );
 
-    //     const { default: rehypeToc } = await import("rehype-toc");
     const { default: rehypeSlug } = await import("rehype-slug");
 
     const output = await bundleMDX({
         source,
-        // (option, frontmatter)
-        xdmOptions(options) {
+        mdxOptions(options) {
             options.remarkPlugins = [
                 ...(options.remarkPlugins ?? []),
-                // remarkMdxImages,
                 remarkGfm,
-                // remarkBreaks,
-                // [remarkFootnotes, { inlineNotes: true }],
             ];
             options.rehypePlugins = [
                 ...(options.rehypePlugins ?? []),
                 rehypeAutolinkHeadings,
                 rehypeSlug,
-                // rehypeToc,
-                [rehypeHighlight, { format: "detect", ignoreMissing: true }],
             ];
 
             return options;
@@ -84,11 +73,11 @@ export async function getPages() {
     const postsPath = await readdir(`${__dirname}/../content/pages`, {
         withFileTypes: true,
     });
-
     return Promise.all(
         postsPath.map(async (dirent) => {
+            const fileName = path.join(`${__dirname}/../content/pages`, dirent.name)
             const file = await readFile(
-                path.join(`${__dirname}/../content/pages`, dirent.name)
+                fileName
             );
             const { attributes } = parseFrontMatter(file.toString());
             return {
@@ -96,6 +85,7 @@ export async function getPages() {
                 slug: dirent.name.replace(/\.mdx/, ""),
                 // @ts-expect-error TODO: properly type this whole thing
                 title: attributes.title,
+                fileName
             };
         })
     );

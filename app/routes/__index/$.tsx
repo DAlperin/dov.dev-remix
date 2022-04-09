@@ -4,7 +4,7 @@ import type { LoaderFunction } from "remix";
 import { json, useLoaderData, useParams } from "remix";
 
 import Split from "~/components/Split";
-import { getPage } from "~/utils/pages.server";
+import { getPage, getPages } from "~/utils/pages.server";
 
 type PageFrontmatter = {
     title: string;
