@@ -20,9 +20,9 @@
 }
 .animate_fadeInRight {
     animation-name: fadeInRight;
-    animation-duration: 0.2s;
+    animation-duration: 3.2s;
 }
 .animate_fadeOutLeft {
     animation-name: fadeOutLeft;
-    animation-duration: 0.2s;
+    animation-duration: 3.2s;
 }

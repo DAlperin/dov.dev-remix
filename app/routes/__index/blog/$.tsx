@@ -30,26 +30,27 @@ export const loader: LoaderFunction = async ({ params }) => {
     return json({ code, frontmatter });
 };
 
-export default function Post(): JSX.Element {
-    const { code, frontmatter } = useLoaderData<LoaderData>();
+function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
     const Component = useMemo(
         () =>
-            getMDXComponent(code, {
+            getMDXComponent(loaderData.code, {
                 BlogNewsletterForm,
             }),
-        [code]
+        [loaderData.code]
     );
 
     return (
         <>
-            <h1 className="leading-14">{frontmatter.title}</h1>
-            <h3>
-                {frontmatter.date} - {frontmatter.tags.join(", ")}
-            </h3>
+            <h1 className="leading-14">{loaderData.frontmatter.title}</h1>
             <hr />
-            <div className="pb-5 post_content">
-                <Component />
-            </div>
+            <Component />
         </>
     );
+}
+
+export default function Post(): JSX.Element {
+    const loaderData = useLoaderData<LoaderData>();
+    if (!loaderData || !loaderData.code || !loaderData.frontmatter)
+        return <p>...loading</p>;
+    return <PostBody loaderData={loaderData} />;
 }

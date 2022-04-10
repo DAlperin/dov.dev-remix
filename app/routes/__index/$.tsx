@@ -4,7 +4,7 @@ import type { LoaderFunction } from "remix";
 import { json, useLoaderData, useParams } from "remix";
 
 import Split from "~/components/Split";
-import { getPage, getPages } from "~/utils/pages.server";
+import { getPage } from "~/utils/pages.server";
 
 type PageFrontmatter = {
     title: string;
@@ -14,6 +14,20 @@ type LoaderData = {
     frontmatter: PageFrontmatter;
     code: string;
 };
+
+export function CatchBoundary(): JSX.Element {
+    const params = useParams();
+    const slug = params["*"];
+    return (
+        <div>
+            <h2>We couldn't find that page!</h2>
+            <h4>
+                We couldnt find <em>{slug}</em> if you think it should be here
+                contact us dov@dov.dev
+            </h4>
+        </div>
+    );
+}
 
 export const loader: LoaderFunction = async ({ params }) => {
     const slug = params["*"];
@@ -31,47 +45,27 @@ export const loader: LoaderFunction = async ({ params }) => {
     return json({ code, frontmatter });
 };
 
-export function CatchBoundary(): JSX.Element {
-    const params = useParams();
-    const slug = params["*"];
-    return (
-        <div>
-            <h2>We couldn't find that page!</h2>
-            <h4>
-                We couldnt find <em>{slug}</em> if you think it should be here
-                contact us dov@dov.dev
-            </h4>
-        </div>
-    );
-}
-
-export function ErrorBoundary(): JSX.Element {
-    return (
-        <div>
-            <h2>500</h2>
-            <h4>
-                Something went wrong. This probably isn't your fault. Try again
-                later.
-            </h4>
-        </div>
-    );
-}
-
-export default function Post(): JSX.Element {
-    const { code, frontmatter } = useLoaderData<LoaderData>();
+function PageBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
     const Component = useMemo(
         () =>
-            getMDXComponent(code, {
+            getMDXComponent(loaderData.code, {
                 Split,
             }),
-        [code]
+        [loaderData.code]
     );
 
     return (
         <>
-            <h1>{frontmatter.title}</h1>
+            <h1>{loaderData.frontmatter.title}</h1>
             <hr />
             <Component />
         </>
     );
+}
+
+export default function Post(): JSX.Element {
+    const loaderData = useLoaderData<LoaderData>();
+    if (!loaderData || !loaderData.code || !loaderData.frontmatter)
+        return <p>Loading...</p>;
+    return <PageBody loaderData={loaderData} />;
 }

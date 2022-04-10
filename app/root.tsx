@@ -9,6 +9,7 @@ import {
     ScrollRestoration,
     useLoaderData,
     useLocation,
+    useOutlet,
     useTransition,
 } from "remix";
 import type { MetaFunction, LoaderFunction, LinksFunction } from "remix";
@@ -170,9 +171,13 @@ function App(): JSX.Element {
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
                 <Links />
             </head>
-            <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full h-full">
+            <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full min-h-full">
                 <PageLoadingMessage />
-                <div className={showLoader ? "opacity-30" : ""}>
+                <div
+                    className={`${
+                        showLoader ? "opacity-30" : ""
+                    } relative min-h-full overflow-x-hidden`}
+                >
                     <Outlet />
                 </div>
                 <ScrollRestoration />

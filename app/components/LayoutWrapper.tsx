@@ -13,8 +13,8 @@ type Props = {
 
 function LayoutWrapper({ children, user, navItems }: Props): JSX.Element {
     return (
-        <div className="flex flex-col justify-between h-screen">
-            <header className="flex items-center justify-between py-10">
+        <div className="flex flex-col flow items-stretch justify-between h-full min-h-full flex-1">
+            <header className="flex items-center justify-between py-10 flex-initial">
                 <div>
                     <Link to="/" aria-label="dov.dev">
                         <div className="flex items-center justify-between">
@@ -43,6 +43,7 @@ function LayoutWrapper({ children, user, navItems }: Props): JSX.Element {
                                 reloadDocument
                             >
                                 <input
+                                    className="cursor-pointer"
                                     type="submit"
                                     value="Logout"
                                     aria-label="Logout"
@@ -54,7 +55,7 @@ function LayoutWrapper({ children, user, navItems }: Props): JSX.Element {
                     </div>
                 </div>
             </header>
-            <main className="mb-auto h-full">{children}</main>
+            <main className="flex-1 flex flex-col">{children}</main>
         </div>
     );
 }

@@ -52,7 +52,7 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
     .mostly_half {
         height: calc(50% - 0.5rem);
     }
-    a {
+    p > a {
         color: #14b8a6;
     }
     h1 {
@@ -87,6 +87,10 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
     }
 }
 
+.footer-social-icons > a {
+    color: inherit;
+}
+
 div.post_content > ul > li {
     @apply mb-1;
 }
@@ -94,6 +98,7 @@ div.post_content > ul > li {
 code:not(.code-highlight) {
     @apply text-pink-500;
 }
+
 /**
  * CSS Styles for code highlighting.
  * Feel free to customize token styles 

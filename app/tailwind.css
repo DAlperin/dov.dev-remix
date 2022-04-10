@@ -594,7 +594,7 @@ select {
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-a {
+p > a {
   color: #14b8a6;
 }
 
@@ -1320,6 +1320,10 @@ summary {
   position: fixed;
 }
 
+.absolute {
+  position: absolute;
+}
+
 .relative {
   position: relative;
 }
@@ -1334,6 +1338,10 @@ summary {
 
 .bottom-8 {
   bottom: 2rem;
+}
+
+.bottom-0 {
+  bottom: 0px;
 }
 
 .z-50 {
@@ -1362,6 +1370,11 @@ summary {
   margin-bottom: 0px;
 }
 
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .my-2 {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -1379,12 +1392,16 @@ summary {
   margin-right: 0.5rem;
 }
 
-.mb-auto {
-  margin-bottom: auto;
+.mb-1 {
+  margin-bottom: 0.25rem;
 }
 
 .mt-2 {
   margin-top: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
 }
 
 .mr-1 {
@@ -1395,10 +1412,6 @@ summary {
   margin-top: 1.25rem;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
 .mt-0 {
   margin-top: 0px;
 }
@@ -1407,8 +1420,20 @@ summary {
   margin-top: 0.25rem;
 }
 
-.mb-1 {
-  margin-bottom: 0.25rem;
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
+.mb-20 {
+  margin-bottom: 5rem;
 }
 
 .block {
@@ -1459,10 +1484,6 @@ summary {
   height: 100%;
 }
 
-.h-screen {
-  height: 100vh;
-}
-
 .h-6 {
   height: 1.5rem;
 }
@@ -1471,8 +1492,22 @@ summary {
   height: 2rem;
 }
 
+.h-max {
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+}
+
+.h-2\/3 {
+  height: 66.666667%;
+}
+
 .min-h-full {
   min-height: 100%;
+}
+
+.min-h-screen {
+  min-height: 100vh;
 }
 
 .w-11\/12 {
@@ -1505,6 +1540,10 @@ summary {
 
 .w-4\/5 {
   width: 80%;
+}
+
+.min-w-full {
+  min-width: 100%;
 }
 
 .max-w-xl {
@@ -1575,6 +1614,10 @@ summary {
   align-items: center;
 }
 
+.items-stretch {
+  align-items: stretch;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -1587,16 +1630,16 @@ summary {
   justify-content: space-between;
 }
 
-.space-y-2 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
 
 .space-y-4 > :not([hidden]) ~ :not([hidden]) {
@@ -1613,6 +1656,10 @@ summary {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
 }
 
 .truncate {
@@ -2103,6 +2150,10 @@ summary {
 
 g.recharts-layer.recharts-cartesian-axis > g > g > text {
   fill: white;
+}
+
+.footer-social-icons > a {
+  color: inherit;
 }
 
 div.post_content > ul > li {
