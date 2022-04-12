@@ -1,5 +1,3 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import {
     Links,
     LiveReload,
@@ -9,16 +7,26 @@ import {
     ScrollRestoration,
     useLoaderData,
     useLocation,
-    useOutlet,
+    useSubmit,
     useTransition,
-} from "remix";
-import type { MetaFunction, LoaderFunction, LinksFunction } from "remix";
+} from "@remix-run/react";
+import type {
+    MetaFunction,
+    LoaderFunction,
+    LinksFunction,
+} from "@remix-run/server-runtime";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+// @ts-expect-error FIXME: write some types for this
+import CommandPalette from "react18-react-command-palette";
 import {
     createThemeSessionResolver,
     ThemeProvider,
     useTheme,
     PreventFlashOnWrongTheme,
+    Theme,
 } from "remix-themes";
+import { ClientOnly } from "remix-utils";
 import { useSpinDelay } from "spin-delay";
 
 import styles from "./tailwind.css";
@@ -147,13 +155,33 @@ export default function AppWithProviders(): JSX.Element {
 }
 
 function App(): JSX.Element {
+    const submit = useSubmit();
     const location = useLocation();
     const data = useLoaderData();
-    const [theme] = useTheme();
+    const [theme, setTheme] = useTheme();
     const transition = useTransition();
     const showLoader = useSpinDelay(Boolean(transition.state === "loading"), {
         delay: 400,
         minDuration: 500,
+    });
+    const commands = [
+        {
+            name: "Toggle theme",
+            command() {
+                setTheme((prev) =>
+                    prev === Theme.DARK ? Theme.LIGHT : Theme.DARK
+                );
+            },
+        },
+    ];
+    useEffect(() => {
+        if (data.user)
+            commands.push({
+                name: "Logout",
+                command() {
+                    submit(null, { method: "post", action: "/api/logout" });
+                },
+            });
     });
     return (
         <html lang="en" className={theme ?? ""}>
@@ -173,6 +201,17 @@ function App(): JSX.Element {
             </head>
             <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full min-h-full">
                 <PageLoadingMessage />
+                <ClientOnly>
+                    {() => {
+                        return (
+                            <CommandPalette
+                                commands={commands}
+                                closeOnSelect
+                                hotKeys="ctrl+/"
+                            />
+                        );
+                    }}
+                </ClientOnly>
                 <div
                     className={`${
                         showLoader ? "opacity-30" : ""
@@ -182,7 +221,7 @@ function App(): JSX.Element {
                 </div>
                 <ScrollRestoration />
                 <Scripts />
-                <LiveReload />
+                {process.env.NODE_ENV === "development" ? <LiveReload /> : null}
             </body>
         </html>
     );

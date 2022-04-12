@@ -18,7 +18,7 @@ export default function FinanceOverviewCard({
     return (
         <DashboardCard
             className="h-full"
-            contentClassName="min-h-full md:min-h-0 h-full flex flex-col p-2"
+            contentClassName="min-h-full md:min-h-0 h-full flex flex-col p-2 finance-card"
         >
             <h2>Finances</h2>
             <h3>{usdFormatter.format(totalCollected)} to date</h3>

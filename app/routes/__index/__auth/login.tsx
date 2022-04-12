@@ -1,6 +1,6 @@
-import { Form, useActionData } from "@remix-run/react";
-import type { LoaderFunction } from "remix";
-import { json, useLoaderData } from "remix";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 
 import AnimatableLink from "~/components/AnimatableLink";
 import { auth, isAuthenticated } from "~/services/auth.server";

@@ -33,7 +33,7 @@ export default function ChargeRow({
     }
     return (
         <div style={style} key={index}>
-            <p className="my-0 text-lg">
+            <p className="my-0 text-lg text-white">
                 {usdFormatter.format(charge?.chargeAmount)}
             </p>
             <div className="flex flex-row my-0 ml-1 text-xs">

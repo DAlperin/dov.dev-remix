@@ -1,4 +1,4 @@
-# fly.toml file generated for dovdotdev-redis on 2022-03-10T20:19:10-05:00
+# fly.toml file generated for dovdotdev-redis on 2022-04-11T16:24:13-04:00
 
 app = "dovdotdev-redis"
 
@@ -15,10 +15,33 @@ processes = []
   allowed_public_ports = []
   auto_rollback = true
 
-[[mounts]]
-  destination = "/data"
-  source = "redis_server"
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
 
-[metrics]
-  port = 9091
-  path = "/metrics"
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+
+  [[mounts]]
+    destination = "/data"
+    source = "redis_server"

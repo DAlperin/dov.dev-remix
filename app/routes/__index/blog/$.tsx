@@ -1,7 +1,8 @@
+import { useLoaderData } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
-import type { LoaderFunction } from "remix";
-import { json, useLoaderData } from "remix";
 
 import { BlogNewsletterForm } from "~/components/NewsletterForm";
 import type { PostMarkdownAttributes } from "~/utils/posts.server";

@@ -1,6 +1,6 @@
+import { useLocation, useOutlet } from "@remix-run/react";
+import type { LinksFunction } from "@remix-run/server-runtime";
 import { AnimatePresence, motion } from "framer-motion";
-import type { LinksFunction } from "remix";
-import { useLocation, useOutlet } from "remix";
 
 import AuthContainer from "~/components/AuthContainer";
 import AuthFormWrapper from "~/components/AuthFormWrapper";

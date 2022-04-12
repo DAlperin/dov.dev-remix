@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
-import type { ActionFunction } from "remix";
-import { json } from "remix";
+import type { ActionFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 
 import { isAuthenticated } from "~/services/auth.server";
 import { db } from "~/services/db.server";

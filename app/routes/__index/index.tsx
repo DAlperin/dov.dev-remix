@@ -1,13 +1,17 @@
 import type { User } from "@prisma/client";
-import type { LinksFunction, LoaderFunction } from "remix";
-import { useLoaderData } from "remix";
+import { useLoaderData } from "@remix-run/react";
+import type { LinksFunction, LoaderFunction } from "@remix-run/server-runtime";
 import Image, { ImageFit } from "remix-image";
 
+import PostList from "~/components/PostList";
 import { isAuthenticated } from "~/services/auth.server";
 import styles from "~/styles/index.css";
+import type { postItem } from "~/utils/posts.server";
+import { getPosts } from "~/utils/posts.server";
 
 type LoaderData = {
     user: false | User;
+    posts: postItem[];
 };
 
 export const links: LinksFunction = () => {
@@ -17,6 +21,7 @@ export const links: LinksFunction = () => {
 export const loader: LoaderFunction = async ({ request }) => {
     return {
         user: await isAuthenticated(request),
+        posts: await getPosts(5),
     };
 };
 
@@ -122,6 +127,7 @@ export default function Index(): JSX.Element {
                 <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
                     Latest posts
                 </h1>
+                <PostList posts={loaderData.posts} />
             </div>
         </div>
     );

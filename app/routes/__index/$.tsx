@@ -1,7 +1,8 @@
+import { useLoaderData, useParams } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
-import type { LoaderFunction } from "remix";
-import { json, useLoaderData, useParams } from "remix";
 
 import Split from "~/components/Split";
 import { getPage } from "~/utils/pages.server";

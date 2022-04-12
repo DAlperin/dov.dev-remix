@@ -14,7 +14,7 @@ type Props = {
 function LayoutWrapper({ children, user, navItems }: Props): JSX.Element {
     return (
         <div className="flex flex-col flow items-stretch justify-between h-full min-h-full flex-1">
-            <header className="flex items-center justify-between py-10 flex-initial">
+            <header className="flex items-center justify-between pt-10 pb-8 flex-initial">
                 <div>
                     <Link to="/" aria-label="dov.dev">
                         <div className="flex items-center justify-between">

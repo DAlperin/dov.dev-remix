@@ -1,4 +1,4 @@
-import { useFetcher } from "remix";
+import { useFetcher } from "@remix-run/react";
 
 export function NewsletterForm({
     title = "Subscribe to the newsletter",

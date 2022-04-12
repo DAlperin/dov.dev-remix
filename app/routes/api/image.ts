@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "remix";
+import type { LoaderFunction } from "@remix-run/server-runtime";
 import type { Resolver } from "remix-image/server";
 import {
     imageLoader,

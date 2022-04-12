@@ -52,7 +52,9 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
     .mostly_half {
         height: calc(50% - 0.5rem);
     }
-    p > a {
+    p > a,
+    div > a,
+    li > a {
         color: #14b8a6;
     }
     h1 {
@@ -68,7 +70,7 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
         @apply font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-sm sm:leading-5 md:text-xl md:leading-10;
     }
     hr {
-        @apply my-2;
+        @apply mb-2 mt-4;
     }
     p {
         @apply my-2;
@@ -86,6 +88,13 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
         @apply cursor-pointer;
     }
 }
+.finance-card > h1,
+h2,
+h3,
+h4,
+h5 {
+    @apply text-gray-200;
+}
 
 .footer-social-icons > a {
     color: inherit;
@@ -97,6 +106,10 @@ div.post_content > ul > li {
 
 code:not(.code-highlight) {
     @apply text-pink-500;
+}
+
+.react-command-palette {
+    display: none;
 }
 
 /**

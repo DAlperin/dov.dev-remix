@@ -1,8 +1,7 @@
 import type { registrationSecret, User } from "@prisma/client";
-import { Form, useTransition } from "@remix-run/react";
+import { Form, useTransition, useLoaderData } from "@remix-run/react";
+import type { ActionFunction, LoaderFunction } from "@remix-run/server-runtime";
 import { useState } from "react";
-import type { ActionFunction, LoaderFunction } from "remix";
-import { useLoaderData } from "remix";
 
 import KeysTable from "~/components/KeysTable";
 import { ensureAdmin, isAuthenticated } from "~/services/auth.server";
@@ -106,7 +105,6 @@ export const action: ActionFunction = async ({
 
 export default function Keys(): JSX.Element {
     const loaderData = useLoaderData<LoaderData>();
-    const transition = useTransition();
     const [CurrentlyInvalidating, setCurrentlyInvalidating] = useState("");
     return (
         <div className="h-full">
@@ -116,7 +114,6 @@ export default function Keys(): JSX.Element {
                     <KeysTable
                         newKey={loaderData.newKey}
                         keys={loaderData.keys}
-                        transition={transition}
                         CurrentlyInvalidating={CurrentlyInvalidating}
                         setCurrentlyInvalidating={setCurrentlyInvalidating}
                     />

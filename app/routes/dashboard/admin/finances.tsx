@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "remix";
-import { useLoaderData } from "remix";
+import { useLoaderData } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/server-runtime";
 import type Stripe from "stripe";
 
 import { getAccountCharges, getTotalCollected } from "~/services/stripe.server";

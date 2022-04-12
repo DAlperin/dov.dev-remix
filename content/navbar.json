@@ -4,6 +4,10 @@
         "link": "/about"
     },
     {
+        "name": "Blog",
+        "link": "/blog"
+    },
+    {
         "name": "Dashboard",
         "link": "/dashboard",
         "loggedinOnly": true

@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "remix";
-import { useParams, useLoaderData, Outlet } from "remix";
+import { useParams, useLoaderData, Outlet } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/server-runtime";
 
 import LayoutWrapper from "~/components/LayoutWrapper";
 import SectionContainer from "~/components/SectionContainer";
@@ -38,15 +38,19 @@ export function CatchBoundary(): JSX.Element {
     );
 }
 
-export function ErrorBoundary(): JSX.Element {
+export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
     return (
-        <div>
-            <h2>500</h2>
-            <h4>
-                Something went wrong. This probably isn't your fault. Try again
-                later.
-            </h4>
-        </div>
+        <SectionContainer fullWidth>
+            <div className="h-full flex-1 mt-10">
+                <h2>500</h2>
+                <h4>
+                    Something went wrong. This probably isn't your fault. Try
+                    again later.
+                </h4>
+                <pre>{error.message}</pre>
+                <pre>{error.stack}</pre>
+            </div>
+        </SectionContainer>
     );
 }
 

@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import type { LoaderFunction } from "remix";
 import {
-    redirect,
     Outlet,
     useLoaderData,
     useLocation,
     useNavigate,
-} from "remix";
+} from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import { redirect } from "@remix-run/server-runtime";
+import { useEffect } from "react";
 
 import { isAuthenticated } from "~/services/auth.server";
 

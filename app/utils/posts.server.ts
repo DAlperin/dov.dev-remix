@@ -14,6 +14,7 @@ export type PostMarkdownAttributes = {
     title: string;
     tags: string[];
     date: string;
+    summary: string;
 };
 
 type bundledMDX = {
@@ -70,11 +71,11 @@ export async function getPost(postPath: string, slug: string): Promise<bundledMD
                 }]
             ];
             options.rehypePlugins = [
+                rehypePrismPlus,
                 [rehypeRaw, { passThrough: nodeTypes }],
                 ...(options.rehypePlugins ?? []),
                 rehypeAutolinkHeadings,
                 rehypeSlug,
-                rehypePrismPlus
             ];
 
             return options;
@@ -99,47 +100,64 @@ export function getPrettyDate(date: string): string {
     // TODO: there is probably a way to do this with toLocaleString but I don't really want to read that much MDN right now
     return `${month} ${theDate.getDay()}, ${theDate.getFullYear()}`
 }
+export type postItem = {
+    prettyDate: string;
+    fileName: string;
+} & PostMarkdownAttributes
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function getPosts() {
+export async function getPosts(limit?: number): Promise<postItem[]> {
     const postsPath = await readdir(`${__dirname}/../content/posts`, {
         withFileTypes: true,
     });
 
-    return Promise.all(
-        postsPath.map(async (dirent) => {
-            const fileName = path.join(`${__dirname}/../content/posts`, dirent.name)
-            const file = await readFile(fileName);
-            const frontMatter = parseFrontMatter(file.toString());
-            const attributes = frontMatter.attributes as PostMarkdownAttributes
-            return {
-                ...attributes,
-                fileName
-            };
-        })
-    );
+    const unsortedPostsDirent = limit ? postsPath.slice(0, limit) : postsPath
+
+    const unsortedPosts = await Promise.all(unsortedPostsDirent.map(async (dirent) => {
+        const fileName = path.join(`${__dirname}/../content/posts`, dirent.name)
+        const file = await readFile(fileName);
+        const frontMatter = parseFrontMatter(file.toString());
+        const attributes = frontMatter.attributes as PostMarkdownAttributes
+        return {
+            ...attributes,
+            prettyDate: getPrettyDate(attributes.date),
+            fileName
+        };
+    }))
+
+    return unsortedPosts.sort((a, b) => {
+        const aDate: Date = new Date(a.date)
+        const bDate: Date = new Date(b.date)
+        return bDate.getUTCMilliseconds() - aDate.getUTCMilliseconds()
+    })
 }
 
-export async function countTags(): Promise<Record<string, number>> {
-    const count: Record<string, number> = {}
+export async function countTags(): Promise<Map<string, number>> {
+    const count: Map<string, number> = new Map<string, number>()
     const posts = await getPosts()
     // FIXME: this lies on the heavy assumption that I won't mess up and add multiple of the same tag to one post
     for (const post of posts) {
         for (const tag of post.tags) {
-            if (tag in count) count[tag] += 1
-            else count[tag] = 1
+            const current = count.get(tag)
+            if (current) {
+                count.set(tag, current + 1)
+            }
+            else {
+                count.set(tag, 1)
+            }
         }
     }
     return count
 }
 
-export async function getPostsByTag(tag: string): Promise<(bundledMDX | undefined)[]> {
+export async function getPostsByTag(tag: string): Promise<(postItem | undefined)[]> {
     const posts = await getPosts()
-    const postsWithTag: Promise<bundledMDX | undefined>[] = []
+    const postsWithTag: (postItem | undefined)[] = []
     for (const post of posts) {
-        if (post.tags.includes(tag)) postsWithTag.push(getPost(post.fileName, post.slug))
+        if (post.tags.includes(tag)) {
+            postsWithTag.push(post)
+        }
     }
-    return Promise.all(postsWithTag)
+    return postsWithTag
 }
 
 export async function getPostBySlug(slug: string): Promise<bundledMDX | undefined> {

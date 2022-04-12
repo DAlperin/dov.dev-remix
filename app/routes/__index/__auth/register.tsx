@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
 import { Form, useActionData } from "@remix-run/react";
-import type { LoaderFunction } from "remix";
-import { json } from "remix";
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 
 import AnimatableLink from "~/components/AnimatableLink";
 import { auth, hash, isAuthenticated } from "~/services/auth.server";
