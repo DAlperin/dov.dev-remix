@@ -9,7 +9,6 @@
     in {
       devShell = pkgs.mkShell {
         nativeBuildInputs = [ 
-          pkgs.cypress
           pkgs.bashInteractive 
         ];
         buildInputs = with pkgs; [
