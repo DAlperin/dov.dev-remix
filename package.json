@@ -8,7 +8,7 @@
     "scripts": {
         "build": "run-s build:*",
         "dev": "run-p dev:*",
-        "dev:server": "NODE_ENV=development node --require ./node_modules/dotenv/config ./build/server.js",
+        "dev:server": "NODE_ENV=development node ./build/server.js --require ./node_modules/dotenv/config",
         "dev:build": "cross-env NODE_ENV=development npm run build:server -- --watch",
         "build:server": "esbuild --platform=node --format=cjs ./server.ts --outdir=build",
         "dev:remix": "cross-env NODE_ENV=development remix watch",
