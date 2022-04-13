@@ -42,7 +42,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     const { getTheme } = await themeSessionResolver(request);
     const user = await isAuthenticated(request);
     const session = await getSession(request.headers.get("cookie"));
-    if (user) {
+    // eslint-disable-next-line unicorn/no-unsafe-regex
+    if (!/\/auth\/?([^\s]+)?/u.test(new URL(request.url).pathname)) {
         session.unset(auth.sessionErrorKey);
         await commitSession(session);
     }
