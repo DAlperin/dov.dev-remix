@@ -31,12 +31,21 @@ import { ClientOnly } from "remix-utils";
 import { useSpinDelay } from "spin-delay";
 
 import styles from "./tailwind.css";
-import { isAuthenticated } from "~/services/auth.server";
-import { sessionStorage } from "~/utils/session.server";
+import { isAuthenticated, auth } from "~/services/auth.server";
+import {
+    commitSession,
+    getSession,
+    sessionStorage,
+} from "~/utils/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
     const { getTheme } = await themeSessionResolver(request);
     const user = await isAuthenticated(request);
+    const session = await getSession(request.headers.get("cookie"));
+    if (user) {
+        session.unset(auth.sessionErrorKey);
+        await commitSession(session);
+    }
     return {
         theme: getTheme(),
         user,
@@ -154,12 +163,6 @@ export default function AppWithProviders(): JSX.Element {
         </ThemeProvider>
     );
 }
-
-const gtag = `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-
-gtag('config', 'G-KFKE2DMK1P');`;
 
 function App(): JSX.Element {
     const submit = useSubmit();
