@@ -595,7 +595,7 @@ select {
 }
 
 p > a,
-    div > a,
+    main > a,
     li > a {
   color: #14b8a6;
 }

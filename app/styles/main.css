@@ -53,7 +53,7 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
         height: calc(50% - 0.5rem);
     }
     p > a,
-    div > a,
+    main > a,
     li > a {
         color: #14b8a6;
     }
