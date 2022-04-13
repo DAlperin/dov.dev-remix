@@ -8,7 +8,10 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       devShell = pkgs.mkShell {
-        nativeBuildInputs = [ pkgs.bashInteractive ];
+        nativeBuildInputs = [ 
+          pkgs.cypress
+          pkgs.bashInteractive 
+        ];
         buildInputs = with pkgs; [
           nodePackages.prisma
         ];

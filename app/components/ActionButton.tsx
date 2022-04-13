@@ -1,12 +1,12 @@
 import { useFetcher } from "@remix-run/react";
-import type { ReactChildren } from "react";
+import type { ReactNode } from "react";
 import React from "react";
 
 type AttributeValue = string | number | readonly string[] | undefined;
 
 type Props = {
     action: string;
-    children: ReactChildren | string;
+    children: ReactNode;
     params?: { key: string; value: AttributeValue }[];
     className?: string;
     disabled?: boolean;

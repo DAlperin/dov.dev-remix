@@ -27,12 +27,15 @@ export default function Themed({
         // HACK: There has to be a way to server render this without react 18 losing its mind
         return (
             <ClientOnly>
-                {() => React.createElement("dark-mode", null, dark)}
-                {() => React.createElement("light-mode", null, light)}
+                {() => {
+                    React.createElement("dark-mode", null, dark);
+                    React.createElement("light-mode", null, light);
+                    return null;
+                }}
             </ClientOnly>
         );
     }
-     
+
     return (
         <ClientOnly>
             {() => (themeToReference === "light" ? light : dark)}

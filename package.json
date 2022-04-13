@@ -13,6 +13,7 @@
         "stats": "loc --exclude package-lock.json app/tailwind.css",
         "postinstall": "remix setup node",
         "lint": "eslint . --fix",
+        "typecheck": "tsc -b",
         "start": "cross-env NODE_ENV=production remix-serve build"
     },
     "dependencies": {
@@ -29,7 +30,7 @@
         "@types/react-window": "^1.8.5",
         "bcrypt": "^5.0.1",
         "cross-env": "^7.0.3",
-        "framer-motion": "^6.2.9",
+        "framer-motion": "^6.2.10",
         "front-matter": "^4.0.2",
         "fs.promises.exists": "^1.1.3",
         "highlight.js": "^11.5.0",
