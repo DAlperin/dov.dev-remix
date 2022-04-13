@@ -89,10 +89,9 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
     }
 }
 .finance-card > h1,
-h2,
-h3,
-h4,
-h5 {
+.finance-card > h2,
+.finance-card > h3,
+.finance-card > h4 {
     @apply text-gray-200;
 }
 
