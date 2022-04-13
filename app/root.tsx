@@ -44,7 +44,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const session = await getSession(request.headers.get("cookie"));
     // eslint-disable-next-line unicorn/no-unsafe-regex
     if (!/\/auth\/?([^\s]+)?/u.test(new URL(request.url).pathname)) {
-        session.unset(auth.sessionErrorKey);
+        session.unset(`__flash_${auth.sessionErrorKey}__`);
         await commitSession(session);
     }
     return {
