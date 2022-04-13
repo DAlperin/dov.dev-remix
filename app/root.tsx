@@ -155,6 +155,12 @@ export default function AppWithProviders(): JSX.Element {
     );
 }
 
+const gtag = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-KFKE2DMK1P');`;
+
 function App(): JSX.Element {
     const submit = useSubmit();
     const location = useLocation();
@@ -195,6 +201,24 @@ function App(): JSX.Element {
                 <meta
                     name="og:url"
                     content={`https://dov.dev${location.pathname}`}
+                />
+                <script
+                    async
+                    src="https://www.googletagmanager.com/gtag/js?id=G-KFKE2DMK1P"
+                />
+                <script
+                    async
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                        
+                       window.dataLayer = window.dataLayer || [];
+                       function gtag(){dataLayer.push(arguments);}
+                       gtag('js', new Date());
+
+                       gtag('config', 'G-KFKE2DMK1P');
+                    `,
+                    }}
                 />
                 <Meta />
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
