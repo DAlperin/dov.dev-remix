@@ -17,7 +17,7 @@ export const fetchImage: Resolver = async (asset, url, options, basePath) => {
 };
 
 const config = {
-    selfUrl: "http://localhost:3000",
+    selfUrl: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "http://localhost:8080",
     cache: new DiskCache(),
     resolver: fetchImage,
     transformer: sharpTransformer,
