@@ -32,7 +32,7 @@ export default function Themed({
             </ClientOnly>
         );
     }
-    // eslint-disable-next-line react/jsx-no-useless-fragment
+     
     return (
         <ClientOnly>
             {() => (themeToReference === "light" ? light : dark)}

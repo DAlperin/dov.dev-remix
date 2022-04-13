@@ -18,7 +18,8 @@ export default function Index(): JSX.Element {
     const tags: JSX.Element[] = [];
     loaderData.tags.forEach((count, tag) => {
         tags.push(
-            <div key={tag}>
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={`${tag}`}>
                 <a href={`/blog/tags/${tag}`}>{tag}</a>({count})
             </div>
         );

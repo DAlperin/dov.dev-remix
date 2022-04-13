@@ -1,7 +1,6 @@
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
 
-import PostCard from "~/components/PostCard";
 import PostList from "~/components/PostList";
 import { empty } from "~/utils/array";
 import type { postItem } from "~/utils/posts.server";

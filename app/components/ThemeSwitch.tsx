@@ -3,7 +3,7 @@ import { Theme, useTheme } from "remix-themes";
 import Themed from "./Themed";
 
 function ThemeSwitch(): JSX.Element {
-    const [_, setTheme] = useTheme();
+    const [, setTheme] = useTheme();
 
     return (
         <div>

@@ -44,6 +44,7 @@ export default function Index(): JSX.Element {
                 <div className="pt-8 rounded-2xl basis-3/4">
                     <Image
                         src="/static/headshot.png"
+                        alt="Dov Alperin headshot"
                         style={{
                             marginLeft: "auto",
                             marginRight: "auto",

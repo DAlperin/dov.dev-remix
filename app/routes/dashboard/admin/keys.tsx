@@ -1,5 +1,5 @@
 import type { registrationSecret, User } from "@prisma/client";
-import { Form, useTransition, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import type { ActionFunction, LoaderFunction } from "@remix-run/server-runtime";
 import { useState } from "react";
 

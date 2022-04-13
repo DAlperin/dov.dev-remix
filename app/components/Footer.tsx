@@ -9,6 +9,7 @@ export default function Footer(): JSX.Element {
                         target="_blank"
                         href="https://twitter.com/dovunderscore"
                         rel="noreferrer"
+                        aria-label="Twitter"
                     >
                         <FaTwitter />{" "}
                     </a>
@@ -16,6 +17,7 @@ export default function Footer(): JSX.Element {
                         target="_blank"
                         href="https://github.com/DAlperin"
                         rel="noreferrer"
+                        aria-label="Github"
                     >
                         <FaGithub />
                     </a>
@@ -23,6 +25,7 @@ export default function Footer(): JSX.Element {
                         target="_blank"
                         href="mailto:dov@dov.dev"
                         rel="noreferrer"
+                        aria-label="Email"
                     >
                         <FaEnvelope />
                     </a>
