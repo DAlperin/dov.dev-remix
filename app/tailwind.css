@@ -1458,6 +1458,10 @@ summary {
   margin-top: 0.75rem;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .block {
   display: block;
 }
@@ -1797,6 +1801,11 @@ summary {
 .bg-gray-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(64 64 64 / var(--tw-bg-opacity));
+}
+
+.bg-gray-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(23 23 23 / var(--tw-bg-opacity));
 }
 
 .fill-neutral-500 {
@@ -2694,6 +2703,10 @@ code:not(.code-highlight) {
 .dark .dark\:text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(163 163 163 / var(--tw-text-opacity));
+}
+
+.dark .dark\:text-inherit {
+  color: inherit;
 }
 
 .dark .dark\:ring-offset-black {

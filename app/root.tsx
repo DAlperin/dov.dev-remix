@@ -92,7 +92,7 @@ function PageLoadingMessage() {
                     className="pointer-events-none fixed left-0 right-0 z-50 px-5vw bottom-8"
                 >
                     <div className="mx-auto flex w-11/12 max-w-8xl justify-end">
-                        <div className="bg-gray-300 dark:bg-gray-600 text-inverse pointer-events-auto relative max-w-xl rounded-lg p-8 pr-14 shadow-md">
+                        <div className="bg-gray-900 dark:bg-gray-600 text-inverse pointer-events-auto relative max-w-xl rounded-lg p-8 pr-14 shadow-md">
                             <div className="flex w-64 items-center">
                                 <div className="blob fill-neutral-500">
                                     {/* This SVG is from https://codepen.io/Ali_Farooq_/pen/gKOJqx */}
@@ -113,14 +113,14 @@ function PageLoadingMessage() {
                                                 animate={{ y: 0, opacity: 1 }}
                                                 exit={{ y: -15, opacity: 0 }}
                                                 transition={{ duration: 0.25 }}
-                                                className="flex-none"
+                                                className="text-white dark:text-inherit flex-none"
                                             >
                                                 Loading
                                             </motion.span>
                                         </div>
                                     </AnimatePresence>
                                     {pendingPath ? (
-                                        <span className="truncate">
+                                        <span className="text-white dark:text-inherit truncate">
                                             path: {pendingPath}
                                         </span>
                                     ) : null}
@@ -139,10 +139,9 @@ export const themeSessionResolver = createThemeSessionResolver(sessionStorage);
 
 export const meta: MetaFunction = () => {
     return {
-        title: "dov.dev",
+        title: "Dov Alperin",
         robots: "follow, index",
         description: "Dov Alperins personal website",
-        // "og:url": "https://dov.dev",
         "og:type": "website",
         "og:site_name": "dov.dev",
         "og:title": "dov.dev",

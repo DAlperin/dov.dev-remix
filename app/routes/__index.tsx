@@ -5,16 +5,23 @@ import LayoutWrapper from "~/components/LayoutWrapper";
 import SectionContainer from "~/components/SectionContainer";
 import { themeSessionResolver } from "~/root";
 import { isAuthenticated } from "~/services/auth.server";
+import { assertedEnvVar } from "~/utils/environment.server";
 import { getNavbarItems } from "~/utils/navbar.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
     const { getTheme } = await themeSessionResolver(request);
     const user = await isAuthenticated(request);
     const isAuthed = user !== false;
+    let region = "developement";
+    if (process.env.NODE_ENV === "production")
+        region = assertedEnvVar("FLY_REGION");
+
     return {
         user,
         navItems: getNavbarItems(isAuthed),
         theme: getTheme(),
+        region,
+        time: new Date().toLocaleString(),
     };
 };
 
@@ -23,7 +30,7 @@ export function CatchBoundary(): JSX.Element {
     const loaderData = useLoaderData();
     const slug = params["*"];
     return (
-        <SectionContainer>
+        <SectionContainer region={loaderData.region} time={loaderData.time}>
             <LayoutWrapper
                 user={loaderData.user}
                 navItems={loaderData.navItems}
@@ -57,7 +64,7 @@ export function ErrorBoundary({ error }: { error: Error }): JSX.Element {
 export default function Index(): JSX.Element {
     const loaderData = useLoaderData();
     return (
-        <SectionContainer>
+        <SectionContainer region={loaderData.region} time={loaderData.time}>
             <LayoutWrapper
                 user={loaderData.user}
                 navItems={loaderData.navItems}

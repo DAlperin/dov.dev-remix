@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-namespace
-import type * as esbuild from "esbuild";
+import type { Message } from "esbuild";
 import parseFrontMatter from "front-matter";
 import fsExists from "fs.promises.exists"
 import type grayMatter from "gray-matter";
@@ -20,7 +19,7 @@ export type PostMarkdownAttributes = {
 type bundledMDX = {
     code: string;
     frontmatter: PostMarkdownAttributes;
-    errors: esbuild.Message[];
+    errors: Message[];
     matter: Omit<grayMatter.GrayMatterFile<string>, "data"> & {
         data: PostMarkdownAttributes;
     };

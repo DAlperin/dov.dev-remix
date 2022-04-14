@@ -1,6 +1,20 @@
 import { FaTwitter, FaEnvelope, FaGithub } from "react-icons/fa";
 
-export default function Footer(): JSX.Element {
+type Props = {
+    region?: string;
+    time?: string;
+};
+
+function RenderInfo({ region, time }: Props): JSX.Element | null {
+    if (!region || !time) return null;
+    return (
+        <p className="mb-0 text-xs">
+            Rendered in {region} at {time}
+        </p>
+    );
+}
+
+export default function Footer({ region, time }: Props): JSX.Element {
     return (
         <footer className="flex items-center justify-center opacity-60">
             <div className="flex flex-col items-center">
@@ -35,6 +49,7 @@ export default function Footer(): JSX.Element {
                         Dov Alperin • ©{new Date().getFullYear()} • dov.dev
                     </p>
                 </div>
+                <RenderInfo region={region} time={time} />
             </div>
         </footer>
     );
