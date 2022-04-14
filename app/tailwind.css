@@ -2525,6 +2525,21 @@ code:not(.code-highlight) {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.placeholder\:text-gray-800::-moz-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(38 38 38 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-800:-ms-input-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(38 38 38 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-800::placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(38 38 38 / var(--tw-text-opacity));
+}
+
 .hover\:bg-gray-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(64 64 64 / var(--tw-bg-opacity));

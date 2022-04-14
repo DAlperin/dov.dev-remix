@@ -9,7 +9,7 @@ function RenderInfo({ region, time }: Props): JSX.Element | null {
     if (!region || !time) return null;
     return (
         <p className="mb-0 text-xs">
-            Rendered in {region} at {time}
+            Rendered in {region} on {time}
         </p>
     );
 }

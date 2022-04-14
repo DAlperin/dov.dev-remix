@@ -44,7 +44,7 @@ export function NewsletterForm({
                     <input
                         aria-label="Email Address"
                         autoComplete="email"
-                        className="px-4 py-2 w-full rounded-md bg-gray-500 dark:bg-black focus:outline-none focus:ring-2 focus:border-transparent focus:ring-primary-600 placeholder:text-white dark:placeholder:text-inherit"
+                        className="px-4 py-2 w-full rounded-md bg-gray-200 dark:bg-black focus:outline-none focus:ring-2 focus:border-transparent focus:ring-primary-600 placeholder:text-gray-800 dark:placeholder:text-inherit"
                         id="email-input"
                         name="email"
                         placeholder="Enter your email"
@@ -68,7 +68,7 @@ export function NewsletterForm({
 export function BlogNewsletterForm({ title }: { title: string }): JSX.Element {
     return (
         <div className="mt-4 flex items-center justify-center">
-            <div className="p-6 bg-gray-100 dark:bg-gray-800 rounded-md">
+            <div className="p-6 bg-slate-300 dark:bg-gray-800 rounded-md">
                 <NewsletterForm title={title} />
             </div>
         </div>

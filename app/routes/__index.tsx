@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         navItems: getNavbarItems(isAuthed),
         theme: getTheme(),
         region,
-        time: new Date().toLocaleString(),
+        time: new Date().toUTCString(),
     };
 };
 

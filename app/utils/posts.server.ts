@@ -52,8 +52,6 @@ export async function getPost(postPath: string, slug: string): Promise<bundledMD
 
     const { default: remarkToc } = await import("remark-toc");
 
-    const { default: remarkCollapse } = await import("remark-collapse")
-
     const { nodeTypes } = await import("@mdx-js/mdx")
 
     const output = await bundleMDX({
@@ -63,11 +61,6 @@ export async function getPost(postPath: string, slug: string): Promise<bundledMD
                 ...(options.remarkPlugins ?? []),
                 remarkGfm,
                 remarkToc,
-                [remarkCollapse, {
-                    test: "Table of contents", summary: () => {
-                        return "Click to open"
-                    }
-                }]
             ];
             options.rehypePlugins = [
                 rehypePrismPlus,
