@@ -43,7 +43,16 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
     return (
         <>
             <h1 className="leading-14">{loaderData.frontmatter.title}</h1>
-            <hr />
+            <p className="mb-0">
+                {loaderData.frontmatter.tags.map((tag) => {
+                    return (
+                        <a key={tag} href={`/blog/tags/${tag}`}>
+                            {tag} &nbsp;
+                        </a>
+                    );
+                })}
+            </p>
+            <hr className="mt-3" />
             <Component />
         </>
     );
