@@ -8,6 +8,10 @@
         "link": "/blog"
     },
     {
+        "name": "Uses",
+        "link": "/uses"
+    },
+    {
         "name": "Dashboard",
         "link": "/dashboard",
         "loggedinOnly": true

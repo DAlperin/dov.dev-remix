@@ -22,8 +22,8 @@ type bundledMDX = {
     };
 };
 
-export async function getPage(slug: string): Promise<bundledMDX | undefined> {
-    if (await cache.redis.exists(`page:${slug}`)) {
+export async function getPage(slug: string, noCache = false): Promise<bundledMDX | undefined> {
+    if (!noCache && await cache.redis.exists(`page:${slug}`)) {
         const cached = await cache.redis.get(`page:${slug}`);
         if (cached) {
             return JSON.parse(cached) as bundledMDX;

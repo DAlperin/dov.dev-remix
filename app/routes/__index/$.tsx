@@ -30,13 +30,15 @@ export function CatchBoundary(): JSX.Element {
     );
 }
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
     const slug = params["*"];
+    const noCache = !!new URL(request.url).searchParams.get("nocache");
+
     if (!slug) {
         return new Response("Not found", { status: 404 });
     }
 
-    const post = await getPage(slug);
+    const post = await getPage(slug, noCache);
     if (!post) {
         throw new Response("Not Found", {
             status: 404,
