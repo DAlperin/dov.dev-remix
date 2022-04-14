@@ -1338,12 +1338,20 @@ summary {
   bottom: 2rem;
 }
 
+.top-24 {
+  top: 6rem;
+}
+
 .bottom-0 {
   bottom: 0px;
 }
 
 .z-50 {
   z-index: 50;
+}
+
+.z-10 {
+  z-index: 10;
 }
 
 .col-start-1 {
@@ -1373,6 +1381,16 @@ summary {
   margin-bottom: 0.5rem;
 }
 
+.mx-10 {
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
+.mx-12 {
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+
 .ml-4 {
   margin-left: 1rem;
 }
@@ -1391,6 +1409,14 @@ summary {
 
 .mb-1 {
   margin-bottom: 0.25rem;
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .mt-2 {
@@ -1419,10 +1445,6 @@ summary {
 
 .mb-4 {
   margin-bottom: 1rem;
-}
-
-.mr-1 {
-  margin-right: 0.25rem;
 }
 
 .mt-10 {
@@ -1585,12 +1607,26 @@ summary {
   border-collapse: separate;
 }
 
+.translate-x-0 {
+  --tw-translate-x: 0px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-x-full {
+  --tw-translate-x: 100%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.cursor-auto {
+  cursor: auto;
 }
 
 .resize {
@@ -1721,6 +1757,11 @@ summary {
   background-color: rgb(115 115 115 / var(--tw-bg-opacity));
 }
 
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 229 229 / var(--tw-bg-opacity));
+}
+
 .bg-primary-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(20 184 166 / var(--tw-bg-opacity));
@@ -1805,6 +1846,21 @@ summary {
   padding-right: 1rem;
 }
 
+.px-12 {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.px-9 {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
+
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
@@ -1813,6 +1869,11 @@ summary {
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 .pr-14 {
@@ -1942,6 +2003,10 @@ summary {
   line-height: 1.375;
 }
 
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
 .tracking-tight {
   letter-spacing: -0.025em;
 }
@@ -2002,6 +2067,10 @@ summary {
 
 .opacity-60 {
   opacity: 0.6;
+}
+
+.opacity-95 {
+  opacity: 0.95;
 }
 
 .opacity-70 {
@@ -2151,7 +2220,7 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
   fill: white;
 }
 
-.finance-card > h1, h2, h3, h4, h5 {
+.finance-card > h1, .finance-card > h2, .finance-card > h3, .finance-card > h4 {
   --tw-text-opacity: 1;
   color: rgb(229 229 229 / var(--tw-text-opacity));
 }
@@ -2495,14 +2564,14 @@ code:not(.code-highlight) {
   background-color: rgb(64 64 64 / var(--tw-bg-opacity));
 }
 
-.dark .dark\:bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-}
-
 .dark .dark\:bg-gray-800 {
   --tw-bg-opacity: 1;
   background-color: rgb(38 38 38 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .dark .dark\:bg-slate-900 {
@@ -2550,6 +2619,14 @@ code:not(.code-highlight) {
 
   .sm\:ml-4 {
     margin-left: 1rem;
+  }
+
+  .sm\:flex {
+    display: flex;
+  }
+
+  .sm\:hidden {
+    display: none;
   }
 
   .sm\:flex-row {

@@ -2,6 +2,7 @@ import type { User } from "@prisma/client";
 import { Form, Link } from "@remix-run/react";
 import type { ReactNode } from "react";
 
+import MobileNav from "./MobileNav";
 import ThemeSwitch from "./ThemeSwitch";
 import type { NavbarItem } from "~/utils/navbar.server";
 
@@ -24,7 +25,8 @@ function LayoutWrapper({ children, user, navItems }: Props): JSX.Element {
                         </div>
                     </Link>
                 </div>
-                <div className="flex items-center text-base leading-5">
+                <MobileNav navItems={navItems} />
+                <div className="hidden sm:flex items-center text-base leading-5">
                     {navItems.map((item) => (
                         <Link
                             key={item.name}
