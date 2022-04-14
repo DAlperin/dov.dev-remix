@@ -37,12 +37,11 @@ export async function getPage(slug: string): Promise<bundledMDX | undefined> {
         pagePath,
         "utf-8"
     );
-    const { default: remarkGfm } = await import("remark-gfm");
-    const { default: rehypeAutolinkHeadings } = await import(
-        "rehype-autolink-headings"
-    );
 
+    const { default: remarkGfm } = await import("remark-gfm");
+    const { default: rehypeAutolinkHeadings } = await import("rehype-autolink-headings");
     const { default: rehypeSlug } = await import("rehype-slug");
+    const { default: remarkToc } = await import("remark-toc")
 
     const output = await bundleMDX({
         source,
@@ -50,6 +49,7 @@ export async function getPage(slug: string): Promise<bundledMDX | undefined> {
             options.remarkPlugins = [
                 ...(options.remarkPlugins ?? []),
                 remarkGfm,
+                remarkToc,
             ];
             options.rehypePlugins = [
                 ...(options.rehypePlugins ?? []),

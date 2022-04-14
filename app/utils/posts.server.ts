@@ -42,17 +42,13 @@ export async function getPost(postPath: string, slug: string): Promise<bundledMD
 
     const { default: rehypePrismPlus } = await import("rehype-prism-plus")
     const { default: remarkGfm } = await import("remark-gfm");
-    const { default: rehypeAutolinkHeadings } = await import(
-        "rehype-autolink-headings"
-    );
-
+    const { default: rehypeAutolinkHeadings } = await import("rehype-autolink-headings");
     const { default: rehypeSlug } = await import("rehype-slug");
-
     const { default: rehypeRaw } = await import("rehype-raw");
-
     const { default: remarkToc } = await import("remark-toc");
-
     const { nodeTypes } = await import("@mdx-js/mdx")
+    const { default: rehypeRemoveEmptyParagraph } = await import("rehype-remove-empty-paragraph")
+    const { default: remarkCollapse } = await import("remark-collapse")
 
     const output = await bundleMDX({
         source,
@@ -61,6 +57,11 @@ export async function getPost(postPath: string, slug: string): Promise<bundledMD
                 ...(options.remarkPlugins ?? []),
                 remarkGfm,
                 remarkToc,
+                [remarkCollapse, {
+                    test: "Table of contents", summary: () => {
+                        return "Click to open"
+                    }
+                }],
             ];
             options.rehypePlugins = [
                 rehypePrismPlus,
@@ -68,6 +69,7 @@ export async function getPost(postPath: string, slug: string): Promise<bundledMD
                 ...(options.rehypePlugins ?? []),
                 rehypeAutolinkHeadings,
                 rehypeSlug,
+                rehypeRemoveEmptyParagraph
             ];
 
             return options;
