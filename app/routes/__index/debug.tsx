@@ -3,7 +3,7 @@ import type { LoaderFunction } from "@remix-run/server-runtime";
 
 import { assertedEnvVar } from "~/utils/environment.server";
 
-export const loader: LoaderFunction = ({ request }) => {
+export const loader: LoaderFunction = () => {
     let region = "developement";
     const baseHost = assertedEnvVar("REDIS_HOST");
     let redisHost = baseHost;

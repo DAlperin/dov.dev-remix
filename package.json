@@ -8,6 +8,7 @@
     "scripts": {
         "build": "run-s build:*",
         "dev": "run-p dev:*",
+        "checks": "run-p lint typecheck stats",
         "dev:server": "NODE_ENV=development node ./build/server.js --require ./node_modules/dotenv/config",
         "build:remix": "remix build",
         "dev:build": "cross-env NODE_ENV=development npm run build:server -- --watch",

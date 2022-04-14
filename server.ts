@@ -25,9 +25,9 @@ app.use((req, res, next) => {
 });
 
 // if we're not in the primary region, then we need to make sure all
-// non-GET/HEAD/OPTIONS requests hit the primary region rather than read-only
-// Postgres DBs.
-// learn more: https://fly.io/docs/getting-started/multi-region-databases/#replay-the-request
+// non-GET/HEAD/OPTIONS requests hit the primary region. In theory
+// it's fine to directly connect to planetscale but latency would be
+// high since currently we can only connect to it via us-east-1
 app.all("*", (req, res, next) => {
     const { method, path: pathname } = req;
     const { PRIMARY_REGION, FLY_REGION } = process.env;
@@ -73,6 +73,7 @@ const BUILD_DIR = path.join(process.cwd(), "build");
 
 app.all(
     "*",
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     MODE === "production"
         ? createRequestHandler({ build: require(BUILD_DIR) })
         : (...args) => {
