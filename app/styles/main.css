@@ -110,7 +110,6 @@ code:not(.code-highlight) {
 .react-command-palette {
     display: none;
 }
-
 /**
  * CSS Styles for code highlighting.
  * Feel free to customize token styles 
@@ -145,7 +144,7 @@ code:not(.code-highlight) {
 }
 
 .highlight-line {
-    @apply -mx-4 bg-gray-700 bg-opacity-50 border-l-4 border-primary-500;
+    @apply -mx-4 bg-gray-200 dark:bg-gray-700 bg-opacity-50 border-l-4 border-primary-500;
 }
 
 .line-number::before {
@@ -161,85 +160,147 @@ code:not(.code-highlight) {
  * Ported by Sara vieria [@SaraVieira]
  * Added by Souvik Mandal [@SimpleIndian]
  */
-.token.comment,
-.token.prolog,
-.token.cdata {
+.dark .token.comment,
+.dark .token.prolog,
+.dark .token.cdata {
     color: rgb(99, 119, 119);
     font-style: italic;
 }
 
-.token.punctuation {
+.dark .token.punctuation {
     color: rgb(199, 146, 234);
 }
 
-.namespace {
+.dark .namespace {
     color: rgb(178, 204, 214);
 }
 
-.token.deleted {
+.dark .token.deleted {
     color: rgba(239, 83, 80, 0.56);
     font-style: italic;
 }
 
-.token.symbol,
-.token.property {
+.dark .token.symbol,
+.dark .token.property {
     color: rgb(128, 203, 196);
 }
 
-.token.tag,
-.token.operator,
-.token.keyword {
+.dark .token.tag,
+.dark .token.operator,
+.dark .token.keyword {
     color: rgb(127, 219, 202);
 }
 
-.token.boolean {
+.dark .token.boolean {
     color: rgb(255, 88, 116);
 }
 
-.token.number {
+.dark .token.number {
     color: rgb(247, 140, 108);
 }
 
-.token.constant,
-.token.function,
-.token.builtin,
-.token.char {
+.dark .token.constant,
+.dark .token.function,
+.dark .token.builtin,
+.dark .token.char {
     color: rgb(130, 170, 255);
 }
 
-.token.selector,
-.token.doctype {
+.dark .token.selector,
+.dark .token.doctype {
     color: rgb(199, 146, 234);
     font-style: italic;
 }
 
-.token.attr-name,
-.token.inserted {
+.dark .token.attr-name,
+.dark .token.inserted {
     color: rgb(173, 219, 103);
     font-style: italic;
 }
 
-.token.string,
-.token.url,
-.token.entity,
-.language-css .token.string,
-.style .token.string {
+.dark .token.string,
+.dark .token.url,
+.dark .token.entity,
+.dark .language-css .token.string,
+.dark .style .token.string {
     color: rgb(173, 219, 103);
 }
 
-.token.class-name,
-.token.atrule,
-.token.attr-value {
+.dark .token.class-name,
+.dark .token.atrule,
+.dark .token.attr-value {
     color: rgb(255, 203, 139);
 }
 
-.token.regex,
-.token.important,
-.token.variable {
+.dark .token.regex,
+.dark .token.important,
+.dark .token.variable {
     color: rgb(214, 222, 235);
+}
+.dark .token.important,
+.dark .token.bold {
+    font-weight: bold;
+}
+
+.dark .token.italic {
+    font-style: italic;
+}
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #999988;
+    font-style: italic;
+}
+
+.token.namespace {
+    opacity: 0.7;
+}
+
+.token.string,
+.token.attr-value {
+    color: #e3116c;
+}
+
+.token.punctuation,
+.token.operator {
+    color: #393a34; /* no highlight */
+}
+
+.token.entity,
+.token.url,
+.token.symbol,
+.token.number,
+.token.boolean,
+.token.variable,
+.token.constant,
+.token.property,
+.token.regex,
+.token.inserted {
+    color: #36acaa;
+}
+
+.token.atrule,
+.token.keyword,
+.token.attr-name,
+.language-autohotkey .token.selector {
+    color: #00a4db;
+}
+
+.token.function,
+.token.deleted,
+.language-autohotkey .token.tag {
+    color: #9a050f;
+}
+
+.token.tag,
+.token.selector,
+.language-autohotkey .token.keyword {
+    color: #00009f;
 }
 
 .token.important,
+.token.function,
 .token.bold {
     font-weight: bold;
 }

@@ -18,7 +18,7 @@ app.use((req, res, next) => {
     if (req.path.endsWith("/") && req.path.length > 1) {
         const query = req.url.slice(req.path.length);
         const safepath = req.path.slice(0, -1).replace(/\/+/gu, "/");
-        res.redirect(301, safepath + query);
+        res.redirect(301, `${safepath}${query}`);
         return;
     }
     next();
@@ -38,7 +38,7 @@ app.all("*", (req, res, next) => {
 
     const shouldReplay = isMethodReplayable && isReadOnlyRegion;
 
-    if (!shouldReplay) return next();
+    if (!shouldReplay) { next(); return; }
 
     const logInfo = {
         pathname,

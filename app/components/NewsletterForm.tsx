@@ -44,7 +44,7 @@ export function NewsletterForm({
                     <input
                         aria-label="Email Address"
                         autoComplete="email"
-                        className="px-4 py-2 w-full rounded-md dark:bg-black focus:outline-none focus:ring-2 focus:border-transparent focus:ring-primary-600"
+                        className="px-4 py-2 w-full rounded-md bg-gray-500 dark:bg-black focus:outline-none focus:ring-2 focus:border-transparent focus:ring-primary-600 placeholder:text-white dark:placeholder:text-inherit"
                         id="email-input"
                         name="email"
                         placeholder="Enter your email"

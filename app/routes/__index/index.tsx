@@ -78,12 +78,18 @@ export default function Index(): JSX.Element {
                     />
                 </div>
                 <div className="aboutContent pt-8 md:px-8 homepageText space-y-5 basis-3/4">
+                    <h4>
+                        Curious student, professional software and web
+                        developer, entrepreneur, activist and fast learner.
+                    </h4>
                     <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Accusamus, deserunt suscipit? Culpa porro
-                        aspernatur quia aperiam natus deleniti eligendi
-                        perspiciatis error consectetur perferendis id ut totam
-                        officia magnam, explicabo nostrum!
+                        Passionate about the places hardware and software
+                        combine, space exploration, using technology to make a
+                        difference, and “making” in almost any form (ask me
+                        about my quest to perfect the perfect Buffalo wing
+                        sauce). I seek interesting problems & love that feeling
+                        I get when something I made starts working the way it’s
+                        intended to.
                     </p>
                 </div>
             </div>
@@ -133,7 +139,7 @@ export default function Index(): JSX.Element {
             </div>
 
             <div className="mt-4 flex items-center justify-center">
-                <div className="p-6 bg-gray-100 dark:bg-gray-800 rounded-md basis-2/3">
+                <div className="p-6 bg-slate-300 dark:bg-gray-800 rounded-md basis-2/3">
                     <NewsletterForm title="Subsribe to my newsletter" />
                 </div>
             </div>
