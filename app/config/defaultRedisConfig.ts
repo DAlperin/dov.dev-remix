@@ -3,9 +3,11 @@ import type { RedisOptions } from "ioredis";
 import { assertedEnvVar } from "~/utils/environment.server";
 
 const baseHost = assertedEnvVar("REDIS_HOST")
-const region = assertedEnvVar("FLY_REGION")
-
-const host = `${region}.${baseHost}`
+let host = baseHost
+if (process.env.NODE_ENV === "production") {
+    const region = assertedEnvVar("FLY_REGION")
+    host = `${region}.${baseHost}`
+}
 
 const defaultRedisConfig: RedisOptions = {
     port: 6379,
