@@ -25,7 +25,7 @@ function LayoutWrapper({ children, user, navItems }: Props): JSX.Element {
                         </div>
                     </Link>
                 </div>
-                <MobileNav navItems={navItems} />
+                <MobileNav navItems={navItems} user={user} />
                 <div className="hidden sm:flex items-center text-base leading-5">
                     {navItems.map((item) => (
                         <Link
