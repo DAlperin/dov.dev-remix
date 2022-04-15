@@ -1594,6 +1594,12 @@ summary {
   max-width: 100%;
 }
 
+.max-w-fit {
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
 .flex-none {
   flex: none;
 }
