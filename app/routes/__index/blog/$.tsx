@@ -5,15 +5,18 @@ import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
 
 import { BlogNewsletterForm } from "~/components/NewsletterForm";
+import { db } from "~/services/db.server";
 import type { PostMarkdownAttributes } from "~/utils/posts.server";
 import { getPrettyDate, getPostBySlug } from "~/utils/posts.server";
+import { commitSession, getSession } from "~/utils/session.server";
 
 type LoaderData = {
     frontmatter: PostMarkdownAttributes;
     code: string;
+    hits: number;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
     const slug = params["*"];
     if (!slug) {
         return new Response("Not found", { status: 404 });
@@ -28,7 +31,22 @@ export const loader: LoaderFunction = async ({ params }) => {
     const { frontmatter, code } = post;
     const fancyDate = getPrettyDate(frontmatter.date);
     frontmatter.date = fancyDate;
-    return json({ code, frontmatter });
+    const session = await getSession(request.headers.get("cookie"));
+    if (!session.has(`hit:${slug}`)) {
+        await db.postHit.create({
+            data: {
+                slug,
+            },
+        });
+        session.set(`hit:${slug}`, 1);
+        await commitSession(session);
+    }
+    const hits = await db.postHit.count({
+        where: {
+            slug,
+        },
+    });
+    return json({ code, frontmatter, hits });
 };
 
 function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
@@ -52,6 +70,7 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
                     );
                 })}
             </p>
+            <p className="mb-0">Hit Counter: {loaderData.hits}</p>
             <hr className="mt-3" />
             <Component />
         </>

@@ -32,6 +32,11 @@ model Dashboard {
   data Json
 }
 
+model PostHit {
+  id String @id @default(uuid()) @unique
+  slug String
+}
+
 datasource db {
   provider = "mysql"
   url = env("DATABASE_URL")
