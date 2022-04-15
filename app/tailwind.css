@@ -1410,6 +1410,10 @@ summary {
   margin-bottom: 0.25rem;
 }
 
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
 .mr-1 {
   margin-right: 0.25rem;
 }
@@ -1428,10 +1432,6 @@ summary {
 
 .mr-0 {
   margin-right: 0px;
-}
-
-.mt-1 {
-  margin-top: 0.25rem;
 }
 
 .ml-0 {
@@ -1578,6 +1578,12 @@ summary {
   max-width: 32rem;
 }
 
+.max-w-fit {
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
 .max-w-7xl {
   max-width: 80rem;
 }
@@ -1592,12 +1598,6 @@ summary {
 
 .max-w-full {
   max-width: 100%;
-}
-
-.max-w-fit {
-  max-width: -webkit-fit-content;
-  max-width: -moz-fit-content;
-  max-width: fit-content;
 }
 
 .flex-none {
@@ -1866,11 +1866,6 @@ summary {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.px-9 {
-  padding-left: 2.25rem;
-  padding-right: 2.25rem;
 }
 
 .px-5 {

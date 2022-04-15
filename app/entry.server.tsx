@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { Headers } from "@remix-run/node";
 import { Response } from "@remix-run/node";
 import isbot from "isbot";
