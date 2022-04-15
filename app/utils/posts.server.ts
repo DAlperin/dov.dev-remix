@@ -25,8 +25,8 @@ type bundledMDX = {
     };
 };
 
-export async function getPost(postPath: string, slug: string): Promise<bundledMDX | undefined> {
-    if (await cache.redis.exists(`post:${slug}`)) {
+export async function getPost(postPath: string, slug: string, noCache = false): Promise<bundledMDX | undefined> {
+    if (!noCache && await cache.redis.exists(`post:${slug}`)) {
         const cached = await cache.redis.get(`post:${slug}`);
         if (cached) {
             return JSON.parse(cached) as bundledMDX;
@@ -154,9 +154,9 @@ export async function getPostsByTag(tag: string): Promise<(postItem | undefined)
     return postsWithTag
 }
 
-export async function getPostBySlug(slug: string): Promise<bundledMDX | undefined> {
+export async function getPostBySlug(slug: string, noCache = false): Promise<bundledMDX | undefined> {
     const posts = await getPosts()
     for (const post of posts) {
-        if (post.slug === slug) return getPost(post.fileName, slug)
+        if (post.slug === slug) return getPost(post.fileName, slug, noCache)
     }
 }

@@ -21,8 +21,9 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     if (!slug) {
         return new Response("Not found", { status: 404 });
     }
+    const noCache = !!new URL(request.url).searchParams.has("noCache");
 
-    const post = await getPostBySlug(slug);
+    const post = await getPostBySlug(slug, noCache);
     if (!post) {
         throw new Response("Not Found", {
             status: 404,
@@ -31,6 +32,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     const { frontmatter, code } = post;
     const fancyDate = getPrettyDate(frontmatter.date);
     frontmatter.date = fancyDate;
+
     const session = await getSession(request.headers.get("cookie"));
     if (!session.has(`hit:${slug}`)) {
         await db.postHit.create({
@@ -41,6 +43,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         session.set(`hit:${slug}`, 1);
         await commitSession(session);
     }
+
     const hits = await db.postHit.count({
         where: {
             slug,

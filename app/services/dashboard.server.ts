@@ -22,7 +22,7 @@ function generateNewDashboardFromDefault() {
     const keys = Object.keys(defaultDash.layouts)
     const dataKeys = Object.keys(defaultDash.data)
     const newI = new Map<string, string>()
-    const result: dashboardConfig = { data: defaultDash.data, layouts: { lg: [], md: [], sm: [], xs: [] } }
+    const result: dashboardConfig = { data: defaultDash.data, layouts: { lg: [], md: [], sm: [], xs: [], xxs: [] } }
     for (const breakpoint of dataKeys) {
         const breakpointItems = defaultDash.data[breakpoint]
         for (const item of breakpointItems) {
@@ -38,6 +38,7 @@ function generateNewDashboardFromDefault() {
     }
     for (const breakpoint of keys) {
         const breakpointItems = defaultDash.layouts[breakpoint]
+        console.log(result.layouts[breakpoint])
         for (const item of breakpointItems) {
             const key = newI.get(item.i)
             if (!key) return

@@ -28,7 +28,8 @@ export type breakPointsTo<K> = {
     lg: K,
     md: K,
     sm: K,
-    xs: K
+    xs: K,
+    xxs: K
 }
 
 // Shortcut to default breakpoint structure
@@ -91,6 +92,20 @@ export const defaultDash: dashboardConfig = {
             },
         ],
         xs: [
+            {
+                i: "card1",
+                type: cardType.CHARGECHART,
+            },
+            {
+                i: "card2",
+                type: cardType.FINANCEOVERVIEW,
+            },
+            {
+                i: "card3",
+                type: cardType.UNKNOWN,
+            },
+        ],
+        xxs: [
             {
                 i: "card1",
                 type: cardType.CHARGECHART,
@@ -176,6 +191,29 @@ export const defaultDash: dashboardConfig = {
             },
         ],
         xs: [
+            {
+                w: 4,
+                h: 2,
+                x: 0,
+                y: 0,
+                i: "card1",
+            },
+            {
+                w: 4,
+                h: 2,
+                x: 0,
+                y: 0,
+                i: "card2",
+            },
+            {
+                w: 4,
+                h: 2,
+                x: 0,
+                y: 0,
+                i: "card3",
+            },
+        ],
+        xxs: [
             {
                 w: 4,
                 h: 2,
