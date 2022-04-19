@@ -104,16 +104,16 @@ export const action: ActionFunction = async ({
 };
 
 export default function Keys(): JSX.Element {
-    const loaderData = useLoaderData<LoaderData>();
+    const { keys, newKey } = useLoaderData<LoaderData>() || {};
     const [CurrentlyInvalidating, setCurrentlyInvalidating] = useState("");
     return (
         <div className="h-full">
-            {loaderData.keys.length > 0 ? (
+            {keys.length > 0 ? (
                 <div>
                     <h2>Manage keys</h2>
                     <KeysTable
-                        newKey={loaderData.newKey}
-                        keys={loaderData.keys}
+                        newKey={newKey}
+                        keys={keys}
                         CurrentlyInvalidating={CurrentlyInvalidating}
                         setCurrentlyInvalidating={setCurrentlyInvalidating}
                     />

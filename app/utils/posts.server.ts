@@ -14,6 +14,7 @@ export type PostMarkdownAttributes = {
     tags: string[];
     date: string;
     summary: string;
+    draft: boolean;
 };
 
 type bundledMDX = {
@@ -80,6 +81,7 @@ export async function getPost(postPath: string, slug: string, noCache = false): 
     });
     if (output) {
         await cache.redis.set(`post:${slug}`, JSON.stringify(output), "EX", 200);
+        if ((output.frontmatter as PostMarkdownAttributes).draft && process.env.NODE_ENV !== "development") return undefined
         return output as unknown as bundledMDX;
     }
 }
@@ -118,7 +120,12 @@ export async function getPosts(limit?: number): Promise<postItem[]> {
         };
     }))
 
-    return unsortedPosts.sort((a, b) => {
+    const currentPosts = unsortedPosts.filter((post) => {
+        if (post.draft && process.env.NODE_ENV !== "development") return false;
+        return true;
+    })
+
+    return currentPosts.sort((a, b) => {
         const aDate: Date = new Date(a.date)
         const bDate: Date = new Date(b.date)
         return bDate.getUTCMilliseconds() - aDate.getUTCMilliseconds()
@@ -130,24 +137,31 @@ export async function countTags(): Promise<Map<string, number>> {
     const posts = await getPosts()
     // FIXME: this lies on the heavy assumption that I won't mess up and add multiple of the same tag to one post
     for (const post of posts) {
-        for (const tag of post.tags) {
-            const current = count.get(tag)
-            if (current) {
-                count.set(tag, current + 1)
-            }
-            else {
-                count.set(tag, 1)
+        if (shouldIncludePost(post)) {
+            for (const tag of post.tags) {
+                const current = count.get(tag)
+                if (current) {
+                    count.set(tag, current + 1)
+                }
+                else {
+                    count.set(tag, 1)
+                }
             }
         }
     }
     return count
 }
 
+function shouldIncludePost(post: postItem): boolean {
+    if (post.draft && process.env.NODE_ENV !== "development") return false
+    return true
+}
+
 export async function getPostsByTag(tag: string): Promise<(postItem | undefined)[]> {
     const posts = await getPosts()
     const postsWithTag: (postItem | undefined)[] = []
     for (const post of posts) {
-        if (post.tags.includes(tag)) {
+        if (post.tags.includes(tag) && shouldIncludePost(post)) {
             postsWithTag.push(post)
         }
     }
@@ -157,6 +171,6 @@ export async function getPostsByTag(tag: string): Promise<(postItem | undefined)
 export async function getPostBySlug(slug: string, noCache = false): Promise<bundledMDX | undefined> {
     const posts = await getPosts()
     for (const post of posts) {
-        if (post.slug === slug) return getPost(post.fileName, slug, noCache)
+        if (post.slug === slug && shouldIncludePost(post)) return getPost(post.fileName, slug, noCache)
     }
 }

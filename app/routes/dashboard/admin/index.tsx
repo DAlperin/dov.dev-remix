@@ -100,7 +100,6 @@ function getDataForCurrentLayoutItem(
     i: string,
     dashboard: dashboardConfig
 ) {
-    console.log(dashboard.data, bp);
     const data = dashboard.data[bp];
     for (const dataItem of data) {
         if (dataItem.i === i) return dataItem;
@@ -113,7 +112,7 @@ export default function AdminIndex(): JSX.Element {
         totalCollected,
         dashboardData,
         dashboardLayout,
-    } = useLoaderData<LoaderData>();
+    } = useLoaderData<LoaderData>() || {};
     const fetcher = useFetcher();
 
     const [currentLayout, setCurrentLayout] = useState<Layout[]>();
