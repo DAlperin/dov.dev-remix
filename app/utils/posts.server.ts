@@ -94,7 +94,7 @@ export function getPrettyDate(date: string): string {
     const theDate = new Date(date)
     const month = monthNames[theDate.getMonth()]
     // TODO: there is probably a way to do this with toLocaleString but I don't really want to read that much MDN right now
-    return `${month} ${theDate.getDay()}, ${theDate.getFullYear()}`
+    return `${month} ${theDate.getDate() + 1}, ${theDate.getFullYear()}`
 }
 export type postItem = {
     prettyDate: string;
@@ -126,9 +126,9 @@ export async function getPosts(limit?: number): Promise<postItem[]> {
     })
 
     return currentPosts.sort((a, b) => {
-        const aDate: Date = new Date(a.date)
-        const bDate: Date = new Date(b.date)
-        return bDate.getUTCMilliseconds() - aDate.getUTCMilliseconds()
+        // @ts-expect-error dates suck
+        return new Date(b.date) - new Date(a.date);
+
     })
 }
 

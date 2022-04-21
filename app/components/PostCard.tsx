@@ -9,7 +9,7 @@ type Props = {
 export default function PostCard({ post }: Props): JSX.Element {
     return (
         <div className="flex flex-col md:flex-row">
-            <div className="mr-0 md:mr-40 mt-1">
+            <div className="basis-1/5 mt-1">
                 <li className="ml-0">{post.prettyDate}</li>
             </div>
             <div className="flex-1">

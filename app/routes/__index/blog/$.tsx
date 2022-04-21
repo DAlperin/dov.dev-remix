@@ -64,16 +64,18 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
     return (
         <>
             <h1 className="leading-14">{loaderData.frontmatter.title}</h1>
-            <p className="mb-0">
-                {loaderData.frontmatter.tags.map((tag) => {
-                    return (
-                        <a key={tag} href={`/blog/tags/${tag}`}>
-                            {tag} &nbsp;
-                        </a>
-                    );
-                })}
-            </p>
-            <p className="mb-0">Hit Counter: {loaderData.hits}</p>
+            <div className="flex flex-row">
+                <p className="mb-0 flex-1">
+                    {loaderData.frontmatter.tags.map((tag) => {
+                        return (
+                            <a key={tag} href={`/blog/tags/${tag}`}>
+                                {tag} &nbsp;
+                            </a>
+                        );
+                    })}
+                </p>
+                <p className="mb-0">Hit Counter: {loaderData.hits}</p>
+            </div>
             <hr className="mt-3" />
             <Component />
         </>

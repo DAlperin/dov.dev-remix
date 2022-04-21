@@ -13,8 +13,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     const user = await isAuthenticated(request);
     const isAuthed = user !== false;
     let region = "developement";
-    if (process.env.NODE_ENV === "production")
+    if (process.env.NODE_ENV === "production") {
+        console.log("trying to assert FLY_REGION");
         region = assertedEnvVar("FLY_REGION");
+    }
 
     return {
         user,

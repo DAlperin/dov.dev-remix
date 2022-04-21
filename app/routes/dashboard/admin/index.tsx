@@ -6,7 +6,6 @@ import { Responsive, WidthProvider as widthProvider } from "react-grid-layout";
 import reactGridStyles from "react-grid-layout/css/styles.css";
 import reactResizeStyles from "react-resizable/css/styles.css";
 
-import AdminBar from "~/components/AdminBar";
 import DashboardItemRenderer from "~/components/DashboardItemRenderer";
 import { ensureAdmin } from "~/services/auth.server";
 import { getDefaultDashboardForUser } from "~/services/dashboard.server";

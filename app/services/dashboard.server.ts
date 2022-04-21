@@ -38,7 +38,6 @@ function generateNewDashboardFromDefault() {
     }
     for (const breakpoint of keys) {
         const breakpointItems = defaultDash.layouts[breakpoint]
-        console.log(result.layouts[breakpoint])
         for (const item of breakpointItems) {
             const key = newI.get(item.i)
             if (!key) return

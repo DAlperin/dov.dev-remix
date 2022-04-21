@@ -4,10 +4,42 @@
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
 import express from "express";
+import prometheusMiddleware from 'express-prometheus-middleware';
 import morgan from "morgan";
 import path from "path";
 
 const app = express();
+if (process.env.ENABLE_METRICS) {
+    const metricsApp = express();
+
+    app.use(
+        prometheusMiddleware({
+            metricsPath: '/metrics',
+            metricsApp,
+            collectDefaultMetrics: true,
+            requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+            requestLengthBuckets: [512, 1024, 5120, 10_240, 51_200, 102_400],
+            responseLengthBuckets: [512, 1024, 5120, 10_240, 51_200, 102_400],
+            customLabels: ['region', 'app', 'instance'],
+            transformLabels: labels => {
+                // region: short 3 letter airport code for the region
+                labels.region = process.env.FLY_REGION ?? 'unknown';
+
+                // app: the app exposing these metrics
+                labels.app = process.env.FLY_APP_NAME ?? 'unknown';
+
+                // instance: your app instance ID
+                labels.instance = process.env.FLY_ALLOC_ID ?? 'unknown';
+            },
+        })
+    );
+
+    const metricsPort = process.env.METRICS_PORT ?? 9091;
+
+    metricsApp.listen(metricsPort, () => {
+        console.log(`✅ metrics ready: http://localhost:${metricsPort}`);
+    });
+}
 
 app.use((req, res, next) => {
     // helpful headers:
