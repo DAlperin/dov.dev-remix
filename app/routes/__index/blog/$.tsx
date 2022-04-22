@@ -44,7 +44,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     frontmatter.date = fancyDate;
 
     const session = await getSession(request.headers.get("cookie"));
-    if (session.data === {}) {
+    if (Object.keys(session.data).length === 0) {
         headers["Set-Cookie"] = await commitSession(session);
     }
     if (!session.has(`hit:${slug}`)) {
