@@ -1,0 +1,209 @@
+---
+title: "Rewriting my site with Remix"
+slug: dovdotdev-remix-rewrite
+date: "2022-04-22"
+tags: ["meta", "remix", "react"]
+draft: false
+summary: "A bones up rewrite of this site from Next.js to Remix in order to support more dynamic applications and content."
+---
+
+import BlogNewsletterForm from "BlogNewsletterForm";
+
+### Table of Contents
+
+## Intro
+
+I recently rewrote this site, dov.dev, from a Next.js application to a Remix one. I wanted to talk a little bit about why, and what I learned in the process.
+
+This site is far more complicated than it seems upon its initial inspection. I have begun to move a considerable amount of my freelance developement business ([hire me!](mailto:dov@dov.dev)) day to day operations into this web application. So not only is dov.dev the public face of myself to the internet, but it is also becoming the outward face of my business to its clients.
+
+## Previous attempts
+
+As my first order of business I have begun to automate what was an absurdly bespoke and time consuming invoicing process. I originally prototyped this new system with my old Next.js based site. I immediately ran into a number of fundamental problems with Next.js as a framework for application developement. The main issue I ran into was that Next.js felt like a framework for the frontend trying to be something it isn't by attempting to be a fullstack solution. My original prototype used Next.js api routes, dynamodb, and nextjs-auth with auth0. While I was able to hack together something that worked I left the project alone for a few months since I felt generally unsatisfied with how much of a hack the whole thing felt, none of the parts seemed to work together nicely. Even though my api was right there as part of the framework, trying to use any of the data in my frontend felt like I was actively working against myself. I decided to put off the project until Next.js API routes got more mature, or something beter came along... Enter Remix.
+
+## Remix Background
+
+I have been following Remix for a while, since even before Ryan Florence and Michael Jackson released it as a beta paid product. And while I have always been curious, I have been simultaneously reticent to hail it as the revolutionary developement it was being sold as by it's creators until I could try it. But having now tried it, I get it, I'm sold, I'm a convert.
+
+## A brief Remix Primer
+
+Remix feels _railsy_. The basic unit in Remix is a `route` which feels very much like a `view` and a `controller` in rails world. Here is a contrived example:
+
+```tsx
+// app/routes/index.tsx
+
+// The "controller"
+export function loader({ request }) {
+    const user = getUser(request);
+    const unread = getUnread(user);
+    return {
+        unread,
+    };
+}
+
+// The "view"
+export default function Index() {
+    const loaderData = useLoaderData();
+    return (
+        <div>
+            <h1>Unread emails: {loaderData.unread}</h1>
+            <p>The rest of the content...</p>
+        </div>
+    );
+}
+```
+
+At the core, a Remix route contains a default function which for all intents and purposes is a normal react component, but there are other exported functions as well such as `loader` which is demonstrated here. A `loader` is what it sounds like, a place to get data that populates the initial render of your route. Unfortunately for engineers everywhere, however, most apps are not read-only meaning they need to handle data mutations in some way. Remix covers that to:
+
+```tsx
+// app/routes/login.tsx
+
+// Like loader, but for mutations
+export function action({ request }) {
+    const clonedRequest = request.clone();
+    const body = await clonedRequest.formData();
+    const email = body.get("email");
+    const password = body.get("password");
+    if (typeof email !== "string" || typeof password !== "string") {
+        return badRequest({
+            formError: "Form submitted incorrectly",
+        });
+    }
+    // Try to log in or return errors if failure
+    await auth.authenticate("form", request, {
+        successRedirect: "/",
+        failureRedirect: "/login",
+    });
+}
+
+export default function Login() {
+    // The data returned as a result of calling the action, usually via a <Form> submission
+    const actionData = useActionData();
+    return (
+        {/* <Form> is a component from Remix that automatically sends it's data
+        to the routes action function when submitted */}
+        <Form method="post" className="mt-5">
+            <label>
+                Email
+                <input type="text" name="email" />
+            </label>
+            {actionData?.fieldErrors?.email ? (
+                <p role="alert">{actionData.fieldErrors.email}</p>
+            ) : null}
+
+            <label>
+                Password
+                <input type="password" name="password" />
+            </label>
+            {actionData?.fieldErrors?.password ? (
+                <p role="alert">{actionData.fieldErrors.password}</p>
+            ) : null}
+
+            <input type="submit" value="Login" />
+
+            {actionData?.formError ? (
+                <p role="alert">{actionData.formError}</p>
+            ) : null}
+        </Form>
+    );
+}
+```
+
+While this example is obviosuly simplified, I think it showcases the elegance that Remix brings to React on the full stack. At a glance it feels like a very sane return to using web standards (i.e forms) and not doing something crazy as with lots of modern react apps.
+
+Remix makes excellent use of the filesystem for routing which probably warrants it's own exploration in future posts. For a real world example see the `app/routes` folder for most of this website.
+
+<figure className="mx-auto">
+    ![diagram](/static/postcontent/dovdotdevroutes.png)
+
+    <figcaption className="text-center"> The routes folder for this app </figcaption>
+
+</figure>
+
+## Personal Remix experience
+
+This site is divided into four main parts:
+
+1. Static content
+2. Dynamic blog content
+3. Misc API surface
+4. Billing system
+
+### Static content
+
+The static content is mostly built from MDX files that are rendered and cached in redis. The [about](/about) and [uses](/uses) page is entirely derived from MDX files, requiring no special handling. This has become extremely nice, updating my website now just becomes updating a text file.
+
+### Dynamic blog content
+
+Each blog post also has it's own MDX file with extensive frontmatter that is used to generate all the not-body content. The blog and tags pages are all dynamically generated and updated based on the frontmatter of posts.
+
+Getting remark and rehype to render posts nicely with all the modern creature comforts I have become acustomed (syntax highlighting, normal formatting, etc) was hellish. If anyone knows a better way to deal with MDX please let me know.
+
+### Misc API surface
+
+Using the "resource routes" (esentially API routes) feature from Remix, this site now handles all the misc webhooks I need on a daily basis. It also handles the API to manage my newsletter subscriptions. Speaking of:
+
+<BlogNewsletterForm title="Shameless plug :)" />
+
+### Billing system
+
+This will probably warrant its own blog post at some point if folks are interested. So far I have built an admin dashboard that gives me insight into the current financials of my business, and I have begun work on the client portal that will handle payments and invoicing in the future.
+
+## Interesting Remix takeaways
+
+### Remix layout routes are super cool
+
+Layout routes allow you to modify the logical layout of a route structure without changing the path itself. For example:
+
+```
+| app
+| -> routes
+| ---> index.tsx (matches /)
+| ---> __auth.tsx
+| ---> __auth (extends the layout of __auth.tsx)
+| -----> login.tsx (matches /login)
+| -----> register.tsx (matches /register)
+```
+
+This site uses layout routes to great effect to achieve subtle nice UX details. For example on the `/login` and `/register` pages are descendants of a layout route that handles animating between the login and register pages. Try it out! Go to the [login](/login) page and try clicking the register button, then vice versa.
+
+### Remix organization is extremely logical
+
+Like I have discussed before, Remix has a railsy feeling. The React ecosystem has missed out on the opinionated structure that comes with frameworks like Rails. I like that whenever I want to change something, I know exactly where that thing lives in the project, and I can pretty easily grok what the most idiomatic way to solve my problem is. This isn't unique to Remix per-se, any project can adopt a highly opinionated structure, but I think Remix has a chance to make one of them standard which would be a welcome change for the React community.
+
+## dov.dev architecture
+
+<div className="mx-auto">
+    ![diagram](/static/postcontent/dovdotdevdiagramdarkmodefriendly.svg)
+</div>
+
+This site is hosted entirely on [fly.io](https://fly.io) and [planetscale](https://planetscale.com). Under normal load an instance of this site is deployed in EWR, MIA, LAX and ORD (though it can be auto-scaled to other regions as load requires). Each instance of the application is deployed alongside an instance of redis. The redis instances are clustered together, each accepts both reads and writes with all of them becoming eventually consistent with the primary instance hosted in EWR.
+
+Currently when a request that would mutate the data hits a non primary region, it uses a fly feature called fly replay. When a non primary region detects an attempt at mutation, it responds to the request with header set: `fly-replay: EWR`. This instructs flys extremely fast edge network to replay the entire request against the EWR region. The EWR instance handles the request like normal and the response is returned to the user back at their original location. Due to fly having an extremely well tuned network overlay, this only adds a few milliseconds of overhead at most.
+
+Suprisingly this all seems to fit pretty snugly in Flys lower tiers and under normal load is even pretty efficient.
+
+<figure className="mx-auto">
+    ![diagram](/static/postcontent/dovdotdevflystats.png)
+
+    <figcaption className="text-center"> Fly stats from the last 6 hours </figcaption>
+
+</figure>
+
+### Agressive caching
+
+The site leans on redis pretty heavily to avoid making expensive cross-region api calls. What this means is that at any given time redis stores expensive stripe data, the rendered content of blog posts, and user specific settings. At the time of writing this, between app and session data my primary redis cluster has around 4000 keys at idle. This can increase significantly depending on load since redis stores session data as well.
+
+### Automatic deployment
+
+To deploy my site all I have to do is push to github. I have an action set up that runs ESLINT, and the Typescript type-checker. Then presuming those checks pass, the site and its assets are built and the whole package is deployed with `flyctl deploy` which does a rolling release that will automatically roll-back if something broke too bad.
+
+### Image optimization
+
+Something like Cloudinary is awesome, but unfortunately I can not quite justify the cost right now. Currently I use an awesome library called [remix-image](https://github.com/Josh-McFarlin/remix-image) that is a thin wrapper around sharp image transformers. I have begun to build off that library to add more features that allow images to be autogenerated in all formats/sizes for each posts, and be served from cloudfront/s3. I'm hoping to get that all working next week. The poor mans Cloudinary if you will.
+
+## Wrap up
+
+I think the thing I loved most during the process of re-writing into Remix is that Remix makes web developement feel _fun_ again. I didn't feel bogged down by plumbing or overcomplication, everything just worked, even when I wanted to branch off the beaten path Remix gave me the tools to do it well, without resorting to cheap hacks. At the risk of sounding like a zealot, Remix has 100 percent become my tool of choice for personal and client work moving forward.
+
+<BlogNewsletterForm title="Subscribe to my (very unintrusive) newsletter!" />
