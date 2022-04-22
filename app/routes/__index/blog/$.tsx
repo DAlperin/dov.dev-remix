@@ -31,6 +31,8 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     }
     const noCache = !!new URL(request.url).searchParams.has("noCache");
 
+    const headers: Record<string, string> = {};
+
     const post = await getPostBySlug(slug, noCache);
     if (!post) {
         throw new Response("Not Found", {
@@ -42,6 +44,9 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     frontmatter.date = fancyDate;
 
     const session = await getSession(request.headers.get("cookie"));
+    if (session.data === {}) {
+        headers["Set-Cookie"] = await commitSession(session);
+    }
     if (!session.has(`hit:${slug}`)) {
         await db.postHit.create({
             data: {
@@ -57,7 +62,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
             slug,
         },
     });
-    return json({ code, frontmatter, hits });
+    return json({ code, frontmatter, hits }, { headers });
 };
 
 function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
