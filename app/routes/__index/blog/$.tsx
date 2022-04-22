@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import type { LoaderFunction } from "@remix-run/server-runtime";
+import type { LoaderFunction, MetaFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
@@ -14,6 +14,14 @@ type LoaderData = {
     frontmatter: PostMarkdownAttributes;
     code: string;
     hits: number;
+};
+
+export const meta: MetaFunction = ({ data }) => {
+    return {
+        title: data.frontmatter.title,
+        description: data.frontmatter.summary,
+        "og:title": data.frontmatter.title,
+    };
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
