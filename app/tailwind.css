@@ -2378,6 +2378,10 @@ code:not(.code-highlight) {
   content: attr(line);
 }
 
+pre {
+  overflow: auto;
+}
+
 /* Token styles */
 
 /**
