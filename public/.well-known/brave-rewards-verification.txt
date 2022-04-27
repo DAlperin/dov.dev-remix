@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: dov.dev
+Token: 9a1c0a9c664027e9290bf5dd6811c9617a9f5129b9adcf6480f61a082fb8c116
