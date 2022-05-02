@@ -1,0 +1,9 @@
+app = "dovdotdev-fly-log-shipper"
+
+[env]
+  ORG = "personal"
+  LOKI_URL = "http://dovdotdev-loki.internal:3100"
+
+[metrics]
+  port = 9598
+  path = "/metrics"
