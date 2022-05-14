@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import type { LinksFunction, LoaderFunction } from "@remix-run/server-runtime";
 import Image, { ImageFit } from "remix-image";
 
-import { NewsletterForm } from "~/components/NewsletterForm";
+import { FitNewsletterForm, NewsletterForm } from "~/components/NewsletterForm";
 import PostList from "~/components/PostList";
 import { isAuthenticated } from "~/services/auth.server";
 import styles from "~/styles/index.css";
@@ -138,11 +138,11 @@ export default function Index(): JSX.Element {
                 <PostList posts={loaderData.posts} />
             </div>
 
-            <div className="mt-4 flex items-center justify-center">
-                <div className="p-6 bg-slate-300 dark:bg-gray-800 rounded-md basis-2/3">
-                    <NewsletterForm title="Subsribe to my newsletter" />
-                </div>
-            </div>
+            {/* <div className="mt-4 flex items-center justify-center">*/}
+            {/*    <div className="p-6 bg-slate-300 dark:bg-gray-800 rounded-md basis-2/3">*/}
+                    <FitNewsletterForm title="Subsribe to my newsletter" />
+            {/*    </div>*/}
+            {/* </div>*/}
         </div>
     );
 }

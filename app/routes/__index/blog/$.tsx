@@ -4,7 +4,7 @@ import { json } from "@remix-run/server-runtime";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
 
-import { BlogNewsletterForm } from "~/components/NewsletterForm";
+import { FitNewsletterForm } from "~/components/NewsletterForm";
 import { db } from "~/services/db.server";
 import type { PostMarkdownAttributes } from "~/utils/posts.server";
 import { getPrettyDate, getPostBySlug } from "~/utils/posts.server";
@@ -69,7 +69,7 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
     const Component = useMemo(
         () =>
             getMDXComponent(loaderData.code, {
-                BlogNewsletterForm,
+                BlogNewsletterForm: FitNewsletterForm,
             }),
         [loaderData.code]
     );

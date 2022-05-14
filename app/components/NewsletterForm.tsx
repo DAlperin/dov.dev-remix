@@ -65,10 +65,10 @@ export function NewsletterForm({
     );
 }
 
-export function BlogNewsletterForm({ title }: { title: string }): JSX.Element {
+export function FitNewsletterForm({ title }: { title: string }): JSX.Element {
     return (
         <div className="mt-4 flex items-center justify-center">
-            <div className="p-6 bg-slate-300 dark:bg-gray-800 rounded-md">
+            <div className="p-6 bg-slate-300 dark:bg-gray-800 rounded-md basis-full md:basis-2/3">
                 <NewsletterForm title={title} />
             </div>
         </div>

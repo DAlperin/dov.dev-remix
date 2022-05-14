@@ -16,9 +16,6 @@
   inputs = ["loki_json"]
   endpoint = "${LOKI_URL}"
   compression = "gzip"
-#  auth.strategy = "basic"
-#  auth.user = "${LOKI_USERNAME}"
-#  auth.password = "${LOKI_PASSWORD}"
   encoding.codec = "json"
 
   labels.event_provider = "{{event.provider}}"
