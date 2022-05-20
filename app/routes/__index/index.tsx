@@ -6,6 +6,7 @@ import Image, { ImageFit } from "remix-image";
 import { FitNewsletterForm, NewsletterForm } from "~/components/NewsletterForm";
 import PostList from "~/components/PostList";
 import { isAuthenticated } from "~/services/auth.server";
+import { getGhSponsors } from "~/services/gh.server";
 import styles from "~/styles/index.css";
 import type { postItem } from "~/utils/posts.server";
 import { getPosts } from "~/utils/posts.server";
@@ -13,6 +14,9 @@ import { getPosts } from "~/utils/posts.server";
 type LoaderData = {
     user: false | User;
     posts: postItem[];
+    sponsors: {
+        node: { id: string; name: string; url: string; avatarUrl: string };
+    }[];
 };
 
 export const links: LinksFunction = () => {
@@ -23,11 +27,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     return {
         user: await isAuthenticated(request),
         posts: await getPosts(5),
+        sponsors: await getGhSponsors(),
     };
 };
 
 export default function Index(): JSX.Element {
     const loaderData = useLoaderData<LoaderData>();
+    console.log(loaderData.sponsors);
     return (
         <div className="space-y-4">
             <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
@@ -138,11 +144,7 @@ export default function Index(): JSX.Element {
                 <PostList posts={loaderData.posts} />
             </div>
 
-            {/* <div className="mt-4 flex items-center justify-center">*/}
-            {/*    <div className="p-6 bg-slate-300 dark:bg-gray-800 rounded-md basis-2/3">*/}
-                    <FitNewsletterForm title="Subsribe to my newsletter" />
-            {/*    </div>*/}
-            {/* </div>*/}
+            <FitNewsletterForm title="Subsribe to my newsletter" />
         </div>
     );
 }
