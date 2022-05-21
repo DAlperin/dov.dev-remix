@@ -1,8 +1,6 @@
-import { User } from "@prisma/client";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
 
-import RoundedImage from "~/components/RoundedImage";
 import { getGhSponsors } from "~/services/gh.server";
 
 type LoaderData = {
