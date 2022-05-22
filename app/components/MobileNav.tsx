@@ -19,6 +19,7 @@ export function MobileNav({ navItems, user }: Props): JSX.Element {
     const transition = useTransition();
     const [navShow, setNavShow] = useState(false);
     const [initial, setInitial] = useState(transition.location);
+    const [initialized, setInitialized] = useState(false);
 
     const onToggleNav = () => {
         setInitial(transition.location);
@@ -35,6 +36,10 @@ export function MobileNav({ navItems, user }: Props): JSX.Element {
     useEffect(() => {
         if (transition.location !== initial) setNavShow(false);
     }, [initial, transition.location]);
+
+    useEffect(() => {
+        setInitialized(true);
+    }, []);
 
     return (
         <div className="sm:hidden flex flex-row">
@@ -69,49 +74,52 @@ export function MobileNav({ navItems, user }: Props): JSX.Element {
                         )}
                     </svg>
                 </button>
-                <div
-                    className={`fixed w-full h-full top-24 right-0 bg-gray-200 dark:bg-gray-800 opacity-95 z-10 transform ease-in-out duration-300 ${
-                        navShow ? "translate-x-0" : "translate-x-full"
-                    }`}
-                >
-                    <button
-                        type="button"
-                        aria-label="toggle modal"
-                        className="fixed w-full h-full cursor-auto focus:outline-none"
-                        onClick={onToggleNav}
-                    />
-                    <nav className="fixed h-full mt-8">
-                        {navItems.map((item) => (
-                            <div key={item.name} className="px-12 py-4">
-                                <Link
-                                    to={item.link}
-                                    className="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
-                                    onClick={onToggleNav}
-                                >
-                                    {item.name}
-                                </Link>
+                {/* Don't accidentally flash the nav on load, never render the nav on the server */}
+                {initialized ? (
+                    <div
+                        className={`fixed w-full h-full top-24 right-0 bg-gray-200 dark:bg-gray-800 opacity-95 z-10 transform ease-in-out duration-300 ${
+                            navShow ? "translate-x-0" : "translate-x-full"
+                        }`}
+                    >
+                        <button
+                            type="button"
+                            aria-label="toggle modal"
+                            className="fixed w-full h-full cursor-auto focus:outline-none"
+                            onClick={onToggleNav}
+                        />
+                        <nav className="fixed h-full mt-8">
+                            {navItems.map((item) => (
+                                <div key={item.name} className="px-12 py-4">
+                                    <Link
+                                        to={item.link}
+                                        className="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
+                                        onClick={onToggleNav}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                </div>
+                            ))}
+                            <div className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 mx-12 px-5 rounded cursor-pointer max-w-fit">
+                                {user ? (
+                                    <Form
+                                        action="/api/logout"
+                                        method="post"
+                                        reloadDocument
+                                    >
+                                        <input
+                                            className="cursor-pointer"
+                                            type="submit"
+                                            value="Logout"
+                                            aria-label="Logout"
+                                        />
+                                    </Form>
+                                ) : (
+                                    <Link to="/login">Login</Link>
+                                )}
                             </div>
-                        ))}
-                        <div className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 mx-12 px-5 rounded cursor-pointer max-w-fit">
-                            {user ? (
-                                <Form
-                                    action="/api/logout"
-                                    method="post"
-                                    reloadDocument
-                                >
-                                    <input
-                                        className="cursor-pointer"
-                                        type="submit"
-                                        value="Logout"
-                                        aria-label="Logout"
-                                    />
-                                </Form>
-                            ) : (
-                                <Link to="/login">Login</Link>
-                            )}
-                        </div>
-                    </nav>
-                </div>
+                        </nav>
+                    </div>
+                ) : null}
             </div>
         </div>
     );
