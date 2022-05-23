@@ -44,9 +44,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     frontmatter.date = fancyDate;
 
     const session = await getSession(request.headers.get("cookie"));
-    if (Object.keys(session.data).length === 0) {
-        headers["Set-Cookie"] = await commitSession(session);
-    }
     if (!session.has(`hit:${slug}`)) {
         await db.postHit.create({
             data: {
@@ -54,7 +51,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
             },
         });
         session.set(`hit:${slug}`, 1);
-        await commitSession(session);
+        headers["Set-Cookie"] = await commitSession(session);
     }
 
     const hits = await db.postHit.count({
