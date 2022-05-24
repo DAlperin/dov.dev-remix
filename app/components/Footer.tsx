@@ -3,13 +3,14 @@ import { FaTwitter, FaEnvelope, FaGithub } from "react-icons/fa";
 type Props = {
     region?: string;
     time?: string;
+    rev?: string;
 };
 
-function RenderInfo({ region, time }: Props): JSX.Element | null {
+function RenderInfo({ region, time, rev }: Props): JSX.Element | null {
     if (!region || !time) return null;
     return (
         <p className="mb-0 text-xs">
-            Rendered in {region} on {time}
+            Rendered in {region} on {time} {rev ? `by ${rev}` : null}
         </p>
     );
 }

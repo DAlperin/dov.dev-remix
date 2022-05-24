@@ -13,8 +13,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     const user = await isAuthenticated(request);
     const isAuthed = user !== false;
     let region = "developement";
+    let rev = null;
     if (process.env.NODE_ENV === "production") {
         region = assertedEnvVar("FLY_REGION");
+        rev = assertedEnvVar("COMMIT_SHA_SHORT");
     }
 
     return {
@@ -22,6 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         navItems: getNavbarItems(isAuthed),
         theme: getTheme(),
         region,
+        rev,
         time: new Date().toUTCString(),
     };
 };
@@ -31,7 +34,11 @@ export function CatchBoundary(): JSX.Element {
     const loaderData = useLoaderData();
     const slug = params["*"];
     return (
-        <SectionContainer region={loaderData.region} time={loaderData.time}>
+        <SectionContainer
+            region={loaderData.region}
+            time={loaderData.time}
+            rev={loaderData.rev}
+        >
             <LayoutWrapper
                 user={loaderData.user}
                 navItems={loaderData.navItems}
