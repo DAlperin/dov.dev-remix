@@ -40,6 +40,9 @@ RUN npm run build
 # Finally, build the production image with minimal footprint
 FROM base
 
+ARG COMMIT_SHA
+ENV COMMIT_SHA=$COMMIT_SHA
+
 WORKDIR /myapp
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
