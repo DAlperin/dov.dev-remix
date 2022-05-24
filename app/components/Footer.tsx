@@ -15,7 +15,7 @@ function RenderInfo({ region, time, rev }: Props): JSX.Element | null {
     );
 }
 
-export default function Footer({ region, time }: Props): JSX.Element {
+export default function Footer({ region, time, rev }: Props): JSX.Element {
     return (
         <footer className="flex items-center justify-center opacity-60">
             <div className="flex flex-col items-center">
@@ -50,7 +50,7 @@ export default function Footer({ region, time }: Props): JSX.Element {
                         Dov Alperin • ©{new Date().getFullYear()} • dov.dev
                     </p>
                 </div>
-                <RenderInfo region={region} time={time} />
+                <RenderInfo region={region} time={time} rev={rev} />
             </div>
         </footer>
     );
