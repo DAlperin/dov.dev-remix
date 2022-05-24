@@ -44,7 +44,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     frontmatter.date = fancyDate;
 
     const session = await getSession(request.headers.get("cookie"));
-    if (!session.has(`hit:${slug}`)) {
+    if (process.env.NODE_ENV === "production" && !session.has(`hit:${slug}`)) {
         await db.postHit.create({
             data: {
                 slug,
