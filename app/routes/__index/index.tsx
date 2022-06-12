@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import type { LinksFunction, LoaderFunction } from "@remix-run/server-runtime";
 import Image, { ImageFit } from "remix-image";
 
-import { FitNewsletterForm, NewsletterForm } from "~/components/NewsletterForm";
+import { FitNewsletterForm } from "~/components/NewsletterForm";
 import PostList from "~/components/PostList";
 import { isAuthenticated } from "~/services/auth.server";
 import styles from "~/styles/index.css";

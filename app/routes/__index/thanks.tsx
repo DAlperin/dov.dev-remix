@@ -26,7 +26,7 @@ export default function Thanks(): JSX.Element {
                         <li key={sponsor.node.id} className="list-none">
                             <img
                                 className="rounded-full h-10 w-10 inline mr-2"
-                                alt={`${sponsor.node.name}s profile picture`}
+                                alt={`${sponsor.node.name}s profile`}
                                 src={sponsor.node.avatarUrl}
                             />
                             <span className="font-bold">

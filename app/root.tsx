@@ -1,36 +1,38 @@
 import {
     Links,
-    LiveReload,
     Meta,
-    Outlet,
     Scripts,
     ScrollRestoration,
     useLoaderData,
     useLocation,
     useSubmit,
     useTransition,
+    LiveReload,
 } from "@remix-run/react";
 import type {
-    MetaFunction,
-    LoaderFunction,
     LinksFunction,
+    LoaderFunction,
+    MetaFunction,
 } from "@remix-run/server-runtime";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-// @ts-expect-error FIXME: write some types for this
-import CommandPalette from "react18-react-command-palette";
+import { Outlet } from "remix";
 import {
     createThemeSessionResolver,
-    ThemeProvider,
-    useTheme,
     PreventFlashOnWrongTheme,
     Theme,
+    ThemeProvider,
+    useTheme,
 } from "remix-themes";
 import { ClientOnly } from "remix-utils";
 import { useSpinDelay } from "spin-delay";
 
 import styles from "./tailwind.css";
-import { isAuthenticated, auth } from "~/services/auth.server";
+import { auth, isAuthenticated } from "~/services/auth.server";
+
+// @ts-expect-error TODO: write types...
+import CommandPalette from "react18-react-command-palette"; // eslint-disable-line
+
 import {
     commitSession,
     getSession,
@@ -42,7 +44,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const user = await isAuthenticated(request);
     const session = await getSession(request.headers.get("cookie"));
     // eslint-disable-next-line unicorn/no-unsafe-regex
-    if (!/\/auth\/?([^\s]+)?/u.test(new URL(request.url).pathname)) {
+    if (!/\/auth\/?(\S+)?/u.test(new URL(request.url).pathname)) {
         session.unset(`__flash_${auth.sessionErrorKey}__`);
         await commitSession(session);
     }
@@ -193,8 +195,16 @@ function App(): JSX.Element {
             });
     });
     return (
-        <html lang="en" className={theme ?? ""}>
+        <html
+            lang="en"
+            className={`${theme ?? ""} ${
+                theme === Theme.DARK || theme === undefined || theme === null
+                    ? "forceDarkMode"
+                    : "forceLightMode"
+            }`} // this forces browsers to use the right color in their respective browser chromes, such as scrollbars
+        >
             <head>
+                <title>Dov Alperin</title>
                 <meta charSet="utf-8" />
                 <meta
                     name="viewport"

@@ -594,6 +594,14 @@ select {
   outline: 1px auto -webkit-focus-ring-color;
 }
 
+.forceDarkMode {
+  color-scheme: dark;
+}
+
+.forceLightMode{
+  color-scheme: light;
+}
+
 p > a,
     main > a,
     li > a {
@@ -1312,10 +1320,6 @@ summary {
 
 .pointer-events-auto {
   pointer-events: auto;
-}
-
-.visible {
-  visibility: visible;
 }
 
 .static {
@@ -2644,6 +2648,10 @@ pre {
 .disabled\:bg-gray-400:disabled {
   --tw-bg-opacity: 1;
   background-color: rgb(163 163 163 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:forceDarkMode {
+  color-scheme: dark;
 }
 
 .dark .dark\:prose-dark {

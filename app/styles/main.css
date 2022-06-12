@@ -52,6 +52,12 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
     .mostly_half {
         height: calc(50% - 0.5rem);
     }
+    .forceDarkMode {
+        color-scheme: dark;
+    }
+    .forceLightMode{
+        color-scheme: light;
+    }
     p > a,
     main > a,
     li > a {
