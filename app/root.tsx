@@ -195,14 +195,7 @@ function App(): JSX.Element {
             });
     });
     return (
-        <html
-            lang="en"
-            className={`${theme ?? ""} ${
-                theme === Theme.DARK || theme === undefined || theme === null
-                    ? "forceDarkMode"
-                    : "forceLightMode"
-            }`} // this forces browsers to use the right color in their respective browser chromes, such as scrollbars
-        >
+        <html lang="en" className={theme ?? ""}>
             <head>
                 <title>Dov Alperin</title>
                 <meta charSet="utf-8" />

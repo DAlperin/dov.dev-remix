@@ -48,15 +48,15 @@
 g.recharts-layer.recharts-cartesian-axis > g > g > text {
     fill: white;
 }
+html.dark {
+    color-scheme: dark;
+}
+html.light{
+    color-scheme: light;
+}
 @layer base {
     .mostly_half {
         height: calc(50% - 0.5rem);
-    }
-    .forceDarkMode {
-        color-scheme: dark;
-    }
-    .forceLightMode{
-        color-scheme: light;
     }
     p > a,
     main > a,

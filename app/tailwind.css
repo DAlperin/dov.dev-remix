@@ -594,14 +594,6 @@ select {
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-.forceDarkMode {
-  color-scheme: dark;
-}
-
-.forceLightMode{
-  color-scheme: light;
-}
-
 p > a,
     main > a,
     li > a {
@@ -2299,6 +2291,14 @@ g.recharts-layer.recharts-cartesian-axis > g > g > text {
   fill: white;
 }
 
+html.dark {
+  color-scheme: dark;
+}
+
+html.light{
+  color-scheme: light;
+}
+
 .finance-card > h1, .finance-card > h2, .finance-card > h3, .finance-card > h4 {
   --tw-text-opacity: 1;
   color: rgb(229 229 229 / var(--tw-text-opacity));
@@ -2648,10 +2648,6 @@ pre {
 .disabled\:bg-gray-400:disabled {
   --tw-bg-opacity: 1;
   background-color: rgb(163 163 163 / var(--tw-bg-opacity));
-}
-
-.dark .dark\:forceDarkMode {
-  color-scheme: dark;
 }
 
 .dark .dark\:prose-dark {
