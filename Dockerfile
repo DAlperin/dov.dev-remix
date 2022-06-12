@@ -22,7 +22,7 @@ WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 ADD package.json package-lock.json ./
-RUN npm prune --production
+RUN npm prune -f --production
 
 # Build the app
 FROM base as build
