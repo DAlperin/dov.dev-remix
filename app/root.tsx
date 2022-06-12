@@ -31,7 +31,7 @@ import styles from "./tailwind.css";
 import { auth, isAuthenticated } from "~/services/auth.server";
 
 // @ts-expect-error TODO: write types...
-import CommandPalette from "react18-react-command-palette"; // eslint-disable-line
+import CommandPalette from "react-command-palette"; // eslint-disable-line
 
 import {
     commitSession,

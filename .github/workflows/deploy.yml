@@ -24,6 +24,8 @@ jobs:
 
             - name: 📥 Download deps
               uses: bahmutov/npm-install@v1
+              with:
+                install-command: npm install -f # Until we can actually get up to date on React 18
 
             - name: 🔬 Lint
               run: npm run lint
