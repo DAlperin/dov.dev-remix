@@ -208,7 +208,7 @@ function App(): JSX.Element {
                     content={`https://dov.dev${location.pathname}`}
                 />
                 <script
-                    src="https://cdn.usefathom.com/script.js"
+                    src="https://thirtyeight-stupendous.d0va1p.net/script.js"
                     data-site="YXSYHQER"
                     defer
                 />
