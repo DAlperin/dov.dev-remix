@@ -208,22 +208,9 @@ function App(): JSX.Element {
                     content={`https://dov.dev${location.pathname}`}
                 />
                 <script
-                    async
-                    src="https://www.googletagmanager.com/gtag/js?id=G-KFKE2DMK1P"
-                />
-                <script
-                    async
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{
-                        __html: `
-                        
-                       window.dataLayer = window.dataLayer || [];
-                       function gtag(){dataLayer.push(arguments);}
-                       gtag('js', new Date());
-
-                       gtag('config', 'G-KFKE2DMK1P');
-                    `,
-                    }}
+                    src="https://cdn.usefathom.com/script.js"
+                    data-site="YXSYHQER"
+                    defer
                 />
                 <Meta />
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
