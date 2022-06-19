@@ -14,6 +14,7 @@ import type {
     LoaderFunction,
     MetaFunction,
 } from "@remix-run/server-runtime";
+import { load } from "fathom-client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Outlet } from "remix";
