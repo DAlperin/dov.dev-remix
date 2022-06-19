@@ -14,7 +14,6 @@ import type {
     LoaderFunction,
     MetaFunction,
 } from "@remix-run/server-runtime";
-import { load } from "fathom-client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Outlet } from "remix";
@@ -207,11 +206,6 @@ function App(): JSX.Element {
                 <meta
                     name="og:url"
                     content={`https://dov.dev${location.pathname}`}
-                />
-                <script
-                    src="https://thirtyeight-stupendous.d0va1p.net/script.js"
-                    data-site="YXSYHQER"
-                    defer
                 />
                 <Meta />
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
