@@ -1,43 +1,178 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-require-imports,@typescript-eslint/ban-ts-comment */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
 import express from "express";
-import prometheusMiddleware from 'express-prometheus-middleware';
+import prometheusMiddleware from "express-prometheus-middleware";
+import { readFileSync } from "fs";
 import morgan from "morgan";
 import path from "path";
+import type { Key } from "path-to-regexp";
+import { pathToRegexp, compile as compileRedirectPath } from "path-to-regexp";
 
 const app = express();
 const metricsApp = express();
 
 app.use(
     prometheusMiddleware({
-        metricsPath: '/metrics',
+        metricsPath: "/metrics",
         metricsApp,
         collectDefaultMetrics: true,
         requestDurationBuckets: [0.1, 0.5, 1, 1.5],
         requestLengthBuckets: [512, 1024, 5120, 10_240, 51_200, 102_400],
         responseLengthBuckets: [512, 1024, 5120, 10_240, 51_200, 102_400],
-        customLabels: ['region', 'app', 'instance'],
-        transformLabels: labels => {
+        customLabels: ["region", "app", "instance"],
+        transformLabels: (labels) => {
             // region: short 3 letter airport code for the region
-            labels.region = process.env.FLY_REGION ?? 'unknown';
+            labels.region = process.env.FLY_REGION ?? "unknown";
 
             // app: the app exposing these metrics
-            labels.app = process.env.FLY_APP_NAME ?? 'unknown';
+            labels.app = process.env.FLY_APP_NAME ?? "unknown";
 
             // instance: your app instance ID
-            labels.instance = process.env.FLY_ALLOC_ID ?? 'unknown';
+            labels.instance = process.env.FLY_ALLOC_ID ?? "unknown";
         },
     })
 );
 
 const metricsPort = process.env.METRICS_PORT ?? 9091;
 
+function parseRedirects(redirectsString: string) {
+    const possibleMethods = [
+        "HEAD",
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH",
+        "*",
+    ];
+    const redirects = redirectsString.split("\n").map((line, lineNum) => {
+        if (!line.trim() || line.startsWith("#")) return null;
+        const [one, two, three] = line
+            .split(" ")
+            .map((l) => l.trim())
+            .filter(Boolean);
+        if (!one) return null;
+        const splitOne = one.split(",");
+
+        let methods;
+        let from;
+        let to;
+        // Check to see if we specify a method. Otherwise, assume all.
+        if (possibleMethods.some((m) => splitOne.includes(m))) {
+            methods = splitOne;
+            from = two;
+            to = three;
+        } else {
+            methods = ["*"];
+            from = one;
+            to = two;
+        }
+        if (!from || !to) {
+            console.error(`Invalid redirect on line ${lineNum + 1}: "${line}"`);
+            return null;
+        }
+        const keys: Key[] = [];
+
+        const toUrl = to.includes("//")
+            ? new URL(to)
+            : new URL(`https://same_host${to}`);
+        try {
+            return {
+                methods,
+                from: pathToRegexp(from, keys),
+                keys,
+                toPathname: compileRedirectPath(toUrl.pathname, {
+                    encode: encodeURIComponent,
+                }),
+                toUrl,
+            };
+        } catch {
+            // if parsing the redirect fails, we'll warn, but we won't crash
+            console.error(
+                `Failed to parse redirect on line ${lineNum}: "${line}"`
+            );
+            return null;
+        }
+    });
+
+    return function redirectsMiddleware(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        const host = req.header("X-Forwarded-Host") ?? req.header("host");
+        const protocol = host?.includes("localhost") ? "http" : "https";
+        let reqUrl;
+        try {
+            reqUrl = new URL(`${protocol}://${host}${req.url}`);
+        } catch {
+            console.error(`Invalid URL: ${protocol}://${host}${req.url}`);
+            next();
+            return;
+        }
+        for (const redirect of redirects) {
+            try {
+                if (
+                    // @ts-expect-error
+                    !redirect.methods.includes("*") &&
+                    // @ts-expect-error
+                    !redirect.methods.includes(req.method)
+                ) {
+                    continue;
+                }
+                // @ts-expect-error
+                const match = redirect.from.exec(req.path);
+                if (!match) continue;
+
+                const params: Record<string, string> = {};
+                const paramValues = match.slice(1);
+                for (
+                    let paramIndex = 0;
+                    paramIndex < paramValues.length;
+                    paramIndex++
+                ) {
+                    const paramValue = paramValues[paramIndex];
+                    // @ts-expect-error
+                    const key = redirect.keys[paramIndex];
+                    if (key && paramValue) {
+                        params[key.name] = paramValue;
+                    }
+                }
+                // @ts-expect-error
+                const { toUrl } = redirect;
+
+                toUrl.protocol = protocol;
+                if (toUrl.host === "same_host") toUrl.host = reqUrl.host;
+
+                for (const [key, value] of reqUrl.searchParams.entries()) {
+                    toUrl.searchParams.append(key, value);
+                }
+                // @ts-expect-error
+                toUrl.pathname = redirect.toPathname(params);
+                res.redirect(307, toUrl.toString());
+                return;
+            } catch (error: unknown) {
+                // an error in the redirect shouldn't stop the request from going through
+                console.error(`Error processing redirects:`, {
+                    error,
+                    redirect,
+                    "req.url": req.url,
+                });
+            }
+        }
+        next();
+    };
+}
+
 metricsApp.listen(metricsPort, () => {
     console.log(`✅ metrics ready: http://localhost:${metricsPort}`);
 });
+
+const here = (...d: string[]) => path.join(__dirname, ...d);
+app.all("*", parseRedirects(readFileSync(here("../_redirects"), "utf8")));
 
 app.use((req, res, next) => {
     // helpful headers:
@@ -68,7 +203,10 @@ app.all("*", (req, res, next) => {
 
     const shouldReplay = isMethodReplayable && isReadOnlyRegion;
 
-    if (!shouldReplay) { next(); return; }
+    if (!shouldReplay) {
+        next();
+        return;
+    }
 
     const logInfo = {
         pathname,
@@ -107,13 +245,13 @@ app.all(
     MODE === "production"
         ? createRequestHandler({ build: require(BUILD_DIR) })
         : (...args) => {
-            purgeRequireCache();
-            const requestHandler = createRequestHandler({
-                build: require(BUILD_DIR),
-                mode: MODE,
-            });
-            return requestHandler(...args);
-        }
+              purgeRequireCache();
+              const requestHandler = createRequestHandler({
+                  build: require(BUILD_DIR),
+                  mode: MODE,
+              });
+              return requestHandler(...args);
+          }
 );
 
 const port = process.env.PORT ?? 3000;
