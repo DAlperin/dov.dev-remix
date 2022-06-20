@@ -14,7 +14,7 @@ export function NewsletterForm({
         if (fetcher.type === "done" && fetcher.data.ok) {
             plausible("Mailing list signup");
         }
-    }, [fetcher.type, fetcher.data]);
+    }, [fetcher.type, fetcher.data, plausible]);
     if (fetcher.type === "done" && fetcher.data.ok) {
         return (
             <div>
