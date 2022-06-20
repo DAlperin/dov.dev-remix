@@ -208,10 +208,13 @@ function App(): JSX.Element {
                     content={`https://dov.dev${location.pathname}`}
                 />
                 <Meta />
+                <script defer data-domain="dov.dev" src="/js/script.js" />
                 <script
-                    defer
-                    data-domain="dov.dev"
-                    src="https://plausible.io/js/plausible.js"
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                        window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+                `,
+                    }}
                 />
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
                 <Links />

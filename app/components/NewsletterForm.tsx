@@ -1,4 +1,7 @@
 import { useFetcher } from "@remix-run/react";
+import { useEffect } from "react";
+
+import { usePlausible } from "~/hooks/usePlausible";
 
 export function NewsletterForm({
     title = "Subscribe to the newsletter",
@@ -6,7 +9,12 @@ export function NewsletterForm({
     title: string;
 }): JSX.Element {
     const fetcher = useFetcher();
-
+    const plausible = usePlausible();
+    useEffect(() => {
+        if (fetcher.type === "done" && fetcher.data.ok) {
+            plausible("Mailing list signup");
+        }
+    }, [fetcher.type, fetcher.data]);
     if (fetcher.type === "done" && fetcher.data.ok) {
         return (
             <div>
