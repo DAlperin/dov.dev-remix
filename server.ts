@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports,@typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
 import { createRequestHandler } from "@remix-run/express";
@@ -8,7 +8,7 @@ import prometheusMiddleware from "express-prometheus-middleware";
 import { readFileSync } from "fs";
 import morgan from "morgan";
 import path from "path";
-import type { Key } from "path-to-regexp";
+import type { Key, PathFunction } from "path-to-regexp";
 import { pathToRegexp, compile as compileRedirectPath } from "path-to-regexp";
 
 const app = express();
@@ -38,7 +38,16 @@ app.use(
 
 const metricsPort = process.env.METRICS_PORT ?? 9091;
 
-function parseRedirects(redirectsString: string) {
+type Redirect = {
+    methods: string[];
+    from: RegExp;
+    keys: Key[];
+    toPathname: PathFunction;
+    toUrl: URL;
+};
+
+// h/t Kent C Dodds who this implementation is mostly ripped from
+function buildRedirectsMiddleware(redirectsString: string) {
     const possibleMethods = [
         "HEAD",
         "GET",
@@ -48,55 +57,62 @@ function parseRedirects(redirectsString: string) {
         "PATCH",
         "*",
     ];
-    const redirects = redirectsString.split("\n").map((line, lineNum) => {
-        if (!line.trim() || line.startsWith("#")) return null;
-        const [one, two, three] = line
-            .split(" ")
-            .map((l) => l.trim())
-            .filter(Boolean);
-        if (!one) return null;
-        const splitOne = one.split(",");
+    const redirects = redirectsString
+        .split("\n")
+        .map((line, lineNum) => {
+            if (!line.trim() || line.startsWith("#")) return null;
+            const [one, two, three] = line
+                .split(" ")
+                .map((l) => l.trim())
+                .filter(Boolean);
+            if (!one) return null;
+            const splitOne = one.split(",");
 
-        let methods;
-        let from;
-        let to;
-        // Check to see if we specify a method. Otherwise, assume all.
-        if (possibleMethods.some((m) => splitOne.includes(m))) {
-            methods = splitOne;
-            from = two;
-            to = three;
-        } else {
-            methods = ["*"];
-            from = one;
-            to = two;
-        }
-        if (!from || !to) {
-            console.error(`Invalid redirect on line ${lineNum + 1}: "${line}"`);
-            return null;
-        }
-        const keys: Key[] = [];
+            let methods;
+            let from;
+            let to;
+            // Check to see if we specify a method. Otherwise, assume all.
+            if (possibleMethods.some((m) => splitOne.includes(m))) {
+                methods = splitOne;
+                from = two;
+                to = three;
+            } else {
+                methods = ["*"];
+                from = one;
+                to = two;
+            }
+            if (!from || !to) {
+                console.error(
+                    `Invalid redirect on line ${lineNum + 1}: "${line}"`
+                );
+                return null;
+            }
+            const keys: Key[] = [];
 
-        const toUrl = to.includes("//")
-            ? new URL(to)
-            : new URL(`https://same_host${to}`);
-        try {
-            return {
-                methods,
-                from: pathToRegexp(from, keys),
-                keys,
-                toPathname: compileRedirectPath(toUrl.pathname, {
-                    encode: encodeURIComponent,
-                }),
-                toUrl,
-            };
-        } catch {
-            // if parsing the redirect fails, we'll warn, but we won't crash
-            console.error(
-                `Failed to parse redirect on line ${lineNum}: "${line}"`
-            );
-            return null;
-        }
-    });
+            const toUrl = to.includes("//")
+                ? new URL(to)
+                : new URL(`https://same_host${to}`);
+            try {
+                return {
+                    methods,
+                    from: pathToRegexp(from, keys),
+                    keys,
+                    toPathname: compileRedirectPath(toUrl.pathname, {
+                        encode: encodeURIComponent,
+                    }),
+                    toUrl,
+                };
+            } catch {
+                // if parsing the redirect fails, we'll warn, but we won't crash
+                console.error(
+                    `Failed to parse redirect on line ${lineNum}: "${line}"`
+                );
+                return null;
+            }
+        })
+        .filter((e): e is Redirect => {
+            return e !== null;
+        });
 
     return function redirectsMiddleware(
         req: express.Request,
@@ -107,8 +123,10 @@ function parseRedirects(redirectsString: string) {
         const protocol = host?.includes("localhost") ? "http" : "https";
         let reqUrl;
         try {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             reqUrl = new URL(`${protocol}://${host}${req.url}`);
         } catch {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             console.error(`Invalid URL: ${protocol}://${host}${req.url}`);
             next();
             return;
@@ -116,14 +134,12 @@ function parseRedirects(redirectsString: string) {
         for (const redirect of redirects) {
             try {
                 if (
-                    // @ts-expect-error
                     !redirect.methods.includes("*") &&
-                    // @ts-expect-error
                     !redirect.methods.includes(req.method)
                 ) {
                     continue;
                 }
-                // @ts-expect-error
+
                 const match = redirect.from.exec(req.path);
                 if (!match) continue;
 
@@ -135,13 +151,11 @@ function parseRedirects(redirectsString: string) {
                     paramIndex++
                 ) {
                     const paramValue = paramValues[paramIndex];
-                    // @ts-expect-error
                     const key = redirect.keys[paramIndex];
                     if (key && paramValue) {
                         params[key.name] = paramValue;
                     }
                 }
-                // @ts-expect-error
                 const { toUrl } = redirect;
 
                 toUrl.protocol = protocol;
@@ -150,7 +164,7 @@ function parseRedirects(redirectsString: string) {
                 for (const [key, value] of reqUrl.searchParams.entries()) {
                     toUrl.searchParams.append(key, value);
                 }
-                // @ts-expect-error
+
                 toUrl.pathname = redirect.toPathname(params);
                 res.redirect(307, toUrl.toString());
                 return;
@@ -172,7 +186,10 @@ metricsApp.listen(metricsPort, () => {
 });
 
 const here = (...d: string[]) => path.join(__dirname, ...d);
-app.all("*", parseRedirects(readFileSync(here("../_redirects"), "utf8")));
+app.all(
+    "*",
+    buildRedirectsMiddleware(readFileSync(here("../_redirects"), "utf8"))
+);
 
 app.use((req, res, next) => {
     // helpful headers:
@@ -190,7 +207,7 @@ app.use((req, res, next) => {
 });
 
 // if we're not in the primary region, then we need to make sure all
-// non-GET/HEAD/OPTIONS requests hit the primary region. In theory
+// non-GET/HEAD/OPTIONS requests hit the primary region. In theory,
 // it's fine to directly connect to planetscale but latency would be
 // high since currently we can only connect to it via us-east-1
 app.all("*", (req, res, next) => {
@@ -257,7 +274,7 @@ app.all(
 const port = process.env.PORT ?? 3000;
 
 app.listen(port, () => {
-    // require the built app so we're ready when the first request comes in
+    // require the built app, so we're ready when the first request comes in
     require(BUILD_DIR);
     console.log(`✅ app ready: http://localhost:${port}`);
 });
