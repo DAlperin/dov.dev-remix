@@ -1,4 +1,4 @@
-import { Image, ImageFit } from "remix-image";
+import { Image } from "remix-image";
 
 type Props = {
     path: string;
@@ -24,7 +24,7 @@ export default function RoundedImage({
                 },
             ]}
             options={{
-                fit: ImageFit.COVER,
+                fit: "cover",
             }}
             className={`rounded-full ${className ?? ""}`}
         />

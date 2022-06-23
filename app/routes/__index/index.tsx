@@ -51,7 +51,7 @@ export default function Index(): JSX.Element {
                             marginRight: "auto",
                         }}
                         options={{
-                            fit: ImageFit.COVER,
+                            fit: "cover",
                         }}
                         responsive={[
                             {

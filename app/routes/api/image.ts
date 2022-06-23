@@ -7,6 +7,7 @@ import {
     fetchResolver,
 } from "remix-image/server";
 
+import { S3Cache } from "~/utils/s3imagecache.server";
 import { sharpTransformer } from "~/utils/sharp.server";
 
 export const fetchImage: Resolver = async (asset, url, options, basePath) => {
@@ -17,8 +18,15 @@ export const fetchImage: Resolver = async (asset, url, options, basePath) => {
 };
 
 const config = {
-    selfUrl: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "http://localhost:8080",
-    cache: new DiskCache(),
+    selfUrl:
+        process.env.NODE_ENV === "development"
+            ? "http://localhost:3000"
+            : "http://localhost:8080",
+    cache: new S3Cache({
+        bucketName: "dovdotdevimagecache",
+        tbd: 0,
+        ttl: 10 * 1000,
+    }),
     resolver: fetchImage,
     transformer: sharpTransformer,
 };
