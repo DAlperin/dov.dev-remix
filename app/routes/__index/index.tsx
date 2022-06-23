@@ -46,6 +46,8 @@ export default function Index(): JSX.Element {
                     <Image
                         src="/static/headshot.png"
                         alt="Dov Alperin headshot"
+                        height="600"
+                        width="1000"
                         style={{
                             marginLeft: "auto",
                             marginRight: "auto",

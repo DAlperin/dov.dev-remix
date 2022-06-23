@@ -15,6 +15,8 @@ export default function RoundedImage({
         <Image
             src={path}
             alt={alt}
+            height="300"
+            width="300"
             responsive={[
                 {
                     size: {
