@@ -37,16 +37,16 @@ app.use(
     })
 );
 
-app.use(
-    cors({
-        origin: [
-            "dov.dev",
-            /\.dov\.dev$/u,
-            "nobookbans.com",
-            /\.nobookbans\.com$/u,
-        ],
-    })
-);
+// app.use(
+//     cors({
+//         origin: [
+//             "dov.dev",
+//             /\.dov\.dev$/u,
+//             "nobookbans.com",
+//             /\.nobookbans\.com$/u,
+//         ],
+//     })
+// );
 
 const metricsPort = process.env.METRICS_PORT ?? 9091;
 
@@ -178,6 +178,9 @@ function buildRedirectsMiddleware(redirectsString: string) {
                 }
 
                 toUrl.pathname = redirect.toPathname(params);
+                res.setHeader("Access-Control-Allow-Origin", "*");
+                res.setHeader("Access-Control-Allow-Methods", "*");
+                res.setHeader("Access-Control-Allow-Headers", "*");
                 res.redirect(307, toUrl.toString());
                 return;
             } catch (error: unknown) {
