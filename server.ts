@@ -166,6 +166,20 @@ function buildRedirectsMiddleware(redirectsString: string) {
                 }
 
                 toUrl.pathname = redirect.toPathname(params);
+                if (
+                    [
+                        "localhost",
+                        "dov.dev",
+                        "nobookbans.com",
+                        "www.nobookbans.com",
+                    ].includes(req.hostname)
+                ) {
+                    res.setHeader(
+                        "Access-Control-Allow-Origin",
+                        `${req.protocol}://${req.hostname}`
+                    );
+                    res.setHeader("Vary", "Origin");
+                }
                 res.redirect(307, toUrl.toString());
                 return;
             } catch (error: unknown) {
