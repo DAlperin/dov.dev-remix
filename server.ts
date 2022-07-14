@@ -3,6 +3,7 @@
 /* eslint-disable no-console */
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
+import cors from "cors";
 import express from "express";
 import prometheusMiddleware from "express-prometheus-middleware";
 import { readFileSync } from "fs";
@@ -33,6 +34,17 @@ app.use(
             // instance: your app instance ID
             labels.instance = process.env.FLY_ALLOC_ID ?? "unknown";
         },
+    })
+);
+
+app.use(
+    cors({
+        origin: [
+            "dov.dev",
+            /\.dov\.dev$/u,
+            "nobookbans.com",
+            /\.nobookbans\.com$/u,
+        ],
     })
 );
 
@@ -166,20 +178,6 @@ function buildRedirectsMiddleware(redirectsString: string) {
                 }
 
                 toUrl.pathname = redirect.toPathname(params);
-                if (
-                    [
-                        "localhost",
-                        "dov.dev",
-                        "nobookbans.com",
-                        "www.nobookbans.com",
-                    ].includes(req.hostname)
-                ) {
-                    res.setHeader(
-                        "Access-Control-Allow-Origin",
-                        `${req.protocol}://${req.hostname}`
-                    );
-                    res.setHeader("Vary", "Origin");
-                }
                 res.redirect(307, toUrl.toString());
                 return;
             } catch (error: unknown) {
