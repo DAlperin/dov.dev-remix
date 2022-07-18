@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     if (!slug) {
         return new Response("Not found", { status: 404 });
     }
-    const noCache = !!new URL(request.url).searchParams.has("noCache");
+    const noCache = !!new URL(request.url).searchParams.has("nocache");
 
     const headers: Record<string, string> = {};
 
@@ -40,6 +40,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         });
     }
     const { frontmatter, code } = post;
+
     const fancyDate = getPrettyDate(frontmatter.date);
     frontmatter.date = fancyDate;
 
@@ -59,6 +60,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
             slug,
         },
     });
+
     return json({ code, frontmatter, hits }, { headers });
 };
 

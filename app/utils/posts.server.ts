@@ -32,7 +32,11 @@ export async function getPost(
     noCache = false
 ): Promise<bundledMDX | undefined> {
     const shard = process.env.FLY_REGION ?? "main";
-    if (!noCache && (await cache.redis.exists(`post:${slug}:${shard}`))) {
+    if (
+        !noCache &&
+        process.env.NODE_ENV !== "production" &&
+        (await cache.redis.exists(`post:${slug}:${shard}`))
+    ) {
         const cached = await cache.redis.get(`post:${slug}:${shard}`);
         if (cached) {
             return JSON.parse(cached) as bundledMDX;
