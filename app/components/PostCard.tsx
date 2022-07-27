@@ -1,32 +1,33 @@
 import { Link } from "@remix-run/react";
 
-import type { postItem } from "~/utils/posts.server";
+import type { SanityPost } from "~/utils/post";
+import { getPrettyDate } from "~/utils/post";
 
 type Props = {
-    post: postItem;
+    post: SanityPost;
 };
 
 export default function PostCard({ post }: Props): JSX.Element {
     return (
         <div className="flex flex-col md:flex-row">
             <div className="basis-1/5 mt-1">
-                <li className="ml-0">{post.prettyDate}</li>
+                <li className="ml-0">{getPrettyDate(post.publishedAt)}</li>
             </div>
             <div className="flex-1">
-                <Link to={`/blog/${post.slug}`}>
+                <Link to={`/blog/${post.slug.current}`}>
                     <h3 className="leading-8">{post.title}</h3>
                 </Link>
                 <p className="mt-0">
-                    {post.tags.map((tag) => {
+                    {post.cats.map((cat) => {
                         return (
-                            <a key={tag} href={`/blog/tags/${tag}`}>
-                                {tag} &nbsp;
+                            <a key={cat.title} href={`/blog/tags/${cat.title}`}>
+                                {cat.title} &nbsp;
                             </a>
                         );
                     })}
                 </p>
                 <p className="light:text-gray-600 dark:text-gray-300">
-                    {post.summary}
+                    {post.description}
                 </p>
             </div>
         </div>

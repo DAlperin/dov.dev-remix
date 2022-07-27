@@ -1,18 +1,18 @@
 import type { User } from "@prisma/client";
 import { useLoaderData } from "@remix-run/react";
 import type { LinksFunction, LoaderFunction } from "@remix-run/server-runtime";
-import Image, { ImageFit } from "remix-image";
+import Image from "remix-image";
 
 import { FitNewsletterForm } from "~/components/NewsletterForm";
 import PostList from "~/components/PostList";
 import { isAuthenticated } from "~/services/auth.server";
 import styles from "~/styles/index.css";
-import type { postItem } from "~/utils/posts.server";
+import type { SanityPost } from "~/utils/post";
 import { getPosts } from "~/utils/posts.server";
 
 type LoaderData = {
     user: false | User;
-    posts: postItem[];
+    posts: SanityPost[];
 };
 
 export const links: LinksFunction = () => {

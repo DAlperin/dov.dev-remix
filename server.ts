@@ -3,7 +3,6 @@
 /* eslint-disable no-console */
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
-import cors from "cors";
 import express from "express";
 import prometheusMiddleware from "express-prometheus-middleware";
 import { readFileSync } from "fs";
@@ -36,17 +35,6 @@ app.use(
         },
     })
 );
-
-// app.use(
-//     cors({
-//         origin: [
-//             "dov.dev",
-//             /\.dov\.dev$/u,
-//             "nobookbans.com",
-//             /\.nobookbans\.com$/u,
-//         ],
-//     })
-// );
 
 const metricsPort = process.env.METRICS_PORT ?? 9091;
 

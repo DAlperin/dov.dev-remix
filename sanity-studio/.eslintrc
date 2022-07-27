@@ -1,0 +1,5 @@
+{
+  "extends": "@sanity/eslint-config-studio",
+  //I don't like this either, but I don't want to deal with merging eslint configs
+  "root": true
+}

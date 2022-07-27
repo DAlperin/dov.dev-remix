@@ -3,11 +3,11 @@ import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 
 import PostList from "~/components/PostList";
-import type { postItem } from "~/utils/posts.server";
+import type { SanityPost } from "~/utils/post";
 import { getPosts } from "~/utils/posts.server";
 
 type LoaderData = {
-    posts: postItem[];
+    posts: SanityPost[];
 };
 
 export const loader: LoaderFunction = async () => {

@@ -1,15 +1,15 @@
 import PostCard from "./PostCard";
-import type { postItem } from "~/utils/posts.server";
+import type { SanityPost } from "~/utils/post";
 
 type Props = {
-    posts: postItem[];
+    posts: SanityPost[];
 };
 
 export default function PostList({ posts }: Props): JSX.Element {
     return (
         <>
             {posts.map((post) => {
-                return <PostCard post={post} key={post.slug} />;
+                return <PostCard post={post} key={post.slug.current} />;
             })}
         </>
     );

@@ -771,6 +771,28 @@ summary {
   cursor: pointer;
 }
 
+blockquote {
+  margin-left: 0.25rem;
+  border-width: 1px;
+  border-top-width: 0px;
+  border-bottom-width: 0px;
+  border-right-width: 0px;
+  border-left-width: 4px;
+  --tw-border-opacity: 1;
+  border-color: rgb(64 64 64 / var(--tw-border-opacity));
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  font-style: italic;
+}
+
+.dark .tokenblockquote {
+  font-style: italic;
+}
+
+.tokenblockquote {
+  font-style: italic;
+}
+
 *, ::before, ::after {
   --tw-translate-x: 0;
   --tw-translate-y: 0;

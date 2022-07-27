@@ -1,13 +1,14 @@
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import { useLoaderData, json } from "superjson-remix";
 
-import { countTags } from "~/utils/posts.server";
+import type { SanityCategory } from "~/utils/post";
+import { getCategories } from "~/utils/posts.server";
 
 type LoaderData = {
-    tags: Map<string, number>;
+    tags: SanityCategory[];
 };
 export const loader: LoaderFunction = async () => {
-    const tags = await countTags();
+    const tags = await getCategories();
     return json<LoaderData>({
         tags,
     });
@@ -16,11 +17,10 @@ export const loader: LoaderFunction = async () => {
 export default function Index(): JSX.Element {
     const loaderData = useLoaderData<LoaderData>();
     const tags: JSX.Element[] = [];
-    loaderData.tags.forEach((count, tag) => {
+    loaderData.tags.forEach((tag) => {
         tags.push(
-            // eslint-disable-next-line react/no-array-index-key
-            <div key={`${tag}`}>
-                <a href={`/blog/tags/${tag}`}>{tag}</a>({count})
+            <div key={`${tag.title}`}>
+                <a href={`/blog/tags/${tag.title}`}>{tag.title}</a>
             </div>
         );
     });

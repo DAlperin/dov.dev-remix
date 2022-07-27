@@ -3,11 +3,11 @@ import type { LoaderFunction } from "@remix-run/server-runtime";
 
 import PostList from "~/components/PostList";
 import { empty } from "~/utils/array";
-import type { postItem } from "~/utils/posts.server";
+import type { SanityPost } from "~/utils/post";
 import { getPostsByTag } from "~/utils/posts.server";
 
 type LoaderData = {
-    posts: postItem[];
+    posts: SanityPost[];
     tag: string;
 };
 

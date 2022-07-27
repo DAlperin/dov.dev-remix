@@ -96,6 +96,9 @@ html.light{
     summary {
         @apply cursor-pointer;
     }
+    blockquote {
+        @apply ml-1 italic border px-3 border-t-0 border-gray-700 border-b-0 border-r-0 border-l-4
+    }
 }
 .finance-card > h1,
 .finance-card > h2,
