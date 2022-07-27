@@ -1,6 +1,7 @@
 import type { TypedObject } from "@portabletext/types";
 
 export type SanityPost = {
+    _id: string;
     title: string;
     cats: SanityCategory[];
     body: TypedObject | TypedObject[];

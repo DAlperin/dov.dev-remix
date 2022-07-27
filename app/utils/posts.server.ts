@@ -1,4 +1,4 @@
-import { getSanityClient } from "~/config/sanity";
+import { getSanityClient } from "~/config/sanity.server";
 import type { SanityCategory, SanityPost } from "~/utils/post";
 
 export async function getPosts(limit?: number): Promise<SanityPost[]> {
