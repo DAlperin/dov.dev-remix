@@ -1,6 +1,6 @@
 module.exports = {
     extends: "galex",
-    ignorePatterns: ["build", "public/build/**", "sanity"],
+    ignorePatterns: ["build", "public/build/**", "sanity-studio"],
     rules: {
         // Tailwind configuration...
         "import/dynamic-import-chunkname": 0,
