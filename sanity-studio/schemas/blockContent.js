@@ -64,6 +64,11 @@ export default {
             type: "code",
         },
         {
+            name: "newsletterform",
+            title: "Newsletter Form",
+            type: "newsletterform",
+        },
+        {
             type: "image",
             options: { hotspot: true },
             fields: [

@@ -8,6 +8,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
+import { FitNewsletterForm } from "~/components/NewsletterForm";
 import { getSanityClient } from "~/config/sanity";
 import { db } from "~/services/db.server";
 import type { SanityCategory, SanityPost } from "~/utils/post";
@@ -43,6 +44,9 @@ const portableTextMap: Partial<PortableTextReactComponents> = {
                     {value.code}
                 </SyntaxHighlighter>
             );
+        },
+        newsletterform: ({ value }) => {
+            return <FitNewsletterForm title={value.title} />;
         },
     },
 };
