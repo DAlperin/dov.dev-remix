@@ -1,6 +1,8 @@
 import type { TypedObject } from "@portabletext/types";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export type SanityPost = {
+    mainImage: SanityImageSource & { caption: string };
     _id: string;
     title: string;
     cats: SanityCategory[];

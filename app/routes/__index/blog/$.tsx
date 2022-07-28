@@ -26,7 +26,6 @@ type LoaderData = {
 };
 
 export const meta: MetaFunction = ({ data }) => {
-    console.log("META FUNCTION BEING CALLED?");
     return {
         title: data.sanityPosts[0].title,
         // description: data.frontmatter.summary,
@@ -142,6 +141,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
+    const builder = imageUrlBuilder(frontendSanityClient);
     const [data, setData] = useState(loaderData.sanityPosts);
     const post = filterDataToSingleItem(data, loaderData.preview);
     return (
@@ -168,6 +168,18 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
                     queryParams={loaderData.queryParams ?? {}}
                 />
             ) : null}
+            {post.mainImage === undefined ? null : (
+                <>
+                    <img
+                        className="w-full"
+                        src={builder.image(post.mainImage).auto("format").url()}
+                        alt={post.mainImage.caption}
+                    />
+                    <figcaption className="text-center mt-2 italic">
+                        {post.mainImage.caption}
+                    </figcaption>
+                </>
+            )}
             <PortableText value={post.body} components={portableTextMap} />
         </>
     );
