@@ -11,6 +11,7 @@ import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import { FitNewsletterForm } from "~/components/NewsletterForm";
 import Preview from "~/components/Preview";
+import { sanityClient as frontendSanityClient } from "~/config/sanity";
 import { getSanityClient } from "~/config/sanity.server";
 import { db } from "~/services/db.server";
 import type { SanityCategory, SanityPost } from "~/utils/post";
@@ -25,17 +26,18 @@ type LoaderData = {
 };
 
 export const meta: MetaFunction = ({ data }) => {
+    console.log("META FUNCTION BEING CALLED?");
     return {
-        title: data.title,
+        title: data.sanityPosts[0].title,
         // description: data.frontmatter.summary,
-        "og:title": data.title,
+        "og:title": data.sanityPosts[0].title,
     };
 };
 
 const portableTextMap: Partial<PortableTextReactComponents> = {
     types: {
         image: ({ value }: { value: SanityImageSource }) => {
-            const builder = imageUrlBuilder(getSanityClient());
+            const builder = imageUrlBuilder(frontendSanityClient);
             return (
                 <div className="mx-auto">
                     {/* eslint-disable-next-line jsx-a11y/alt-text */}
@@ -82,17 +84,16 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     }
 
     const requestUrl = new URL(request?.url);
-    console.log(requestUrl.searchParams, process.env.SANITY_PREVIEW_SECRET);
 
     const preview =
         requestUrl?.searchParams?.get("preview") ===
         process.env.SANITY_PREVIEW_SECRET;
 
-    console.log("is preview:", preview);
     const query = `*[_type == 'post' && slug.current == $slug] {
           "cats": categories[]->,
           ...
         }`;
+
     const queryParams = {
         slug,
     };

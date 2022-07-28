@@ -1,8 +1,6 @@
 import PicoSanity from "picosanity";
 
-import { sanityConfig } from "~/config/sanity";
-
-export const sanityClient = new PicoSanity(sanityConfig);
+import { sanityClient, sanityConfig } from "~/config/sanity";
 
 // // Authenticated client for fetching draft documents
 export const previewClient = new PicoSanity({
