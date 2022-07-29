@@ -209,8 +209,9 @@ function App(): JSX.Element {
                 />
                 <Meta />
                 <script defer data-domain="dov.dev" src="/js/script.js" />
+                {/* prettier-ignore */}
                 <script
-                    dangerouslySetInnerHTML={{
+                    dangerouslySetInnerHTML={{ // eslint-disable-line react/no-danger
                         __html: `
                         window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
                 `,

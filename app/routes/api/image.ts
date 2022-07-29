@@ -1,11 +1,6 @@
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import type { Resolver } from "remix-image/server";
-import {
-    imageLoader,
-    DiskCache,
-    fsResolver,
-    fetchResolver,
-} from "remix-image/server";
+import { imageLoader, fsResolver, fetchResolver } from "remix-image/server";
 
 import { S3Cache } from "~/utils/s3imagecache.server";
 import { sharpTransformer } from "~/utils/sharp.server";

@@ -1,3 +1,4 @@
+/* eslint sonarjs/cognitive-complexity: 0 */
 /* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
