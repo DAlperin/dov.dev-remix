@@ -2,6 +2,15 @@ import type { TypedObject } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export type SanityPost = {
+    fullImage: {
+        metadata: {
+            lqip: string;
+            dimensions: {
+                height: number;
+                width: number;
+            };
+        };
+    };
     mainImage: SanityImageSource & { caption: string };
     _id: string;
     title: string;

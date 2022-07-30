@@ -11,6 +11,7 @@ import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import { FitNewsletterForm } from "~/components/NewsletterForm";
 import Preview from "~/components/Preview";
+import ProgressiveImg from "~/components/ProgressiveImg";
 import { sanityClient as frontendSanityClient } from "~/config/sanity";
 import { getSanityClient } from "~/config/sanity.server";
 import { db } from "~/services/db.server";
@@ -90,6 +91,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
     const query = `*[_type == 'post' && slug.current == $slug] {
           "cats": categories[]->,
+          "fullImage": mainImage.asset->,
           ...
         }`;
 
@@ -170,8 +172,11 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
             ) : null}
             {post.mainImage === undefined ? null : (
                 <>
-                    <img
+                    <ProgressiveImg
                         className="w-full"
+                        height={post.fullImage.metadata.dimensions.height}
+                        width={post.fullImage.metadata.dimensions.width}
+                        placeholderSrc={post.fullImage.metadata.lqip}
                         src={builder.image(post.mainImage).auto("format").url()}
                         alt={post.mainImage.caption}
                     />
