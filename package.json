@@ -19,7 +19,7 @@
         "format": "prettier --write .",
         "start": "cross-env NODE_ENV=production node ./build/server.js",
         "stats": "loc --exclude package-lock.json app/tailwind.css",
-        "build:sanity": "cd sanity-studio && sanity build -y && cp -r ./dist ../public/studio",
+        "build:sanity": "cd sanity-studio && npm i && sanity build -y && cp -r ./dist ../public/studio",
         "postinstall": "remix setup node",
         "lint": "eslint . --fix",
         "typecheck": "tsc -b"
