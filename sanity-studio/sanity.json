@@ -1,7 +1,8 @@
 {
   "root": true,
   "project": {
-    "name": "dov.dev"
+    "name": "dov.dev",
+    "basePath": "/studio"
   },
   "api": {
     "projectId": "rg368k0k",
