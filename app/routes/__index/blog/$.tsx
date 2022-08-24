@@ -1,22 +1,24 @@
-import type { PortableTextReactComponents } from "@portabletext/react";
-import { PortableText } from "@portabletext/react";
-import { useLoaderData } from "@remix-run/react";
-import type { LoaderFunction, MetaFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import type {PortableTextReactComponents} from "@portabletext/react";
+import {PortableText} from "@portabletext/react";
+import {useLoaderData} from "@remix-run/react";
+import type {LoaderFunction, MetaFunction} from "@remix-run/server-runtime";
+import {json} from "@remix-run/server-runtime";
 import imageUrlBuilder from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import { useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import type {SanityImageSource} from "@sanity/image-url/lib/types/types";
+import {useEffect, useState} from "react";
+import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import {okaidia, prism} from "react-syntax-highlighter/dist/cjs/styles/prism";
 
-import { FitNewsletterForm } from "~/components/NewsletterForm";
+import {FitNewsletterForm} from "~/components/NewsletterForm";
 import Preview from "~/components/Preview";
 import ProgressiveImg from "~/components/ProgressiveImg";
-import { sanityClient as frontendSanityClient } from "~/config/sanity";
-import { getSanityClient } from "~/config/sanity.server";
-import { db } from "~/services/db.server";
-import type { SanityCategory, SanityPost } from "~/utils/post";
-import { commitSession, getSession } from "~/utils/session.server";
+import {sanityClient as frontendSanityClient} from "~/config/sanity";
+import {getSanityClient} from "~/config/sanity.server";
+import {db} from "~/services/db.server";
+import type {SanityCategory, SanityPost} from "~/utils/post";
+import {commitSession, getSession} from "~/utils/session.server";
+import {Theme, useTheme} from "remix-themes";
+import {themeSessionResolver} from "~/root";
 
 type LoaderData = {
     sanityPosts: SanityPost[];
@@ -34,7 +36,36 @@ export const meta: MetaFunction = ({ data }) => {
     };
 };
 
+
+const BuildPre = (code: string) => {
+    return ({ children }: {children: JSX.Element}) => <pre className="blog-pre">
+        <CodeCopyBtn code={code}/>
+        {children}
+    </pre>
+}
+
+function CodeCopyBtn({ code }: {code: string}) {
+    const [copyOk, setCopyOk] = useState(false);
+
+    const iconColor = copyOk ? '#0af20a' : '#ddd';
+
+    const handleClick = () => {
+        navigator.clipboard.writeText(code)
+        setCopyOk(true)
+        setTimeout(() => {
+            setCopyOk(false);
+        }, 500);
+    }
+
+    return (
+        <div className="code-copy-btn">
+            <button onClick={handleClick} className="text-lg mt-3 mr-3" style={{color: iconColor}}>Copy</button>
+        </div>
+    )
+}
+
 const portableTextMap: Partial<PortableTextReactComponents> = {
+
     types: {
         image: ({ value }: { value: SanityImageSource }) => {
             const builder = imageUrlBuilder(frontendSanityClient);
@@ -46,8 +77,19 @@ const portableTextMap: Partial<PortableTextReactComponents> = {
             );
         },
         codeBlock: ({ value }) => {
+            const [mounted, setMounted] = useState(false)
+            const [theme, _] = useTheme()
+            // useEffect only runs on the client, so now we can safely show the UI
+            useEffect(() => {
+                setMounted(true)
+            }, [])
+
+            if (!mounted) {
+                return <pre><code>{value.code}</code></pre>
+            }
+
             return (
-                <SyntaxHighlighter language={value.language} style={okaidia}>
+                <SyntaxHighlighter language={value.language} style={theme === Theme.DARK ? okaidia : prism} PreTag={BuildPre(value.code)}>
                     {value.code}
                 </SyntaxHighlighter>
             );
@@ -78,6 +120,7 @@ export function filterDataToSingleItem(
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
+    const { getTheme } = await themeSessionResolver(request);
     const slug = params["*"];
     if (!slug) {
         return new Response("Not found", { status: 404 });
@@ -137,6 +180,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
             query: preview ? query : null,
             queryParams: preview ? queryParams : null,
             hits,
+            theme: getTheme()
         },
         { headers }
     );
@@ -146,6 +190,7 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
     const builder = imageUrlBuilder(frontendSanityClient);
     const [data, setData] = useState(loaderData.sanityPosts);
     const post = filterDataToSingleItem(data, loaderData.preview);
+
     return (
         <>
             <h1 className="leading-14">{post.title}</h1>
