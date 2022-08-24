@@ -11,6 +11,7 @@ import morgan from "morgan";
 import path from "path";
 import type { Key, PathFunction } from "path-to-regexp";
 import { pathToRegexp, compile as compileRedirectPath } from "path-to-regexp";
+import 'dotenv/config'
 
 const app = express();
 const metricsApp = express();
@@ -195,13 +196,15 @@ app.all(
     buildRedirectsMiddleware(readFileSync(here("../_redirects"), "utf8"))
 );
 
+const noCleanUrls = ["/studio/"]
+
 app.use((req, res, next) => {
     // helpful headers:
     res.set("x-fly-region", process.env.FLY_REGION ?? "unknown");
     res.set("Strict-Transport-Security", `max-age=${60 * 60 * 24 * 365 * 100}`);
 
     // /clean-urls/ -> /clean-urls
-    if (req.path.endsWith("/") && req.path.length > 1) {
+    if (req.path.endsWith("/") && req.path.length > 1 && !noCleanUrls.includes(req.path)) {
         const query = req.url.slice(req.path.length);
         const safepath = req.path.slice(0, -1).replace(/\/+/gu, "/");
         res.redirect(301, `${safepath}${query}`);
