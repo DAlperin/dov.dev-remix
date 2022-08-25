@@ -8,17 +8,17 @@ import type {SanityImageSource} from "@sanity/image-url/lib/types/types";
 import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {okaidia, prism} from "react-syntax-highlighter/dist/cjs/styles/prism";
+import {Theme, useTheme} from "remix-themes";
 
 import {FitNewsletterForm} from "~/components/NewsletterForm";
 import Preview from "~/components/Preview";
 import ProgressiveImg from "~/components/ProgressiveImg";
 import {sanityClient as frontendSanityClient} from "~/config/sanity";
 import {getSanityClient} from "~/config/sanity.server";
+import {themeSessionResolver} from "~/root";
 import {db} from "~/services/db.server";
 import type {SanityCategory, SanityPost} from "~/utils/post";
 import {commitSession, getSession} from "~/utils/session.server";
-import {Theme, useTheme} from "remix-themes";
-import {themeSessionResolver} from "~/root";
 
 type LoaderData = {
     sanityPosts: SanityPost[];
@@ -37,7 +37,7 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 
-const BuildPre = (code: string) => {
+const buildPre = (code: string) => {
     return ({ children }: {children: JSX.Element}) => <pre className="blog-pre">
         <CodeCopyBtn code={code}/>
         {children}
@@ -49,8 +49,8 @@ function CodeCopyBtn({ code }: {code: string}) {
 
     const iconColor = copyOk ? '#0af20a' : '#ddd';
 
-    const handleClick = () => {
-        navigator.clipboard.writeText(code)
+    const handleClick = async () => {
+        await navigator.clipboard.writeText(code)
         setCopyOk(true)
         setTimeout(() => {
             setCopyOk(false);
@@ -59,13 +59,12 @@ function CodeCopyBtn({ code }: {code: string}) {
 
     return (
         <div className="code-copy-btn">
-            <button onClick={handleClick} className="text-lg mt-3 mr-3" style={{color: iconColor}}>Copy</button>
+            <button type="button" onClick={handleClick} className="text-lg mt-3 mr-3" style={{color: iconColor}}>Copy</button>
         </div>
     )
 }
 
 const portableTextMap: Partial<PortableTextReactComponents> = {
-
     types: {
         image: ({ value }: { value: SanityImageSource }) => {
             const builder = imageUrlBuilder(frontendSanityClient);
@@ -76,9 +75,9 @@ const portableTextMap: Partial<PortableTextReactComponents> = {
                 </div>
             );
         },
-        codeBlock: ({ value }) => {
+        codeBlock: function CodeBlock ({ value }) {
             const [mounted, setMounted] = useState(false)
-            const [theme, _] = useTheme()
+            const [theme] = useTheme()
             // useEffect only runs on the client, so now we can safely show the UI
             useEffect(() => {
                 setMounted(true)
@@ -89,7 +88,7 @@ const portableTextMap: Partial<PortableTextReactComponents> = {
             }
 
             return (
-                <SyntaxHighlighter language={value.language} style={theme === Theme.DARK ? okaidia : prism} PreTag={BuildPre(value.code)}>
+                <SyntaxHighlighter language={value.language} style={theme === Theme.DARK ? okaidia : prism} PreTag={buildPre(value.code)}>
                     {value.code}
                 </SyntaxHighlighter>
             );

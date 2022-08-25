@@ -196,7 +196,7 @@ app.all(
     buildRedirectsMiddleware(readFileSync(here("../_redirects"), "utf8"))
 );
 
-const noCleanUrls = ["/studio/"]
+const noCleanUrls = new Set(["/studio/"])
 
 app.use((req, res, next) => {
     // helpful headers:
@@ -204,7 +204,7 @@ app.use((req, res, next) => {
     res.set("Strict-Transport-Security", `max-age=${60 * 60 * 24 * 365 * 100}`);
 
     // /clean-urls/ -> /clean-urls
-    if (req.path.endsWith("/") && req.path.length > 1 && !noCleanUrls.includes(req.path)) {
+    if (req.path.endsWith("/") && req.path.length > 1 && !noCleanUrls.has(req.path)) {
         const query = req.url.slice(req.path.length);
         const safepath = req.path.slice(0, -1).replace(/\/+/gu, "/");
         res.redirect(301, `${safepath}${query}`);

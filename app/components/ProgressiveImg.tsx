@@ -6,10 +6,10 @@ export default function ProgressiveImg({
     alt,
     ...props
 }: {
+    [x: string]: unknown;
     placeholderSrc: string;
     src: string;
     alt: string;
-    [x: string]: unknown;
 }): JSX.Element {
     const [imgSrc, setImgSrc] = useState(placeholderSrc || src);
 
