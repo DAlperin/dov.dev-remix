@@ -19,6 +19,7 @@ import {themeSessionResolver} from "~/root";
 import {db} from "~/services/db.server";
 import type {SanityCategory, SanityPost} from "~/utils/post";
 import {commitSession, getSession} from "~/utils/session.server";
+import {cache} from "~/services/cache.server";
 
 type LoaderData = {
     sanityPosts: SanityPost[];
@@ -78,7 +79,7 @@ const portableTextMap: Partial<PortableTextReactComponents> = {
         codeBlock: function CodeBlock ({ value }) {
             const [mounted, setMounted] = useState(false)
             const [theme] = useTheme()
-            // useEffect only runs on the client, so now we can safely show the UI
+
             useEffect(() => {
                 setMounted(true)
             }, [])
@@ -141,10 +142,17 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         slug,
     };
 
-    const sanityPosts = await getSanityClient(preview).fetch(
-        query,
-        queryParams
-    );
+    let sanityPosts
+
+    if (await cache.redis.exists(`post:${slug}`) && !preview) {
+       sanityPosts = JSON.parse(await cache.redis.get(`post:${slug}`))
+    } else {
+        sanityPosts = await getSanityClient(preview).fetch(
+            query,
+            queryParams
+        );
+        cache.redis.set(`post:${slug}`, JSON.stringify(sanityPosts), "EX", 200)
+    }
 
     if (sanityPosts.length === 0) {
         throw new Response("Not Found", {
