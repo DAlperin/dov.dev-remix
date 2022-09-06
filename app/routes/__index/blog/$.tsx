@@ -29,11 +29,15 @@ type LoaderData = {
     preview: boolean;
 };
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction = ({ data }: {data: LoaderData}) => {
+    const builder = imageUrlBuilder(frontendSanityClient);
     return {
         title: data.sanityPosts[0].title,
-        // description: data.frontmatter.summary,
+        description: data.sanityPosts[0].description,
+        keywords: data.sanityPosts[0].cats.map(keyword => keyword.title).join(","),
         "og:title": data.sanityPosts[0].title,
+        "og:description": data.sanityPosts[0].description,
+        "og:image": builder.image(data.sanityPosts[0].mainImage).auto("format").url()
     };
 };
 
