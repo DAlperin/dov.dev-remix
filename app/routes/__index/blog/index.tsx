@@ -4,7 +4,7 @@ import { json } from "@remix-run/server-runtime";
 
 import PostList from "~/components/PostList";
 import type { SanityPost } from "~/utils/post";
-import { getPosts } from "~/utils/posts.server";
+import { getPosts } from "~/services/posts.server";
 
 type LoaderData = {
     posts: SanityPost[];

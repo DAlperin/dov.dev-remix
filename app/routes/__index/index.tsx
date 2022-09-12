@@ -8,7 +8,7 @@ import PostList from "~/components/PostList";
 import { isAuthenticated } from "~/services/auth.server";
 import styles from "~/styles/index.css";
 import type { SanityPost } from "~/utils/post";
-import { getPosts } from "~/utils/posts.server";
+import { getPosts } from "~/services/posts.server";
 
 type LoaderData = {
     user: false | User;
