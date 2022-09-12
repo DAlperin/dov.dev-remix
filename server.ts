@@ -258,6 +258,11 @@ app.use(
 // more aggressive with this caching.
 app.use(express.static("public", { maxAge: "1h" }));
 
+// Mount the sanity studio react router app
+app.use(
+    "/studio/*",
+    express.static("public/studio/index.html", { maxAge: "1h" }));
+
 app.use(morgan("tiny"));
 
 const MODE = process.env.NODE_ENV;
