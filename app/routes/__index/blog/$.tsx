@@ -108,6 +108,7 @@ export function filterDataToSingleItem(
     data: SanityPost[],
     preview = false
 ): SanityPost {
+    // console.log("IN HERE", data)
     if (!Array.isArray(data)) {
         return data;
     }
@@ -117,6 +118,7 @@ export function filterDataToSingleItem(
     }
 
     if (preview) {
+        console.log(true, data)
         return data.find((item) => item._id.startsWith(`drafts.`)) ?? data[0];
     }
 
@@ -151,10 +153,13 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     if (await cache.redis.exists(`post:${slug}`) && !preview) {
        sanityPosts = JSON.parse(await cache.redis.get(`post:${slug}`))
     } else {
+        console.log("NO cache")
+        console.log(preview)
         sanityPosts = await getSanityClient(preview).fetch(
             query,
             queryParams
         );
+        console.log(sanityPosts)
         cache.redis.set(`post:${slug}`, JSON.stringify(sanityPosts), "EX", 200)
     }
 
