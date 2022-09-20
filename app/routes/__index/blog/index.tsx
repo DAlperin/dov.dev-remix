@@ -3,8 +3,8 @@ import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 
 import PostList from "~/components/PostList";
-import type { SanityPost } from "~/utils/post";
 import { getPosts } from "~/services/posts.server";
+import type { SanityPost } from "~/utils/post";
 
 type LoaderData = {
     posts: SanityPost[];

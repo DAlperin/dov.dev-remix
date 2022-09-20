@@ -2,17 +2,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
-import { NodeSDK } from "@opentelemetry/sdk-node";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
-
-const traceExporter = new OTLPTraceExporter();
-
-const sdk = new NodeSDK({
-    traceExporter,
-    instrumentations: [getNodeAutoInstrumentations()],
-});
-
+import { NodeSDK } from "@opentelemetry/sdk-node";
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
 import express from "express";
@@ -24,6 +16,13 @@ import type { Key, PathFunction } from "path-to-regexp";
 import { pathToRegexp, compile as compileRedirectPath } from "path-to-regexp";
 
 import "dotenv/config";
+
+const traceExporter = new OTLPTraceExporter();
+
+const sdk = new NodeSDK({
+    traceExporter,
+    instrumentations: [getNodeAutoInstrumentations()],
+});
 
 sdk.start().then(() => {
     const app = express();
@@ -325,4 +324,6 @@ sdk.start().then(() => {
             }
         }
     }
+}).catch(() => {
+    throw new Error("Failed to start instrumentation")
 });

@@ -16,10 +16,10 @@ import ProgressiveImg from "~/components/ProgressiveImg";
 import {sanityClient as frontendSanityClient} from "~/config/sanity";
 import {getSanityClient} from "~/config/sanity.server";
 import {themeSessionResolver} from "~/root";
+import {cache} from "~/services/cache.server";
 import {db} from "~/services/db.server";
 import type {SanityCategory, SanityPost} from "~/utils/post";
 import {commitSession, getSession} from "~/utils/session.server";
-import {cache} from "~/services/cache.server";
 
 type LoaderData = {
     sanityPosts: SanityPost[];

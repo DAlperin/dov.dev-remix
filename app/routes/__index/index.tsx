@@ -6,9 +6,9 @@ import Image from "remix-image";
 import { FitNewsletterForm } from "~/components/NewsletterForm";
 import PostList from "~/components/PostList";
 import { isAuthenticated } from "~/services/auth.server";
+import { getPosts } from "~/services/posts.server";
 import styles from "~/styles/index.css";
 import type { SanityPost } from "~/utils/post";
-import { getPosts } from "~/services/posts.server";
 
 type LoaderData = {
     user: false | User;

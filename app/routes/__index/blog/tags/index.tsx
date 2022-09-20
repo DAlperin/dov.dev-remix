@@ -1,8 +1,8 @@
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import { useLoaderData, json } from "superjson-remix";
 
-import type { SanityCategory } from "~/utils/post";
 import { getCategories } from "~/services/posts.server";
+import type { SanityCategory } from "~/utils/post";
 
 type LoaderData = {
     tags: SanityCategory[];
