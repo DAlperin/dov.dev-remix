@@ -27,6 +27,11 @@
     "dependencies": {
         "@aws-sdk/client-s3": "3.113.0",
         "@mdx-js/mdx": "^2.1.1",
+        "@opentelemetry/auto-instrumentations-node": "^0.32.1",
+        "@opentelemetry/exporter-trace-otlp-proto": "^0.33.0",
+        "@opentelemetry/instrumentation-express": "^0.31.1",
+        "@opentelemetry/instrumentation-http": "^0.33.0",
+        "@opentelemetry/sdk-node": "^0.33.0",
         "@portabletext/react": "1.0.6",
         "@prisma/client": "3.12.0",
         "@remix-run/express": "^1.3.4",
