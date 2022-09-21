@@ -234,7 +234,7 @@ sdk.start()
                 `max-age=${60 * 60 * 24 * 365 * 100}`
             );
             if (activeSpan) {
-                res.set("trace-id", activeSpan.spanContext().spanId);
+                res.set("trace-id", activeSpan.spanContext().traceId);
             }
 
             // /clean-urls/ -> /clean-urls
