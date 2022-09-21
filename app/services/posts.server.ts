@@ -1,14 +1,19 @@
 import { getSanityClient } from "~/config/sanity.server";
 import type { SanityCategory, SanityPost } from "~/utils/post";
+import {tracer} from "../../telemetry";
 
 export async function getPosts(limit?: number): Promise<SanityPost[]> {
-    return getSanityClient().fetch(
-        `*[_type == 'post'][0...$limit] {
+    return tracer.startActiveSpan("getPosts", span => {
+        const posts = getSanityClient().fetch(
+            `*[_type == 'post'][0...$limit] {
           "cats": categories[]->,
           ...
         } | order(dateTime(publishedAt) desc)`,
-        { limit: limit ? limit : 5 }
-    );
+            { limit: limit ? limit : 5 }
+        );
+        span.end()
+        return posts
+    })
 }
 
 export async function countPostsPerTag(tag: string): Promise<number> {
@@ -27,12 +32,17 @@ export async function countPostsPerTag(tag: string): Promise<number> {
 }
 
 export async function getCategories(): Promise<SanityCategory[]> {
-    return getSanityClient().fetch('*[_type == "category"]');
+    return tracer.startActiveSpan("getCategories", span => {
+        const cats = getSanityClient().fetch('*[_type == "category"]');
+        span.end()
+        return cats
+    })
 }
 
 export async function getPostsByTag(tag: string): Promise<SanityPost[]> {
-    return getSanityClient().fetch(
-        `
+    return tracer.startActiveSpan("getPostsByTag", span => {
+        const posts = getSanityClient().fetch(
+            `
         *[_type == "post" && $cat in categories[]->title] {
           ...,
           "cats": categories[]->,
@@ -41,6 +51,9 @@ export async function getPostsByTag(tag: string): Promise<SanityPost[]> {
             slug
           },
         }`,
-        { cat: tag }
-    );
+            {cat: tag}
+        );
+        span.end()
+        return posts
+    })
 }

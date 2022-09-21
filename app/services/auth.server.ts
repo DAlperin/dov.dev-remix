@@ -11,6 +11,7 @@ import {
     getSession,
     sessionStorage,
 } from "~/utils/session.server";
+import api from "@opentelemetry/api";
 
 export type sessionUser = {
     id: string;
@@ -66,6 +67,11 @@ export async function isAuthenticated(
             throw runtimeRedirect(options.failureRedirect);
         }
         return false;
+    }
+    let activeSpan = api.trace.getActiveSpan();
+    if (activeSpan && user) {
+        activeSpan.setAttribute("user.id", user.id);
+        activeSpan.setAttribute("user.name", user.name);
     }
     if (options?.successRedirect) {
 

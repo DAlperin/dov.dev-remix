@@ -39,6 +39,7 @@ import {
     sessionStorage,
 } from "~/utils/session.server";
 
+
 export const loader: LoaderFunction = async ({ request }) => {
     const { getTheme } = await themeSessionResolver(request);
     const user = await isAuthenticated(request);
