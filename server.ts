@@ -7,6 +7,7 @@ import api from "@opentelemetry/api";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { NodeSDK } from "@opentelemetry/sdk-node";
+import { PrismaInstrumentation } from "@prisma/instrumentation";
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
 import express from "express";
@@ -21,7 +22,10 @@ const traceExporter = new OTLPTraceExporter();
 
 const sdk = new NodeSDK({
     traceExporter,
-    instrumentations: [getNodeAutoInstrumentations()],
+    instrumentations: [
+        getNodeAutoInstrumentations(),
+        new PrismaInstrumentation(),
+    ],
 });
 
 sdk.start()

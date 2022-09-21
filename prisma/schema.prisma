@@ -4,7 +4,7 @@
 generator client {
   provider = "prisma-client-js"
   binaryTargets = ["native"]
-  previewFeatures = ["referentialIntegrity"]
+  previewFeatures = ["referentialIntegrity", "tracing"]
 }
 
 model User {
