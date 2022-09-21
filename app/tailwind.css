@@ -1608,6 +1608,10 @@ blockquote {
   width: 80%;
 }
 
+.w-1\/2 {
+  width: 50%;
+}
+
 .min-w-full {
   min-width: 100%;
 }
@@ -1652,6 +1656,10 @@ blockquote {
 
 .flex-initial {
   flex: 0 1 auto;
+}
+
+.grow {
+  flex-grow: 1;
 }
 
 .basis-full {
@@ -1710,6 +1718,10 @@ blockquote {
 
 .items-start {
   align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .items-center {
@@ -2007,6 +2019,10 @@ blockquote {
 
 .text-center {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .text-lg {

@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
+import "dotenv/config";
+import api from "@opentelemetry/api";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { NodeSDK } from "@opentelemetry/sdk-node";
@@ -14,9 +16,6 @@ import morgan from "morgan";
 import path from "path";
 import type { Key, PathFunction } from "path-to-regexp";
 import { pathToRegexp, compile as compileRedirectPath } from "path-to-regexp";
-
-import "dotenv/config";
-import api from "@opentelemetry/api";
 
 const traceExporter = new OTLPTraceExporter();
 
@@ -147,8 +146,8 @@ sdk.start()
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     reqUrl = new URL(`${protocol}://${host}${req.url}`);
                 } catch {
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     console.error(
+                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                         `Invalid URL: ${protocol}://${host}${req.url}`
                     );
                     next();
@@ -226,7 +225,7 @@ sdk.start()
         const noCleanUrls = new Set(["/studio/"]);
 
         app.use((req, res, next) => {
-            let activeSpan = api.trace.getActiveSpan();
+            const activeSpan = api.trace.getActiveSpan();
             // helpful headers:
             res.set("x-fly-region", process.env.FLY_REGION ?? "unknown");
             res.set(
