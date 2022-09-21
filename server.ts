@@ -14,8 +14,6 @@ import path from "path";
 import type { Key, PathFunction } from "path-to-regexp";
 import { pathToRegexp, compile as compileRedirectPath } from "path-to-regexp";
 
-const tracer = api.trace.getTracer("dovdotdev-tracer");
-
 const app = express();
 const metricsApp = express();
 
