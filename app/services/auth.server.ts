@@ -1,11 +1,10 @@
 import api from "@opentelemetry/api";
 import type { User } from "@prisma/client";
-// import invariant from "@remix-run/react/invariant";
-import invariant from "@remix-run/dev/invariant";
 import { redirect as runtimeRedirect } from "@remix-run/server-runtime";
 import { compare, hash as bcryptHash } from "bcrypt";
 import { Authenticator, AuthorizationError } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
+import invariant from "tiny-invariant";
 
 import { db } from "~/services/db.server";
 import {

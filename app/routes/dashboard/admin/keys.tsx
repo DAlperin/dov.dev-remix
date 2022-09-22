@@ -1,6 +1,7 @@
 import type { registrationSecret, User } from "@prisma/client";
 import { Form, useLoaderData } from "@remix-run/react";
 import type { ActionFunction, LoaderFunction } from "@remix-run/server-runtime";
+import type { LoaderArgs } from "@remix-run/server-runtime";
 import { useState } from "react";
 
 import KeysTable from "~/components/KeysTable";
@@ -20,7 +21,7 @@ type ActionData = {
     newKey?: registrationSecret;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
     const user = await isAuthenticated(request, {
         failureRedirect: "/login",
     });
@@ -48,8 +49,8 @@ export const loader: LoaderFunction = async ({ request }) => {
             newKey,
         };
     }
-    return null;
-};
+    // return null;
+}
 
 export const action: ActionFunction = async ({
     request,
@@ -104,7 +105,7 @@ export const action: ActionFunction = async ({
 };
 
 export default function Keys(): JSX.Element {
-    const { keys, newKey } = useLoaderData<LoaderData>() || {};
+    const { keys, newKey } = useLoaderData<typeof loader>();
     const [CurrentlyInvalidating, setCurrentlyInvalidating] = useState("");
     return (
         <div className="h-full">
@@ -113,7 +114,7 @@ export default function Keys(): JSX.Element {
                     <h2>Manage keys</h2>
                     <KeysTable
                         newKey={newKey}
-                        keys={keys as unknown as registrationSecret[]}
+                        keys={keys}
                         CurrentlyInvalidating={CurrentlyInvalidating}
                         setCurrentlyInvalidating={setCurrentlyInvalidating}
                     />

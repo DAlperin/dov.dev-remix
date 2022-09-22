@@ -1,12 +1,13 @@
 import type { registrationSecret } from "@prisma/client";
+import type { SerializeFrom } from "@remix-run/node";
 import { AnimatePresence, motion } from "framer-motion";
 
 import ActionButton from "~/components/ActionButton";
 import ActionCheckbox from "~/components/ActionCheckbox";
 
 type Props = {
-    newKey: string | null;
-    keys: registrationSecret[];
+    newKey: SerializeFrom<registrationSecret> | null;
+    keys: SerializeFrom<registrationSecret[]>;
     CurrentlyInvalidating: string;
     setCurrentlyInvalidating: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -33,7 +34,7 @@ export default function KeysTable({
                                     exit={{ opacity: 0 }}
                                     key={key.key}
                                     className={`table-row w-full ${
-                                        newKey === key.key
+                                        newKey?.key === key.key
                                             ? "text-green-700 animate_fadeInTop"
                                             : ""
                                     }`}
