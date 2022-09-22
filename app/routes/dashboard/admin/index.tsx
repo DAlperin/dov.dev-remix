@@ -124,7 +124,7 @@ export default function AdminIndex(): JSX.Element {
     useEffect(() => {
         const updateLayoutData = () => {
             const [newData, newDataKey] = getCurrentLayoutForDashboard(
-                dashboardData,
+                dashboardData as dashboardConfig,
                 breakpoints
             );
             setCurrentLayout(newData);
@@ -138,14 +138,14 @@ export default function AdminIndex(): JSX.Element {
         });
     }, [dashboardData, breakpoints, dashboardLayout]);
 
-    const chargesWithMoney: ChargeWithCustomer[] = chargesWithCustomers.filter(
-        (charge) => {
-            if (charge.chargeAmount > 0) {
-                return true;
-            }
-            return false;
+    const chargesWithMoney: ChargeWithCustomer[] = (
+        chargesWithCustomers as ChargeWithCustomer[]
+    ).filter((charge) => {
+        if (charge.chargeAmount > 0) {
+            return true;
         }
-    );
+        return false;
+    });
 
     return (
         <div className="h-full w-full">
@@ -162,7 +162,10 @@ export default function AdminIndex(): JSX.Element {
                     measureBeforeMount
                     onLayoutChange={(layout, layouts) => {
                         if (!dashboardData.id || layout.length === 0) return;
-                        mergeLayoutsToDashboard(layouts, dashboardData);
+                        mergeLayoutsToDashboard(
+                            layouts,
+                            dashboardData as dashboardConfig
+                        );
                         fetcher.submit(
                             {
                                 data: JSON.stringify(dashboardData),
@@ -179,7 +182,7 @@ export default function AdminIndex(): JSX.Element {
                         const data = getDataForCurrentLayoutItem(
                             currentLayoutKey,
                             val.i,
-                            dashboardData
+                            dashboardData as dashboardConfig
                         );
                         if (!data) return null;
                         return (

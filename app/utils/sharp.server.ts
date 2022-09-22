@@ -15,16 +15,10 @@ export const sharpTransformer: Transformer = {
     name: "sharpTransformer",
     supportedInputs,
     supportedOutputs,
+    fallbackOutput: MimeType.PNG,
     transform: async (
         { data },
-        {
-            width,
-            height,
-            fit,
-            position,
-            quality,
-            compressionLevel,
-        }
+        { width, height, fit, position, quality, compressionLevel }
     ) => {
         const image = sharp(data);
 

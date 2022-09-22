@@ -113,7 +113,7 @@ export default function Keys(): JSX.Element {
                     <h2>Manage keys</h2>
                     <KeysTable
                         newKey={newKey}
-                        keys={keys}
+                        keys={keys as unknown as registrationSecret[]}
                         CurrentlyInvalidating={CurrentlyInvalidating}
                         setCurrentlyInvalidating={setCurrentlyInvalidating}
                     />

@@ -34,7 +34,7 @@ export default function Posts(): JSX.Element {
             {empty(loaderData.posts) ? (
                 <p>No posts match this tag</p>
             ) : (
-                <PostList posts={loaderData.posts} />
+                <PostList posts={loaderData.posts as SanityPost[]} />
             )}
         </div>
     );

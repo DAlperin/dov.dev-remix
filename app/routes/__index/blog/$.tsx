@@ -1,25 +1,25 @@
-import type {PortableTextReactComponents} from "@portabletext/react";
-import {PortableText} from "@portabletext/react";
-import {useLoaderData} from "@remix-run/react";
-import type {LoaderFunction, MetaFunction} from "@remix-run/server-runtime";
-import {json} from "@remix-run/server-runtime";
+import type { PortableTextReactComponents } from "@portabletext/react";
+import { PortableText } from "@portabletext/react";
+import { useLoaderData } from "@remix-run/react";
+import type { LoaderFunction, MetaFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 import imageUrlBuilder from "@sanity/image-url";
-import type {SanityImageSource} from "@sanity/image-url/lib/types/types";
-import {useEffect, useState} from "react";
-import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
-import {okaidia, prism} from "react-syntax-highlighter/dist/cjs/styles/prism";
-import {Theme, useTheme} from "remix-themes";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { useEffect, useState } from "react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { okaidia, prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { Theme, useTheme } from "remix-themes";
 
-import {FitNewsletterForm} from "~/components/NewsletterForm";
+import { FitNewsletterForm } from "~/components/NewsletterForm";
 import Preview from "~/components/Preview";
 import ProgressiveImg from "~/components/ProgressiveImg";
-import {sanityClient as frontendSanityClient} from "~/config/sanity";
-import {getSanityClient} from "~/config/sanity.server";
-import {themeSessionResolver} from "~/root";
-import {cache} from "~/services/cache.server";
-import {db} from "~/services/db.server";
-import type {SanityCategory, SanityPost} from "~/utils/post";
-import {commitSession, getSession} from "~/utils/session.server";
+import { sanityClient as frontendSanityClient } from "~/config/sanity";
+import { getSanityClient } from "~/config/sanity.server";
+import { themeSessionResolver } from "~/root";
+import { cache } from "~/services/cache.server";
+import { db } from "~/services/db.server";
+import type { SanityCategory, SanityPost } from "~/utils/post";
+import { commitSession, getSession } from "~/utils/session.server";
 
 type LoaderData = {
     sanityPosts: SanityPost[];
@@ -29,44 +29,57 @@ type LoaderData = {
     preview: boolean;
 };
 
-export const meta: MetaFunction = ({ data }: {data: LoaderData}) => {
+export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
     const builder = imageUrlBuilder(frontendSanityClient);
     return {
         title: data.sanityPosts[0].title,
         description: data.sanityPosts[0].description,
-        keywords: data.sanityPosts[0].cats.map(keyword => keyword.title).join(","),
+        keywords: data.sanityPosts[0].cats
+            .map((keyword) => keyword.title)
+            .join(","),
         "og:title": data.sanityPosts[0].title,
         "og:description": data.sanityPosts[0].description,
-        "og:image": builder.image(data.sanityPosts[0].mainImage).auto("format").url()
+        "og:image": builder
+            .image(data.sanityPosts[0].mainImage)
+            .auto("format")
+            .url(),
     };
 };
 
-
 const buildPre = (code: string) => {
-    return ({ children }: {children: JSX.Element}) => <pre className="blog-pre">
-        <CodeCopyBtn code={code}/>
-        {children}
-    </pre>
-}
+    return ({ children }: { children: JSX.Element }) => (
+        <pre className="blog-pre">
+            <CodeCopyBtn code={code} />
+            {children}
+        </pre>
+    );
+};
 
-function CodeCopyBtn({ code }: {code: string}) {
+function CodeCopyBtn({ code }: { code: string }) {
     const [copyOk, setCopyOk] = useState(false);
 
-    const iconColor = copyOk ? '#0af20a' : '#ddd';
+    const iconColor = copyOk ? "#0af20a" : "#ddd";
 
     const handleClick = async () => {
-        await navigator.clipboard.writeText(code)
-        setCopyOk(true)
+        await navigator.clipboard.writeText(code);
+        setCopyOk(true);
         setTimeout(() => {
             setCopyOk(false);
         }, 500);
-    }
+    };
 
     return (
         <div className="code-copy-btn">
-            <button type="button" onClick={handleClick} className="text-lg mt-3 mr-3" style={{color: iconColor}}>Copy</button>
+            <button
+                type="button"
+                onClick={handleClick}
+                className="text-lg mt-3 mr-3"
+                style={{ color: iconColor }}
+            >
+                Copy
+            </button>
         </div>
-    )
+    );
 }
 
 const portableTextMap: Partial<PortableTextReactComponents> = {
@@ -80,20 +93,28 @@ const portableTextMap: Partial<PortableTextReactComponents> = {
                 </div>
             );
         },
-        codeBlock: function CodeBlock ({ value }) {
-            const [mounted, setMounted] = useState(false)
-            const [theme] = useTheme()
+        codeBlock: function CodeBlock({ value }) {
+            const [mounted, setMounted] = useState(false);
+            const [theme] = useTheme();
 
             useEffect(() => {
-                setMounted(true)
-            }, [])
+                setMounted(true);
+            }, []);
 
             if (!mounted) {
-                return <pre><code>{value.code}</code></pre>
+                return (
+                    <pre>
+                        <code>{value.code}</code>
+                    </pre>
+                );
             }
 
             return (
-                <SyntaxHighlighter language={value.language} style={theme === Theme.DARK ? okaidia : prism} PreTag={buildPre(value.code)}>
+                <SyntaxHighlighter
+                    language={value.language}
+                    style={theme === Theme.DARK ? okaidia : prism}
+                    PreTag={buildPre(value.code)}
+                >
                     {value.code}
                 </SyntaxHighlighter>
             );
@@ -118,7 +139,7 @@ export function filterDataToSingleItem(
     }
 
     if (preview) {
-        console.log(true, data)
+        console.log(true, data);
         return data.find((item) => item._id.startsWith(`drafts.`)) ?? data[0];
     }
 
@@ -148,19 +169,16 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         slug,
     };
 
-    let sanityPosts
+    let sanityPosts;
 
-    if (await cache.redis.exists(`post:${slug}`) && !preview) {
-       sanityPosts = JSON.parse(await cache.redis.get(`post:${slug}`))
+    if ((await cache.redis.exists(`post:${slug}`)) && !preview) {
+        sanityPosts = JSON.parse(await cache.redis.get(`post:${slug}`));
     } else {
-        console.log("NO cache")
-        console.log(preview)
-        sanityPosts = await getSanityClient(preview).fetch(
-            query,
-            queryParams
-        );
-        console.log(sanityPosts)
-        cache.redis.set(`post:${slug}`, JSON.stringify(sanityPosts), "EX", 200)
+        console.log("NO cache");
+        console.log(preview);
+        sanityPosts = await getSanityClient(preview).fetch(query, queryParams);
+        console.log(sanityPosts);
+        cache.redis.set(`post:${slug}`, JSON.stringify(sanityPosts), "EX", 200);
     }
 
     if (sanityPosts.length === 0) {
@@ -196,7 +214,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
             query: preview ? query : null,
             queryParams: preview ? queryParams : null,
             hits,
-            theme: getTheme()
+            theme: getTheme(),
         },
         { headers }
     );
@@ -254,5 +272,5 @@ function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
 export default function Post(): JSX.Element {
     const loaderData = useLoaderData<LoaderData>();
     if (!loaderData) return <p>...loading</p>;
-    return <PostBody loaderData={loaderData} />;
+    return <PostBody loaderData={loaderData as LoaderData} />;
 }

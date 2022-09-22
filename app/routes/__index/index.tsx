@@ -1,6 +1,11 @@
 import type { User } from "@prisma/client";
 import { useLoaderData } from "@remix-run/react";
-import type { LinksFunction, LoaderFunction } from "@remix-run/server-runtime";
+import type {
+    LinksFunction,
+    LoaderArgs,
+    LoaderFunction,
+} from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 import Image from "remix-image";
 
 import { FitNewsletterForm } from "~/components/NewsletterForm";
@@ -19,15 +24,15 @@ export const links: LinksFunction = () => {
     return [{ rel: "stylesheet", href: styles }];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-    return {
+export async function loader({ request }: LoaderArgs) {
+    return json<LoaderData>({
         user: await isAuthenticated(request),
         posts: await getPosts(5),
-    };
-};
+    });
+}
 
 export default function Index(): JSX.Element {
-    const loaderData = useLoaderData<LoaderData>();
+    const loaderData = useLoaderData<typeof loader>();
     return (
         <div className="space-y-4">
             <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
@@ -137,7 +142,7 @@ export default function Index(): JSX.Element {
                 <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
                     Latest posts
                 </h1>
-                <PostList posts={loaderData.posts} />
+                <PostList posts={loaderData.posts as SanityPost[]} />
             </div>
 
             <FitNewsletterForm title="Subsribe to my newsletter" />

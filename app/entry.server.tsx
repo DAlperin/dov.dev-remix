@@ -9,7 +9,6 @@ export default function handleRequest(
     remixContext: EntryContext
 ): Response {
     const markup = renderToString(
-        // @ts-expect-error I can't really be bothered to figure out why typescript complains about this
         <RemixServer context={remixContext} url={request.url} />
     );
 

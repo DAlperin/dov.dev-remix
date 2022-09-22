@@ -23,7 +23,7 @@ export default function Index(): JSX.Element {
         <div>
             <h1>Posts</h1>
             <hr />
-            <PostList posts={loaderData.posts} />
+            <PostList posts={loaderData.posts as SanityPost[]} />
         </div>
     );
 }
