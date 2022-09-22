@@ -2,7 +2,7 @@ import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentation
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 // import { ConsoleSpanExporter } from "@opentelemetry/sdk-trace-base";
-// import { PrismaInstrumentation } from "@prisma/instrumentation";
+import { PrismaInstrumentation } from "@prisma/instrumentation";
 
 const traceExporter = new OTLPTraceExporter();
 
@@ -11,7 +11,7 @@ const sdk = new NodeSDK({
     traceExporter,
     instrumentations: [
         getNodeAutoInstrumentations(),
-        // new PrismaInstrumentation(),
+        new PrismaInstrumentation(),
     ],
 });
 
