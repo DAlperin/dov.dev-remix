@@ -23,7 +23,7 @@ const config = {
         ttl: 10 * 1000,
     }),
     resolver: fetchImage,
-    transformer: sharpTransformer,
+    // transformer: sharpTransformer,
 };
 
 export const loader: LoaderFunction = ({ request }) => {

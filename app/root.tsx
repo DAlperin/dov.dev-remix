@@ -18,6 +18,7 @@ import type {
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 // import { Outlet } from "remix";
+import remixImageStyles from "remix-image/remix-image.css";
 import {
     createThemeSessionResolver,
     PreventFlashOnWrongTheme,
@@ -150,7 +151,11 @@ export const meta: MetaFunction = () => {
 };
 
 export const links: LinksFunction = () => {
-    return [{ rel: "stylesheet", href: styles }];
+    return [
+        { rel: "stylesheet", href: styles },
+
+        { rel: "stylesheet", href: remixImageStyles },
+    ];
 };
 
 export default function AppWithProviders(): JSX.Element {

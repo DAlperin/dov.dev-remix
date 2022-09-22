@@ -51,37 +51,6 @@ export default function Index(): JSX.Element {
                     <Image
                         src="/static/headshot.png"
                         alt="Dov Alperin headshot"
-                        height="600"
-                        width="1000"
-                        style={{
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                        }}
-                        options={{
-                            fit: "cover",
-                        }}
-                        responsive={[
-                            {
-                                size: {
-                                    width: 1000,
-                                    height: 600,
-                                },
-                            },
-                            {
-                                size: {
-                                    width: 500,
-                                    height: 500,
-                                },
-                                maxWidth: 748,
-                            },
-                            {
-                                size: {
-                                    width: 400,
-                                    height: 400,
-                                },
-                                maxWidth: 640,
-                            },
-                        ]}
                     />
                 </div>
                 <div className="aboutContent pt-8 md:px-8 homepageText space-y-5 basis-3/4">

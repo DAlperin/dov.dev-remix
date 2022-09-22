@@ -28,7 +28,7 @@ export default function KeysTable({
                 </div>
                 <div className="table-row-group">
                     <AnimatePresence>
-                        {keys.map((key) => {
+                        {keys.map((key: SerializeFrom<registrationSecret>) => {
                             return (
                                 <motion.div
                                     exit={{ opacity: 0 }}
