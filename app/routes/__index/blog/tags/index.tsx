@@ -1,5 +1,7 @@
+import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
-import { useLoaderData, json } from "superjson-remix";
+// import { useLoaderData, json } from "superjson-remix";
 
 import { getCategories } from "~/services/posts.server";
 import type { SanityCategory } from "~/utils/post";

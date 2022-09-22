@@ -8,6 +8,7 @@ import {
     useSubmit,
     useTransition,
     LiveReload,
+    Outlet,
 } from "@remix-run/react";
 import type {
     LinksFunction,
@@ -16,7 +17,7 @@ import type {
 } from "@remix-run/server-runtime";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Outlet } from "remix";
+// import { Outlet } from "remix";
 import {
     createThemeSessionResolver,
     PreventFlashOnWrongTheme,
@@ -30,15 +31,13 @@ import { useSpinDelay } from "spin-delay";
 import styles from "./tailwind.css";
 import { auth, isAuthenticated } from "~/services/auth.server";
 
-// @ts-expect-error TODO: write types...
-import CommandPalette from "react-command-palette"; // eslint-disable-line
+// import CommandPalette from "react-command-palette"; // eslint-disable-line
 
 import {
     commitSession,
     getSession,
     sessionStorage,
 } from "~/utils/session.server";
-
 
 export const loader: LoaderFunction = async ({ request }) => {
     const { getTheme } = await themeSessionResolver(request);
@@ -167,7 +166,7 @@ export default function AppWithProviders(): JSX.Element {
 }
 
 function App(): JSX.Element {
-    const submit = useSubmit();
+    // const submit = useSubmit();
     const location = useLocation();
     const data = useLoaderData();
     const [theme, setTheme] = useTheme();
@@ -176,25 +175,25 @@ function App(): JSX.Element {
         delay: 400,
         minDuration: 500,
     });
-    const commands = [
-        {
-            name: "Toggle theme",
-            command() {
-                setTheme((prev) =>
-                    prev === Theme.DARK ? Theme.LIGHT : Theme.DARK
-                );
-            },
-        },
-    ];
-    useEffect(() => {
-        if (data.user)
-            commands.push({
-                name: "Logout",
-                command() {
-                    submit(null, { method: "post", action: "/api/logout" });
-                },
-            });
-    });
+    // const commands = [
+    //     {
+    //         name: "Toggle theme",
+    //         command() {
+    //             setTheme((prev) =>
+    //                 prev === Theme.DARK ? Theme.LIGHT : Theme.DARK
+    //             );
+    //         },
+    //     },
+    // ];
+    // useEffect(() => {
+    //     if (data.user)
+    //         commands.push({
+    //             name: "Logout",
+    //             command() {
+    //                 submit(null, { method: "post", action: "/api/logout" });
+    //             },
+    //         });
+    // });
     return (
         <html lang="en" className={theme ?? ""}>
             <head>
@@ -223,17 +222,17 @@ function App(): JSX.Element {
             </head>
             <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full min-h-full">
                 <PageLoadingMessage />
-                <ClientOnly>
-                    {() => {
-                        return (
-                            <CommandPalette
-                                commands={commands}
-                                closeOnSelect
-                                hotKeys="ctrl+/"
-                            />
-                        );
-                    }}
-                </ClientOnly>
+                {/* <ClientOnly>*/}
+                {/*    {() => {*/}
+                {/*        return (*/}
+                {/*            <CommandPalette*/}
+                {/*                commands={commands}*/}
+                {/*                closeOnSelect*/}
+                {/*                hotKeys="ctrl+/"*/}
+                {/*            />*/}
+                {/*        );*/}
+                {/*    }}*/}
+                {/* </ClientOnly>*/}
                 <div
                     className={`${
                         showLoader ? "opacity-30" : ""

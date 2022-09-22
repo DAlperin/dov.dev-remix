@@ -1,5 +1,7 @@
+import api from "@opentelemetry/api";
 import type { User } from "@prisma/client";
-import invariant from "@remix-run/react/invariant";
+// import invariant from "@remix-run/react/invariant";
+import invariant from "@remix-run/dev/invariant";
 import { redirect as runtimeRedirect } from "@remix-run/server-runtime";
 import { compare, hash as bcryptHash } from "bcrypt";
 import { Authenticator, AuthorizationError } from "remix-auth";
@@ -11,7 +13,6 @@ import {
     getSession,
     sessionStorage,
 } from "~/utils/session.server";
-import api from "@opentelemetry/api";
 
 export type sessionUser = {
     id: string;
@@ -39,7 +40,6 @@ export async function ensureAdmin(
 ): Promise<User> {
     const user = await isAuthenticated(request);
     if (!user) {
-
         throw runtimeRedirect(options.failureRedirect);
     }
     return user;
@@ -63,18 +63,16 @@ export async function isAuthenticated(
             await logout(request);
         }
         if (options?.failureRedirect) {
-
             throw runtimeRedirect(options.failureRedirect);
         }
         return false;
     }
-    let activeSpan = api.trace.getActiveSpan();
+    const activeSpan = api.trace.getActiveSpan();
     if (activeSpan && user) {
         activeSpan.setAttribute("user.id", user.id);
         activeSpan.setAttribute("user.name", user.name);
     }
     if (options?.successRedirect) {
-
         throw runtimeRedirect(options.successRedirect);
     }
     return user;
