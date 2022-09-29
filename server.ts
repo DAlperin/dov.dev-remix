@@ -193,28 +193,6 @@ metricsApp.listen(metricsPort, () => {
     console.log(`✅ metrics ready: http://localhost:${metricsPort}`);
 });
 
-// Remix fingerprints its assets so we can cache forever.
-app.use(
-    "/build",
-    express.static("public/build", { immutable: true, maxAge: "1y" })
-);
-
-// Everything else (like favicon.ico) is cached for an hour. You may want to be
-// more aggressive with this caching.
-app.use(express.static("public", { maxAge: "1h" }));
-
-// Mount the sanity studio react router app
-app.use(
-    "/studio/*",
-    express.static("public/studio/index.html", { maxAge: "1h" })
-);
-
-const here = (...d: string[]) => path.join(__dirname, ...d);
-app.all(
-    "*",
-    buildRedirectsMiddleware(readFileSync(here("../_redirects"), "utf8"))
-);
-
 const noCleanUrls = new Set(["/studio/"]);
 
 app.use((req, res, next) => {
@@ -239,6 +217,28 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+// Remix fingerprints its assets so we can cache forever.
+app.use(
+    "/build",
+    express.static("public/build", { immutable: true, maxAge: "1y" })
+);
+
+// Everything else (like favicon.ico) is cached for an hour. You may want to be
+// more aggressive with this caching.
+app.use(express.static("public", { maxAge: "1h" }));
+
+// Mount the sanity studio react router app
+app.use(
+    "/studio/*",
+    express.static("public/studio/index.html", { maxAge: "1h" })
+);
+
+const here = (...d: string[]) => path.join(__dirname, ...d);
+app.all(
+    "*",
+    buildRedirectsMiddleware(readFileSync(here("../_redirects"), "utf8"))
+);
 
 // if we're not in the primary region, then we need to make sure all
 // non-GET/HEAD/OPTIONS requests hit the primary region. In theory,
