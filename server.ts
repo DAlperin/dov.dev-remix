@@ -193,6 +193,22 @@ metricsApp.listen(metricsPort, () => {
     console.log(`✅ metrics ready: http://localhost:${metricsPort}`);
 });
 
+// Remix fingerprints its assets so we can cache forever.
+app.use(
+    "/build",
+    express.static("public/build", { immutable: true, maxAge: "1y" })
+);
+
+// Everything else (like favicon.ico) is cached for an hour. You may want to be
+// more aggressive with this caching.
+app.use(express.static("public", { maxAge: "1h" }));
+
+// Mount the sanity studio react router app
+app.use(
+    "/studio/*",
+    express.static("public/studio/index.html", { maxAge: "1h" })
+);
+
 const here = (...d: string[]) => path.join(__dirname, ...d);
 app.all(
     "*",
@@ -259,21 +275,6 @@ app.use(compression());
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by");
 
-// Remix fingerprints its assets so we can cache forever.
-app.use(
-    "/build",
-    express.static("public/build", { immutable: true, maxAge: "1y" })
-);
-
-// Everything else (like favicon.ico) is cached for an hour. You may want to be
-// more aggressive with this caching.
-app.use(express.static("public", { maxAge: "1h" }));
-
-// Mount the sanity studio react router app
-app.use(
-    "/studio/*",
-    express.static("public/studio/index.html", { maxAge: "1h" })
-);
 
 app.use(morgan("tiny"));
 
