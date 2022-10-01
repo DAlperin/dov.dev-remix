@@ -90,7 +90,7 @@
         "remix": "^1.7.0",
         "remix-auth": "^3.3.0",
         "remix-auth-form": "^1.2.0",
-        "remix-image": "^1.3.2",
+        "remix-image": "^1.3.3",
         "remix-redis-session": "^0.0.11",
         "remix-themes": "^1.1.6",
         "remix-utils": "^3.3.0",

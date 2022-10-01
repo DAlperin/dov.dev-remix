@@ -47,13 +47,24 @@ export default function Index(): JSX.Element {
                 </i>
             </h1>
             <div className="pb-0.5 md:pb-8 flex flex-col md:flex-row">
-                <div className="pt-8 rounded-2xl basis-3/4">
+                <div className="basis-3/4">
                     <Image
                         src="/static/headshot.png"
                         alt="Dov Alperin headshot"
+                        style={{
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                        height="400"
+                        width="650"
+                        responsive={[
+                            {
+                                size: { width: 650, height: 400 },
+                            },
+                        ]}
                     />
                 </div>
-                <div className="aboutContent pt-8 md:px-8 homepageText space-y-5 basis-3/4">
+                <div className="aboutContent mt-4 md:px-8 homepageText space-y-5 basis-3/4">
                     <h4>
                         Curious student, professional software and web
                         developer, entrepreneur, activist and fast learner.
