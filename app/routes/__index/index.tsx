@@ -50,6 +50,7 @@ export default function Index(): JSX.Element {
                     <img
                         src="/static/headshot.png"
                         alt="Dov Alperin headshot"
+                        loading="lazy"
                         style={{
                             marginLeft: "auto",
                             marginRight: "auto",
