@@ -1670,6 +1670,14 @@ blockquote {
   flex-basis: 75%;
 }
 
+.basis-1\/4 {
+  flex-basis: 25%;
+}
+
+.basis-1\/2 {
+  flex-basis: 50%;
+}
+
 .border-separate {
   border-collapse: separate;
 }
@@ -1802,10 +1810,6 @@ blockquote {
 
 .rounded-full {
   border-radius: 9999px;
-}
-
-.rounded-2xl {
-  border-radius: 1rem;
 }
 
 .border-2 {

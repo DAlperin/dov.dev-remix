@@ -6,7 +6,6 @@ import type {
     LoaderFunction,
 } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import Image from "remix-image";
 
 import { FitNewsletterForm } from "~/components/NewsletterForm";
 import PostList from "~/components/PostList";
@@ -47,24 +46,21 @@ export default function Index(): JSX.Element {
                 </i>
             </h1>
             <div className="pb-0.5 md:pb-8 flex flex-col md:flex-row">
-                <div className="basis-3/4">
-                    <Image
+                <div className="basis-1/2 flex justify-center">
+                    <img
                         src="/static/headshot.png"
                         alt="Dov Alperin headshot"
                         style={{
                             marginLeft: "auto",
                             marginRight: "auto",
+                            marginTop: "auto",
+                            marginBottom: "auto",
                         }}
-                        height="400"
-                        width="650"
-                        responsive={[
-                            {
-                                size: { width: 650, height: 400 },
-                            },
-                        ]}
+                        height="1669"
+                        width="2517"
                     />
                 </div>
-                <div className="aboutContent mt-4 md:px-8 homepageText space-y-5 basis-3/4">
+                <div className="aboutContent mt-4 md:px-8 homepageText space-y-5 basis-1/2">
                     <h4>
                         Curious student, professional software and web
                         developer, entrepreneur, activist and fast learner.
