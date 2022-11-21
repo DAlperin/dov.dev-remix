@@ -48,7 +48,7 @@ export default function Index(): JSX.Element {
             <div className="pb-0.5 md:pb-8 flex flex-col md:flex-row">
                 <div className="basis-1/2 flex justify-center">
                     <img
-                        src="/static/headshot.png"
+                        src="/static/headshot.webp"
                         alt="Dov Alperin headshot"
                         loading="lazy"
                         style={{
