@@ -1,16 +1,23 @@
 import { getSanityClient } from "~/config/sanity.server";
 import type { SanityCategory, SanityPost } from "~/utils/post";
 import {tracer} from "../../telemetry";
+import { cache } from "~/services/cache.server";
 
 export async function getPosts(limit?: number): Promise<SanityPost[]> {
-    return tracer.startActiveSpan("getPosts", span => {
-        const posts = getSanityClient().fetch(
+    return tracer.startActiveSpan("getPosts", async span => {
+        if (await cache.redis.exists("posts_all")) {
+            const posts = JSON.parse(await cache.redis.get("posts_all"));
+            span.end()
+            return posts
+        }
+        const posts = await getSanityClient().fetch(
             `*[_type == 'post'][0...$limit] {
           "cats": categories[]->,
           ...
         } | order(dateTime(publishedAt) desc)`,
-            { limit: limit ? limit : 5 }
+            {limit: limit ? limit : 5}
         );
+        cache.redis.set("posts_all", JSON.stringify(posts), "EX", 200)
         span.end()
         return posts
     })

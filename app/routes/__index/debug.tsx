@@ -20,7 +20,8 @@ export async function loader() {
     const baseHost = assertedEnvVar("REDIS_HOST");
     let redisHost = baseHost;
     let commitSha = "dev";
-    const regions = await txtLookup("regions.dovdotdev.internal")
+    const rawRegions = await txtLookup("regions.dovdotdev.internal")
+    const regions = rawRegions[0][0].split(",")
     if (process.env.NODE_ENV === "production") {
         region = assertedEnvVar("FLY_REGION");
         redisHost = `${region}.${baseHost}`;
@@ -43,7 +44,7 @@ export default function Debug(): JSX.Element {
             <p>Revision: {data.commitSha}</p>
             <h3>App regions:</h3>
             <ul>
-                {data.regions[0].map(region => {
+                {data.regions.map(region => {
                     return <li key={region}><a href={`/?forceRegion=${region}`}>{region}</a></li>
                 })}
             </ul>
