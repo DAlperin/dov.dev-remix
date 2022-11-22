@@ -242,8 +242,9 @@ app.all(
 
 app.all("*", (req: express.Request, res, next) => {
    const { FLY_REGION, NODE_ENV } = process.env;
-   if (req.params.forceRegion !== undefined && req.params.forceRegion !== FLY_REGION && NODE_ENV === "production") {
-       res.set("fly-replay", `region=${req.params.forceRegion}`);
+   if (req.query.forceRegion !== undefined && req.query.forceRegion !== FLY_REGION && NODE_ENV === "production") {
+       // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
+       res.set("fly-replay", `region=${req.query.forceRegion}`);
        return res.sendStatus(409);
    }
    next()
