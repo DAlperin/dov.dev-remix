@@ -240,6 +240,14 @@ app.all(
     buildRedirectsMiddleware(readFileSync(here("../_redirects"), "utf8"))
 );
 
+app.all("*", (req: express.Request, res, next) => {
+   const { FLY_REGION, NODE_ENV } = process.env;
+   if (req.params.forceRegion && req.params.forceRegion !== FLY_REGION && NODE_ENV === "production") {
+       res.set("fly-replay", `region=${req.params.forceRegion}`);
+       return res.sendStatus(409);
+   }
+   next()
+})
 // if we're not in the primary region, then we need to make sure all
 // non-GET/HEAD/OPTIONS requests hit the primary region. In theory,
 // it's fine to directly connect to planetscale but latency would be
