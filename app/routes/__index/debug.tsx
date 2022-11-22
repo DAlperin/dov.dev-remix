@@ -20,7 +20,7 @@ export async function loader() {
     const baseHost = assertedEnvVar("REDIS_HOST");
     let redisHost = baseHost;
     let commitSha = "dev";
-    const regions = await txtLookup("regions.kaniko-test.internal")
+    const regions = await txtLookup("regions.dovdotdev.internal")
     if (process.env.NODE_ENV === "production") {
         region = assertedEnvVar("FLY_REGION");
         redisHost = `${region}.${baseHost}`;
