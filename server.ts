@@ -247,6 +247,10 @@ app.all("*", (req: express.Request, res, next) => {
         req.query.forceRegion !== FLY_REGION &&
         NODE_ENV === "production"
     ) {
+        console.log(
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
+            `Replaying because of forceRegion. Replaying to ${req.query.forceRegion} from ${FLY_REGION}`
+        );
         // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
         res.set("fly-replay", `region=${req.query.forceRegion}`);
         return res.sendStatus(409);
