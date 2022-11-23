@@ -241,14 +241,19 @@ app.all(
 );
 
 app.all("*", (req: express.Request, res, next) => {
-   const { FLY_REGION, NODE_ENV } = process.env;
-   if (req.query.forceRegion !== undefined && req.query.forceRegion !== FLY_REGION && NODE_ENV === "production") {
-       // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
-       res.set("fly-replay", `region=${req.query.forceRegion}`);
-       return res.sendStatus(409);
-   }
-   next()
-})
+    const { FLY_REGION, NODE_ENV } = process.env;
+    if (
+        req.query.forceRegion !== undefined &&
+        req.query.forceRegion !== FLY_REGION &&
+        NODE_ENV === "production"
+    ) {
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
+        res.set("fly-replay", `region=${req.query.forceRegion}`);
+        return res.sendStatus(409);
+    }
+    next();
+});
+
 // if we're not in the primary region, then we need to make sure all
 // non-GET/HEAD/OPTIONS requests hit the primary region. In theory,
 // it's fine to directly connect to planetscale but latency would be
@@ -283,7 +288,6 @@ app.use(compression());
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by");
-
 
 app.use(morgan("tiny"));
 

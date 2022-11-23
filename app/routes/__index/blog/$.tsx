@@ -198,11 +198,17 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         headers["Set-Cookie"] = await commitSession(session);
     }
 
-    const hits = await db.postHit.count({
-        where: {
-            slug,
-        },
-    });
+    let hits = 0;
+    if (await cache.redis.exists(`post:${slug}:hits`)) {
+        hits = await cache.redis.get(`post:${slug}:hits`);
+    } else {
+        const hits = await db.postHit.count({
+            where: {
+                slug,
+            },
+        });
+        cache.redis.set(`post:${slug}:hits`, hits, "EX", 60);
+    }
 
     return json(
         {
