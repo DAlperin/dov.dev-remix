@@ -216,14 +216,16 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         if (await cache.redis.exists(`post:${slug}:hits`)) {
             hits = await cache.redis.get(`post:${slug}:hits`);
         } else {
-            const hits = await db.postHit.count({
+            hits = await db.postHit.count({
                 where: {
                     slug,
                 },
             });
             await cache.redis.set(`post:${slug}:hits`, hits, "EX", 60);
         }
+
         span.end();
+
         return json(
             {
                 sanityPosts,
