@@ -198,7 +198,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         headers["Set-Cookie"] = await commitSession(session);
     }
 
-    let hits = 0;
+    let hits;
     if (await cache.redis.exists(`post:${slug}:hits`)) {
         hits = await cache.redis.get(`post:${slug}:hits`);
     } else {
@@ -207,7 +207,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
                 slug,
             },
         });
-        cache.redis.set(`post:${slug}:hits`, hits, "EX", 60);
+        await cache.redis.set(`post:${slug}:hits`, hits, "EX", 60);
     }
 
     return json(
