@@ -10,6 +10,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { okaidia, prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Theme, useTheme } from "remix-themes";
 
+import { tracer } from "../../../../telemetry";
 import { FitNewsletterForm } from "~/components/NewsletterForm";
 import Preview from "~/components/Preview";
 import ProgressiveImg from "~/components/ProgressiveImg";
@@ -147,80 +148,94 @@ export function filterDataToSingleItem(
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-    const { getTheme } = await themeSessionResolver(request);
-    const slug = params["*"];
-    if (!slug) {
-        return new Response("Not found", { status: 404 });
-    }
+    return tracer.startActiveSpan("blog/$.tsx", async (span) => {
+        const { getTheme } = await themeSessionResolver(request);
+        const slug = params["*"];
+        if (!slug) {
+            span.end();
+            return new Response("Not found", { status: 404 });
+        }
 
-    const requestUrl = new URL(request?.url);
+        const requestUrl = new URL(request?.url);
 
-    const preview =
-        requestUrl?.searchParams?.get("preview") ===
-        process.env.SANITY_PREVIEW_SECRET;
+        const preview =
+            requestUrl?.searchParams?.get("preview") ===
+            process.env.SANITY_PREVIEW_SECRET;
 
-    const query = `*[_type == 'post' && slug.current == $slug] {
+        const query = `*[_type == 'post' && slug.current == $slug] {
           "cats": categories[]->,
           "fullImage": mainImage.asset->,
           ...
         }`;
 
-    const queryParams = {
-        slug,
-    };
+        const queryParams = {
+            slug,
+        };
 
-    let sanityPosts;
+        let sanityPosts;
 
-    if ((await cache.redis.exists(`post:${slug}`)) && !preview) {
-        sanityPosts = JSON.parse(await cache.redis.get(`post:${slug}`));
-    } else {
-        sanityPosts = await getSanityClient(preview).fetch(query, queryParams);
-        cache.redis.set(`post:${slug}`, JSON.stringify(sanityPosts), "EX", 200);
-    }
+        if ((await cache.redis.exists(`post:${slug}`)) && !preview) {
+            sanityPosts = JSON.parse(await cache.redis.get(`post:${slug}`));
+        } else {
+            sanityPosts = await getSanityClient(preview).fetch(
+                query,
+                queryParams
+            );
+            cache.redis.set(
+                `post:${slug}`,
+                JSON.stringify(sanityPosts),
+                "EX",
+                200
+            );
+        }
 
-    if (sanityPosts.length === 0) {
-        throw new Response("Not Found", {
-            status: 404,
-        });
-    }
+        if (sanityPosts.length === 0) {
+            throw new Response("Not Found", {
+                status: 404,
+            });
+        }
 
-    const headers: Record<string, string> = {};
+        const headers: Record<string, string> = {};
 
-    const session = await getSession(request.headers.get("cookie"));
+        const session = await getSession(request.headers.get("cookie"));
 
-    if (process.env.NODE_ENV === "production" && !session.has(`hit:${slug}`)) {
-        await db.postHit.create({
-            data: {
-                slug,
+        if (
+            process.env.NODE_ENV === "production" &&
+            !session.has(`hit:${slug}`)
+        ) {
+            await db.postHit.create({
+                data: {
+                    slug,
+                },
+            });
+            session.set(`hit:${slug}`, 1);
+            headers["Set-Cookie"] = await commitSession(session);
+        }
+
+        let hits;
+        if (await cache.redis.exists(`post:${slug}:hits`)) {
+            hits = await cache.redis.get(`post:${slug}:hits`);
+        } else {
+            const hits = await db.postHit.count({
+                where: {
+                    slug,
+                },
+            });
+            await cache.redis.set(`post:${slug}:hits`, hits, "EX", 60);
+        }
+        span.end();
+        return json(
+            {
+                sanityPosts,
+                preview,
+                query: preview ? query : null,
+                queryParams: preview ? queryParams : null,
+                hits,
+                theme: getTheme(),
             },
-        });
-        session.set(`hit:${slug}`, 1);
-        headers["Set-Cookie"] = await commitSession(session);
-    }
-
-    let hits;
-    if (await cache.redis.exists(`post:${slug}:hits`)) {
-        hits = await cache.redis.get(`post:${slug}:hits`);
-    } else {
-        const hits = await db.postHit.count({
-            where: {
-                slug,
-            },
-        });
-        await cache.redis.set(`post:${slug}:hits`, hits, "EX", 60);
-    }
-
-    return json(
-        {
-            sanityPosts,
-            preview,
-            query: preview ? query : null,
-            queryParams: preview ? queryParams : null,
-            hits,
-            theme: getTheme(),
-        },
-        { headers }
-    );
+            { headers }
+        );
+    });
 };
 
 function PostBody({ loaderData }: { loaderData: LoaderData }): JSX.Element {
