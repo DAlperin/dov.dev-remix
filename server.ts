@@ -262,31 +262,31 @@ app.all("*", (req: express.Request, res, next) => {
 // non-GET/HEAD/OPTIONS requests hit the primary region. In theory,
 // it's fine to directly connect to planetscale but latency would be
 // high since currently we can only connect to it via us-east-1
-app.all("*", (req, res, next) => {
-    const { method, path: pathname } = req;
-    const { PRIMARY_REGION, FLY_REGION } = process.env;
-
-    const isMethodReplayable = !["GET", "OPTIONS", "HEAD"].includes(method);
-    const isReadOnlyRegion =
-        FLY_REGION && PRIMARY_REGION && FLY_REGION !== PRIMARY_REGION;
-
-    const shouldReplay = isMethodReplayable && isReadOnlyRegion;
-
-    if (!shouldReplay) {
-        next();
-        return;
-    }
-
-    const logInfo = {
-        pathname,
-        method,
-        PRIMARY_REGION,
-        FLY_REGION,
-    };
-    console.info(`Replaying:`, logInfo);
-    res.set("fly-replay", `region=${PRIMARY_REGION}`);
-    return res.sendStatus(409);
-});
+// app.all("*", (req, res, next) => {
+//     const { method, path: pathname } = req;
+//     const { PRIMARY_REGION, FLY_REGION } = process.env;
+//
+//     const isMethodReplayable = !["GET", "OPTIONS", "HEAD"].includes(method);
+//     const isReadOnlyRegion =
+//         FLY_REGION && PRIMARY_REGION && FLY_REGION !== PRIMARY_REGION;
+//
+//     const shouldReplay = isMethodReplayable && isReadOnlyRegion;
+//
+//     if (!shouldReplay) {
+//         next();
+//         return;
+//     }
+//
+//     const logInfo = {
+//         pathname,
+//         method,
+//         PRIMARY_REGION,
+//         FLY_REGION,
+//     };
+//     console.info(`Replaying:`, logInfo);
+//     res.set("fly-replay", `region=${PRIMARY_REGION}`);
+//     return res.sendStatus(409);
+// });
 
 app.use(compression());
 
