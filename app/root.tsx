@@ -225,7 +225,7 @@ function App(): JSX.Element {
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
                 <Links />
             </head>
-            <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full min-h-full">
+            <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full min-h-full snow dark:snow-dark">
                 <PageLoadingMessage />
                 {/* <ClientOnly>*/}
                 {/*    {() => {*/}
@@ -241,7 +241,7 @@ function App(): JSX.Element {
                 <div
                     className={`${
                         showLoader ? "opacity-30" : ""
-                    } relative min-h-full overflow-x-hidden`}
+                    } relative min-h-full overflow-x-hidden backdrop-blur-sm`}
                 >
                     <Outlet />
                 </div>

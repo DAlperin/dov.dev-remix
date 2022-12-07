@@ -17,11 +17,11 @@ const config = {
         process.env.NODE_ENV === "development"
             ? "http://localhost:3000"
             : "http://localhost:8080",
-    cache: new S3Cache({
-        bucketName: "dovdotdevimagecache",
-        tbd: 0,
-        ttl: 10 * 1000,
-    }),
+    // cache: new S3Cache({
+    //     bucketName: "dovdotdevimagecache",
+    //     tbd: 0,
+    //     ttl: 10 * 1000,
+    // }),
     resolver: fetchImage,
     // transformer: sharpTransformer,
 };
