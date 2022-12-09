@@ -238,12 +238,14 @@ function App(): JSX.Element {
                 {/*        );*/}
                 {/*    }}*/}
                 {/* </ClientOnly>*/}
-                <div
-                    className={`${
-                        showLoader ? "opacity-30" : ""
-                    } relative min-h-full overflow-x-hidden backdrop-blur-sm`}
-                >
-                    <Outlet />
+                <div className="backdrop-blur-sm">
+                    <div
+                        className={`${
+                            showLoader ? "opacity-30" : ""
+                        } relative min-h-full overflow-x-hidden backdrop-blur-sm`}
+                    >
+                        <Outlet />
+                    </div>
                 </div>
                 <ScrollRestoration />
                 <Scripts />
