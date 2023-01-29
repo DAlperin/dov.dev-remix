@@ -5,7 +5,6 @@ import {
     ScrollRestoration,
     useLoaderData,
     useLocation,
-    useSubmit,
     useTransition,
     LiveReload,
     Outlet,
@@ -17,23 +16,17 @@ import type {
 } from "@remix-run/server-runtime";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-// import { Outlet } from "remix";
 import remixImageStyles from "remix-image/remix-image.css";
 import {
     createThemeSessionResolver,
     PreventFlashOnWrongTheme,
-    Theme,
     ThemeProvider,
     useTheme,
 } from "remix-themes";
-import { ClientOnly } from "remix-utils";
 import { useSpinDelay } from "spin-delay";
 
 import styles from "./tailwind.css";
 import { auth, isAuthenticated } from "~/services/auth.server";
-
-// import CommandPalette from "react-command-palette"; // eslint-disable-line
-
 import {
     commitSession,
     getSession,
@@ -225,7 +218,7 @@ function App(): JSX.Element {
                 <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
                 <Links />
             </head>
-            <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full min-h-full snow dark:snow-dark">
+            <body className="antialiased text-black bg-white dark:bg-gray-900 dark:text-white w-full min-h-full">
                 <PageLoadingMessage />
                 {/* <ClientOnly>*/}
                 {/*    {() => {*/}
