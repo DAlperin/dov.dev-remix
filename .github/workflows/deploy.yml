@@ -143,7 +143,8 @@ jobs:
               with:
                   args: "deploy --app ${{ steps.app_name.outputs.value }}-staging --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
               env:
-                  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+                FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+                FLY_API_BASE_URL: https://flyio-web-staging.fly.dev
 
             - name: 🚀 Deploy Production
               if: ${{ github.ref == 'refs/heads/main' }}
