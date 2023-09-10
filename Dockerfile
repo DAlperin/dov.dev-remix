@@ -5,7 +5,7 @@ FROM node:18-bullseye-slim as base
 ENV NODE_ENV production
 
 # Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl && apt-get install -y ca-certificates
+RUN apt-get update && apt-get install -y openssl ca-certificates 
 
 RUN apt-get install python3 build-essential -y
 
